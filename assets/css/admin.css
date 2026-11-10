@@ -364,3 +364,38 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .pg-dynnote { margin-bottom: 10px; }
 .pg-det > summary { cursor: pointer; font-weight: 700; padding: 6px 0 12px; color: var(--muted); }
 .pg-det[open] > summary { color: var(--fg); }
+
+
+/* =====================================================================================================
+   v4 — red / white / black admin. Black shell, flat near-black cards, one red for the active tab, the
+   primary button and anything that needs attention; the PIN pad and the login card are white paper.
+   ===================================================================================================== */
+.ad-gate-card { background: #fff; color: #000; border: 0; border-radius: 14px; box-shadow: none; }
+.ad-gate-card h1 { font-weight: 800; letter-spacing: -0.02em; text-transform: none; font-size: 1.5rem; color: #000; }
+.ad-gate-card .muted, .ad-gate-card .ad-back { color: #555; }
+.ad-gate-mark { filter: none; }
+.pin-dots i { border-color: rgba(0, 0, 0, .35); }
+.pin-dots i.on { background: #E10600; }
+.pin-pad button { background: #000; color: #fff; border: 0; border-radius: 12px; font-family: var(--f-body); font-weight: 800; }
+.pin-pad button:hover { background: #E10600; border-color: #E10600; }
+.pin-pad button:active { background: #E10600; }
+.ad-gate-card .btn-primary { background: #E10600; }
+.ad-gate-card .input { background: #F4F4F4; color: #000; border-color: rgba(0, 0, 0, .2); }
+.ad-steps { color: #333; }
+.ad-steps a, .ad-card-head a { color: #E10600; }
+.ad-gate-msg { color: #E10600; }
+.ad-top { background: rgba(0, 0, 0, .94); border-bottom: 1px solid var(--line); }
+.ad-brand { text-transform: none; letter-spacing: -0.01em; font-weight: 800; }
+.ad-tabs button { border-radius: 8px; border-color: transparent; color: var(--muted); }
+.ad-tabs button[aria-selected="true"] { background: #E10600; border-color: #E10600; color: #fff; }
+.ad-card, .ad-item, .ad-list-item, .ad-stat, .ad-req { background: var(--surface); border-color: var(--line); border-radius: 12px; box-shadow: none; }
+.ad-item, .ad-list-item, .ad-stat, .ad-req { background: var(--bg-2); }
+.ad-stat:hover { border-color: var(--fg); }
+.ad-stat b { color: #fff; }
+.ad-req.s-new { border-left-color: #E10600; }
+.ad-req.s-contacted { border-left-color: #fff; }
+.ad-fold > summary::after { color: var(--fg); border-color: var(--line-strong); }
+.ad-fold[open] > summary::after { background: #E10600; border-color: #E10600; color: #fff; }
+.ad-pill.ok { color: #fff; border-color: #fff; }
+.btn.armed { border-color: #E10600; color: #E10600; }
+.ad-gate-card .btn-primary { border: 0; color: #fff; }

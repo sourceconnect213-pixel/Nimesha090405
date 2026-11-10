@@ -1611,3 +1611,172 @@ body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height
 .pk-fees dd { margin: 0; }
 .pk-quote { margin: 16px 0 0; padding-top: 14px; border-top: 1px dashed var(--line); font-size: .86rem; color: var(--faint); }
 @media (max-width: 720px) { .pk-fees dl { grid-template-columns: 1fr; gap: 4px; } .pk-fees dd { margin-bottom: 8px; } }
+
+
+/* =====================================================================================================
+   v4 — red / white / black. Three colours, no tints: a true black page, white paper panels for the parts a
+   customer reads most closely (the price list, the chosen package, the estimate, the "let's talk" band) and
+   one red for the price, the primary action and the current selection. No gradients, no glow, no grey
+   shadows; corners small and the same everywhere; hairline rules. Everything above this block still sets
+   the layout — this block only changes what things are made of.
+   ===================================================================================================== */
+:root {
+  --bg: #000000; --bg-2: #0C0C0C; --surface: #121212; --surface-2: #181818;
+  --line: rgba(255, 255, 255, .14); --line-strong: rgba(255, 255, 255, .26);
+  --fg: #FFFFFF; --muted: #CFCFCF; --faint: #9C9C9C;
+  --cyan: #E10600; --blue: #E10600; --violet: #9E0400; --violet-soft: #FF8C85;
+  --grad: #E10600; --grad-ink: #E10600; --on-accent: #FFFFFF;
+  --r: 10px; --r-lg: 14px; --r-btn: 8px; --r-card: 12px; --r-icon: 8px;
+  --lift: none; --edge: none;
+  /* the white paper panels */
+  --paper: #FFFFFF; --paper-ink: #000000; --paper-muted: #3A3A3A; --paper-faint: #6B6B6B; --paper-line: rgba(0, 0, 0, .14); --paper-line-strong: rgba(0, 0, 0, .3);
+}
+html, body { background: var(--bg); }
+body::before, .hero::before { display: none; }   /* no hex pattern, no red glow behind the hero */
+
+/* type: one heavy sans, tight; the red full stop is the only accent in a headline */
+.display { font-weight: 800; letter-spacing: -0.035em; line-height: 1.0; }
+h1.display { font-size: clamp(2.6rem, 6.4vw, 5.2rem); letter-spacing: -0.045em; }
+.lead { color: var(--muted); }
+.eyebrow { font-family: var(--f-body); font-size: .9rem; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--cyan); gap: 10px; }
+.eyebrow::before { width: 22px; height: 2px; background: var(--cyan); opacity: 1; }
+.eyebrow[data-no]::before { content: ""; }
+
+/* buttons: solid red, or white outline on black; nothing shines */
+.btn { border-radius: var(--r-btn); font-weight: 800; letter-spacing: 0; box-shadow: none; }
+.btn::before { background: var(--bg); border-radius: calc(var(--r-btn) - 1px); }
+.btn::after { display: none; }
+.btn:not(.btn-primary):not(.btn-wa) { border: 1px solid var(--line-strong); background: transparent; color: var(--fg); }
+.btn:not(.btn-primary):not(.btn-wa)::before { display: none; }
+.btn-primary { background: var(--cyan); background-size: auto; box-shadow: none; }
+.btn-primary:hover { background: #FF1A12; }
+.btn:not(.btn-primary):not(.btn-wa):hover { border-color: var(--fg); }
+.btn:hover { transform: none; }
+.btn-wa { background: #1DA851; }
+
+/* header: black, white links, a red hairline on top (nav.js already draws the progress line) */
+.site-header.scrolled { background: rgba(0, 0, 0, .9); border-bottom-color: var(--line); }
+.nav-links a:not(.btn) { color: var(--fg); }
+.nav-links a:not(.btn)::after { background: var(--cyan); height: 2px; }
+.menu-btn { background: transparent; border-color: var(--line-strong); border-radius: var(--r-btn); }
+
+/* icon tiles: white stroke in a hairline square */
+.hex-icon, .pick .hex-icon, .svx-row .hex-icon { background: transparent; border: 1px solid var(--line-strong); border-radius: var(--r-icon); }
+.hex-icon svg, .float-card .ic svg, .term .ic svg { stroke: var(--fg); }
+.service.creative .hex-icon svg { stroke: var(--fg); }
+.float-card .ic, .term .ic { background: transparent; border: 1px solid var(--line-strong); border-radius: var(--r-icon); }
+
+/* surfaces: one flat near-black, hairline edge, no gradient, no blur blobs */
+.service, .price-card, .faq details, .term, .tl-body, .svc-box, .acc-card, .form-step, .summary, .float-card, .legal-sec, .cut,
+.rung, .menu-btn, .ad-card, .to-top { background: var(--surface); border-color: var(--line); box-shadow: none; border-radius: var(--r-card); }
+.band { background: var(--bg-2); border-block: 1px solid var(--line); }
+.site-footer { background: var(--bg); }
+.float-card { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.video-frame { background: var(--line-strong); box-shadow: none; }
+.video-frame > .hx3d-canvas { background: #000; }
+.tl-dot { background: var(--surface); border: 1px solid var(--line-strong); color: var(--fg); }
+.tl-item.on .tl-dot { background: var(--cyan); border-color: var(--cyan); }
+.tl-fill { background: var(--cyan); box-shadow: none; }
+.tl-item.on .tl-body { border-color: var(--line-strong); }
+.hero-points li::before { background: var(--cyan); box-shadow: none; }
+.price-card.featured { background: var(--surface); border: 1px solid var(--fg); box-shadow: none; }
+.input { background: var(--bg-2); border-radius: var(--r-btn); border-color: var(--line-strong); }
+.input:focus { border-color: var(--fg); box-shadow: none; }
+.opt-box { background: var(--bg-2); border-radius: var(--r-btn); }
+.opt input:checked + .opt-box { background: var(--surface-2); border-color: var(--cyan); }
+.opt input:checked + .opt-box .tick { background: var(--cyan); }
+.opt-box .tick::after { background: #fff; }
+.chip, .stepper li, .ad-pill { border-radius: 4px; }
+.stepper li.done { color: var(--fg); border-color: var(--fg); background: transparent; }
+.stepper li.done::before { color: var(--cyan); }
+.faq summary::after { color: var(--fg); }
+.faq details[open] summary::after { background: var(--cyan); border-color: var(--cyan); color: #fff; }
+.svx-row:focus-visible, .svx-panel.creative .svx-row:focus-visible { background: var(--surface); }
+.notice-bar { background: var(--cyan); }
+.wa-float { box-shadow: none; }
+.est-bar { background: rgba(0, 0, 0, .94); border-top: 1px solid var(--line); }
+
+/* ---- the white paper ----
+   The price list, the open package, the estimate and the "let's talk" band are printed on white. */
+.paper, #pricing, .pk-panel, .estimate, .cta-band, .summary, .ad-gate-card {
+  --bg: var(--paper); --bg-2: #F4F4F4; --surface: #FFFFFF; --surface-2: #F4F4F4;
+  --fg: var(--paper-ink); --muted: var(--paper-muted); --faint: var(--paper-faint);
+  --line: var(--paper-line); --line-strong: var(--paper-line-strong); --on-accent: #FFFFFF;
+  color: var(--paper-ink); background: var(--paper);
+}
+#pricing { border-block: 0; padding-block: clamp(56px, 8vw, 110px); }
+#pricing .section-head h2, #pricing .lead { color: var(--paper-ink); }
+#pricing .lead { color: var(--paper-muted); }
+.tabs-bar { border-bottom: 2px solid var(--paper-ink); }
+.tab { color: var(--paper-faint); font-weight: 800; }
+.tab[aria-selected="true"] { color: var(--paper-ink); background: transparent; }
+.tab::after, .tabs-ind { background: var(--cyan); }
+.rung { background: #fff; border-color: var(--paper-line); color: var(--paper-ink); border-radius: var(--r-card); }
+.rung-meta { color: var(--paper-faint); }
+.rung[aria-selected="true"] { background: var(--paper-ink); border-color: var(--paper-ink); color: #fff; transform: none; }
+.rung[aria-selected="true"] .rung-meta { color: #BDBDBD; }
+.rung[aria-selected="true"] .rung-price { color: #FF4D47; }
+.rung-badge { background: var(--cyan); color: #fff; border-radius: 4px; }
+.pk-panel { background: #fff; border: 1px solid var(--paper-ink); border-radius: var(--r-card); box-shadow: none; }
+.pk-panel::after { display: none; }
+.pk-panel .price-amt, .price-amt.grad-text, .grad-text { color: var(--cyan); }
+.pk-panel .price-from { color: var(--paper-faint); }
+.pk-panel h3 { color: var(--paper-ink); }
+.pk-badge { background: var(--paper-ink); color: #fff; border-radius: 4px; }
+.pk-badge:hover { background: var(--cyan); }
+.pk-tags span { border-color: var(--paper-line-strong); color: var(--paper-muted); border-radius: 4px; }
+.pk-list { border-top-color: var(--paper-line); color: var(--paper-muted); }
+.pk-list li::before { color: var(--cyan); }
+.pk-ex { border-top-color: var(--paper-line); color: var(--paper-faint); }
+.pk-blurb { color: var(--paper-muted); }
+.pk-fees { background: #fff; border-color: var(--paper-ink); border-radius: var(--r-card); }
+.pk-fees summary { color: var(--paper-ink); }
+.pk-fees summary::after { color: var(--paper-ink); }
+.pk-fees-body, .pk-fees dd { color: var(--paper-muted); }
+.pk-fees dt { color: var(--paper-ink); }
+.pk-quote { color: var(--paper-faint); border-top-color: var(--paper-line); }
+.ladder-note, .ladder-intro, #pricing .terms-line { color: var(--paper-muted); }
+#pricing .terms-line b { color: var(--paper-ink); }
+#pricing .price-card { background: #fff; border-color: var(--paper-line); color: var(--paper-ink); }
+#pricing .price-card ul { color: var(--paper-muted); }
+#pricing .price-card .price-amt { color: var(--cyan); }
+#pricing .price-card.featured { border-color: var(--paper-ink); }
+#pricing .price-card .badge { background: var(--paper-ink); color: #fff; }
+#pricing .price-usd, #pricing .price-from { color: var(--paper-faint); }
+#pricing .btn:not(.btn-primary) { border-color: var(--paper-ink); color: var(--paper-ink); }
+#pricing .btn:not(.btn-primary):hover { background: var(--paper-ink); color: #fff; }
+.svc-body .pk-panel .btn:not(.btn-primary), .pk-panel .btn:not(.btn-primary) { border-color: var(--paper-ink); color: var(--paper-ink); }
+/* the estimate (project form) */
+.estimate { background: #fff; border: 1px solid var(--paper-ink); border-radius: var(--r-card); box-shadow: none; color: var(--paper-ink); }
+.estimate .est-label, .estimate .est-usd, .estimate .est-note, .estimate .est-rate { color: var(--paper-faint); }
+.estimate .est-total { color: var(--cyan); }
+.estimate .est-total .to { color: var(--paper-muted); }
+.estimate .est-meta div { background: #F4F4F4; border-color: var(--paper-line); color: var(--paper-ink); }
+.estimate .est-meta span { color: var(--paper-faint); }
+.estimate .est-lines li { color: var(--paper-muted); }
+.estimate .est-lines li b { color: var(--paper-ink); }
+.estimate .btn:not(.btn-primary) { border-color: var(--paper-ink); color: var(--paper-ink); }
+/* the "let's talk" band */
+.cta-band { background: #fff; border: 0; border-radius: var(--r-card); color: var(--paper-ink); }
+.cta-band::before, .cta-band::after { display: none; }
+.cta-band h2, .cta-band .lead { color: var(--paper-ink); }
+.cta-band .lead { color: var(--paper-muted); }
+.cta-band .btn:not(.btn-primary):not(.btn-wa) { border-color: var(--paper-ink); color: var(--paper-ink); }
+.summary { background: #fff; border-color: var(--paper-ink); color: var(--paper-ink); }
+.summary pre { background: #F4F4F4; color: var(--paper-muted); border-color: var(--paper-line); }
+
+/* the service picker on the home page: a plain list with hairline rules */
+.pick { border-radius: var(--r-card); }
+.pick-t em, .pick-go { color: var(--cyan); }
+
+/* the phone layout keeps its swipe lists; the paper keeps its 16px gutter */
+@media (max-width: 700px) { #pricing { padding-block: 48px; } }
+/* v4 fixes: no grey fades under the header / above the bottom (they smudge the white paper); the red button has no
+   stray outline; four pricing tabs scroll sideways on a phone instead of overlapping */
+.site-header::after, body::after { display: none; }
+.btn-primary, .btn-primary:focus-visible { border: 0; outline-offset: 3px; }
+.btn-primary::before { display: none; }
+.pk-panel .btn-primary, .estimate .btn-primary, .cta-band .btn-primary { color: #fff; }
+@media (max-width: 560px) { .tab { flex: 0 0 auto; min-width: max-content; padding: 0 14px; } .tabs-bar { gap: 4px; } }
+.btn-wa, .btn-wa:focus-visible { border: 0; }
+.btn-wa::before { display: none; }
