@@ -37,7 +37,12 @@
         fillMissing(conf.packages, built.packages); fillMissing(conf.addons, built.addons);
         window.HEXORA = Object.assign({}, built, conf);
       }
-      if (svc && Array.isArray(svc.list)) window.HX_SERVICES = Object.assign({}, window.HX_SERVICES, svc);
+      if (svc && Array.isArray(svc.list)) {
+        // a service whose built-in text is versioned (pkgv, the Mobile Apps page) replaces an older saved copy of itself
+        const bl = (window.HX_SERVICES && window.HX_SERVICES.list) || [];
+        svc.list = svc.list.map(x => { const b = bl.find(y => y.slug === x.slug); return b && b.pkgv && x.pkgv !== b.pkgv ? b : x; });
+        window.HX_SERVICES = Object.assign({}, window.HX_SERVICES, svc);
+      }
       const tx = c.texts ? JSON.parse(c.texts) : null;   // text changes from the admin panel's Pages tab (sitetext.js applies them)
       if (tx && typeof tx === "object" && !Array.isArray(tx)) window.HX_TEXTS = tx;
     } catch (e) { /* a broken copy: keep the built-in data */ }

@@ -76,7 +76,7 @@ window.HX_SERVICES = {
   list: [
     /* ---------------- Development ---------------- */
     {
-      slug: "mobile-apps", cat: "dev", name: "Mobile Apps", anim: "phone",
+      slug: "mobile-apps", cat: "dev", name: "Mobile Apps", anim: "phone", pkgv: 2,   // pkgv: this text goes with the approved package list (config.js packagesVersion); an older saved copy is replaced
       icon: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
       short: "Android apps Flutter වලින්. Fixed LKR packages 5ක් + custom",
       summary: "Flutter වලින් හදන Android apps. LKR 14,000 ඉඳන් fixed price packages 5ක්, ලොකු projects වලට custom quote (iOS / Web එක්ක).",

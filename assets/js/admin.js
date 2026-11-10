@@ -255,7 +255,12 @@
     if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageQuote"].forEach(k => { c[k] = clone(d[k]); });
     ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
-    if (S.data.services && S.data.services.list) S.data.services.list.forEach(x => { if (x.packages === undefined && x.slug === "mobile-apps") x.packages = true; });
+    if (S.data.services && S.data.services.list) {
+      const bl = (window.HX_SERVICES && window.HX_SERVICES.list) || [];
+      // a service whose built-in text is versioned (pkgv, the Mobile Apps page) replaces an older saved copy of itself
+      S.data.services.list = S.data.services.list.map(x => { const b = bl.find(y => y.slug === x.slug); return b && b.pkgv && x.pkgv !== b.pkgv ? clone(b) : x; });
+      S.data.services.list.forEach(x => { if (x.packages === undefined && x.slug === "mobile-apps") x.packages = true; });
+    }
     if (S.data.services && !S.data.services.home && window.HX_SERVICES && window.HX_SERVICES.home) S.data.services.home = clone(window.HX_SERVICES.home);
   }
   // the Pages tab's text changes: { "original text": "new text" }
