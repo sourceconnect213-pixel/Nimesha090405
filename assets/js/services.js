@@ -97,7 +97,10 @@ window.HX_SERVICES = {
         { q: "Screen එකක් කියන්නේ මොකක්ද?", a: "App එකේ වෙන වෙනම page එකක් (Ex: Login, Home, Cart, Profile). හැම package එකකම screens ගණනක් තියෙනවා (3, 5, 8, 12, 20). ඊට වැඩි screens හෝ package එකේ නැති features ඕන නම් වෙනම quote එකක් දෙනවා." },
         { q: "iPhone (iOS) app එකක් හදන්න පුළුවන්ද?", a: "Package 01 – 05 Android only. iOS හෝ Web version එකක් ඕන නම් Custom App Development (LKR 299,000 ඉඳන්) එකෙන් scope එකට quote කරනවා. Apple developer account එක (USD 99 / අවුරුද්දට) ඔයාගේ." },
         { q: "Price එකට hosting / Firebase / Play Store fees include ද?", a: "නෑ. Package price එක development charge එක විතරයි. Firebase / database usage, hosting, domain, PayHere merchant fees, Google developer account (USD 25 එකපාරයි) ඔයාගේ accounts වලින් වෙනම. Basic සහ Standard apps වලට server එකක් ඕනම නෑ." },
-        { q: "Play Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා — app එක ඔයාගේ නමින්. Google USD 25 එකපාරයි (Google ට)." }
+        { q: "Play Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා — app එක ඔයාගේ නමින්. Google USD 25 එකපාරයි (Google ට)." },
+        { q: "Quote එකක් ගන්න මොනවද කියන්න ඕන?", a: "Business එක, package එක, screens ගණන සහ ඒවායේ නම්, users / roles (customer, staff, admin), save කරන data (Ex: products, orders), uploads (photos / files, කීයක්), payments, notifications, external APIs, දැනට තියෙන Firebase / Play Store / domain accounts, content ලැබෙන දවස සහ ඕන දවස. Project form එකේ Idea එකේ මේවා ලියන්න, call එකෙන් ඉතුරු ටික අහනවා." },
+        { q: "Package එකේ නැති feature එකක් ඕන නම්?", a: "ඒකට වෙනම ලිඛිත quote එකක් (change request) දෙනවා. Package එකේ දැනටම include දෙයකට දෙපාරක් ගණන් වෙන්නේ නෑ. Scope එක package එකට වඩා ගොඩක් ලොකු නම් ඊළඟ package එක හෝ Custom එක recommend කරනවා." },
+        { q: "Urgent ඕන නම්?", a: "App packages වලට automatic urgent charge එකක් නෑ. ඉක්මනට ඕන නම් form එකේ Speed එක Urgent කරන්න — පුළුවන්ද කියලා බලලා, ඕන නම් ගණන call එකෙන් confirm කරනවා." }
       ]
     },
     {

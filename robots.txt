@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin/
 
-Sitemap: https://teamhexoramain-creator.github.io/Nimesha090405/sitemap.xml
+Sitemap: https://sourceconnect213-pixel.github.io/Nimesha090405/sitemap.xml
