@@ -61,10 +61,10 @@ window.HX_SERVICES = {
       { time: "ඊට පස්සේ", t: "Support", d: "{support} එකක් free bug fixes. ඊට පස්සේ monthly maintenance plan එකක් ගන්න පුළුවන්." }
     ],
     faq: [
-      { q: "Project එකක් ඉවර කරන්න කොච්චර කල් යනවද?", a: "Logo එකකට දවස් 3ක් විතර, reel එකකට දවස් 1 – 2ක්. Basic Android app එකකට දවස් 5 – 7ක්, Firebase app එකකට සති 3 – 5ක්, ලොකු systems වලට මාස 2 – 4 ක් යන්න පුළුවන්. Project form එකේ ඔයාගේ project එකට ගැළපෙන time එක පෙන්නනවා." },
+      { q: "Project එකක් ඉවර කරන්න කොච්චර කල් යනවද?", a: "Logo එකකට දවස් 3ක් විතර, reel එකකට දවස් 1 – 2ක්. Landing page එකකට දවස් 3 – 5ක්, WordPress site එකකට සති 3 – 4ක්, Basic Android app එකකට දවස් 5 – 7ක්, Firebase app එකකට සති 3 – 5ක්, ලොකු systems වලට මාස 2 – 3ක් යන්න පුළුවන්. හැම package එකකම time එක පෙන්නනවා." },
       { q: "පටන් ගන්න මට මොකද ඕන?", a: "ඔයාගේ idea එක විතරයි. මොකද ඕන, කවුද use කරන්නේ කියලා කියන්න. ඔයාට කැමති apps, logos, videos තියෙනවා නම් ඒවත් එවන්න. Design සහ technical වැඩ ඔක්කොම අපි කරනවා." },
       { q: "Play Store / App Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා. එතකොට app එක ඔයාගේ නමින් තියෙන්නේ. Google USD 25 එකපාරයි, Apple USD 99 අවුරුද්දට (ඒ fees ඔයාගේ). App packages 01 – 05 Android only." },
-      { q: "App package price එකට hosting / Firebase fees include ද?", a: "නෑ. Package prices development charges විතරයි (fixed LKR). Firebase / database usage, hosting, domain, PayHere fees, Google / Apple developer accounts ඕන වුණොත් ඔයාගේ accounts වලින් වෙනම. Basic / Standard apps වලට server එකක් ඕනම නෑ." },
+      { q: "Package price එකට hosting / domain / Firebase fees include ද?", a: "නෑ. App සහ website package prices development charges විතරයි (fixed LKR). Hosting, domain, Firebase / Supabase / database usage, email, PayHere fees, Google / Apple developer accounts ඕන වුණොත් ඔයාගේ accounts වලින් වෙනම. Basic / Standard apps වලටයි Basic / Standard websites වලටයි server එකක් ඕනම නෑ." },
       { q: "Source code එක මට ලැබෙනවද?", a: "ඔව්. Final payment එක කළාම full source code එක සහ project එකේ logins ඔක්කොම ඔයාට දෙනවා." },
       { q: "Launch කළාට පස්සේ මොකද වෙන්නේ?", a: "{support} එකක් bug fixes free. ඊට පස්සේ updates, අලුත් features, server checks වලට monthly maintenance plan එකක් ගන්න පුළුවන්." },
       { q: "Logo එකකට revisions කීයක් දෙනවද?", a: "Concepts 3ක් පෙන්නනවා. ඔයාට කැමති එක revisions 3ක් වෙනකන් free. Final files PNG, JPG, SVG, PDF විදියට දෙනවා, print වලටයි online වලටයි දාන්න පුළුවන්." },
@@ -104,44 +104,51 @@ window.HX_SERVICES = {
       ]
     },
     {
-      slug: "websites", cat: "dev", name: "Websites", anim: "browser",
+      slug: "websites", cat: "dev", name: "Websites", anim: "browser", pkgv: 3,   // pkgv: this text goes with the approved website package list
       icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',
-      short: "Business, shop, portfolio sites. Fast සහ SEO ready",
-      summary: "Business, shop, portfolio sites. Phone එකේ ලස්සනට පෙන්නන, ඉක්මනට load වෙන, Google එකේ හොයාගන්න පුළුවන් sites.",
-      intro: "ඔයාගේ business එක online ගෙනියන්න website එකක්. Phone, tablet, computer හැම එකකම ලස්සනට පේන, ඉක්මනට load වෙන විදියට හදනවා.",
-      tags: ["Next.js", "SEO", "Hosting"],
+      short: "Landing page, business site, WordPress, online shop. Fixed LKR packages",
+      summary: "Landing pages, business sites, WordPress CMS sites සහ WooCommerce online shops. LKR 10,000 ඉඳන් fixed price packages, phone එකේ ලස්සනට පේන, Google එකේ හොයාගන්න පුළුවන්.",
+      intro: "ඔයාගේ business එක online ගෙනියන්න website එකක්: එක page landing site එකක ඉඳන් WordPress CMS site එකක් සහ online shop එකක් වෙනකන්. Package එකේ කියලා තියෙන pages, items විතරයි — ඊට වැඩි දෙයක් ඕන නම් වෙනම quote එකක්.",
+      tags: ["Static", "WordPress", "WooCommerce"],
+      packages: true, pkgCat: "web", pkgKeys: ["web-basic", "web-standard", "web-professional", "web-ecommerce"],
       includes: [
-        "Small site එකක pages 5 ට වෙනකන්",
-        "Phone වලට ගැළපෙන design",
-        "Google ready (SEO)",
-        "Domain & hosting setup ඕන නම්",
-        "Launch උනාට පස්සේ monthly maintenance plan එකක් ගන්න පුළුවන්"
+        "Fixed LKR development price (dollar rate එකට වෙනස් වෙන්නේ නෑ)",
+        "Phone, tablet, computer හැම එකකම ලස්සනට පේන design",
+        "Basic SEO, sitemap, HTTPS setup",
+        "Domain / hosting setup — ඒ fees ඔයාගේ accounts වලින් වෙනම",
+        "Revisions (package එක අනුව 1 – 2), දවස් 30ක් bug-fix support",
+        "{advance} advance, final payment එකෙන් පස්සේ source files ඔයාට"
       ],
-      prices: [{ type: "website", featured: true }, { extra: "hosting" }, { maint: "small" }],
+      prices: [],
       faq: [
-        { q: "Website එකක් හදන්න කොච්චර කල් යනවද?", a: "පොඩි site එකකට (pages 5 ට වෙනකන්) සති 2 – 3 ක් විතර. Project form එකේ ඔයාගේ site එකට ගැළපෙන time එක පෙන්නනවා." },
-        { q: "Domain එක සහ hosting එක ගණන් වලට include ද?", a: "Domain & hosting setup එක අපි කරනවා ({extra:hosting}). ඒත් domain / hosting fees වෙනම ගෙවන්න ඕන." },
-        { q: "Pages 5 කට වැඩි ඕන නම්?", a: "Medium site එකක් (pages 6 – 15) නම් price එක ×1.6, large (16+) නම් ×2.4. Project form එකෙන් හරියටම බලන්න පුළුවන්." }
+        { q: "Website එකක් හදන්න කොච්චර කල් යනවද?", a: "Basic landing page එකකට දවස් 3 – 5ක්, Standard site එකකට දවස් 10 – 15ක්, WordPress site එකකට සති 3 – 4ක්, online shop එකකට සති 5 – 7ක් විතර — ඔයාගේ content (text, photos) වෙලාවට ලැබුණොත්." },
+        { q: "Domain එක සහ hosting එක ගණන් වලට include ද?", a: "Setup එක අපි කරනවා, ඒත් fees ඔයාගේ: domain අවුරුද්දකට (.com.lk LKR 1,000 වගේ), hosting ඕන නම් (Basic / Standard sites වලට free static hosting ඇති; WordPress / shop වලට WordPress hosting plan එකක් — Ex: USD 39 ඉඳන් අවුරුද්දට). Lifetime free hosting කියලා එකක් නෑ." },
+        { q: "Pages වැඩි ඕන නම්? Online payments ඕන නම්?", a: "Package එකේ limits (pages, items, products) පැනුවොත් වෙනම quote එකක් හෝ ඊළඟ package එක. Online payments (PayHere), cart, customer accounts E-commerce package එකේ. Login, roles, dashboards ඕන නම් Business Systems බලන්න." },
+        { q: "Ongoing maintenance?", a: "දවස් 30 bug-fix support එකට පස්සේ updates, security patches, content changes වලට වෙනම maintenance plan එකක් (Maintenance & Hosting බලන්න)." }
       ]
     },
     {
-      slug: "business-systems", cat: "dev", name: "Business Systems", anim: "dashboard",
+      slug: "business-systems", cat: "dev", name: "Business Systems", anim: "dashboard", pkgv: 3,
       icon: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
-      short: "POS, booking, stock සහ class management systems",
-      summary: "POS, booking, stock, class සහ student management systems. Reports ඔක්කොම ඕන තැනක ඉඳන් බලන්න පුළුවන්.",
-      intro: "POS, booking, stock, class සහ student management වගේ වැඩ computer එකෙන් හරි phone එකෙන් හරි කරන්න පුළුවන් web system එකක්. Admin panel එක දැනටම include.",
-      tags: ["Dashboards", "Reports", "User roles"],
+      short: "Class, stock, appointment, customer systems සහ custom portals",
+      summary: "Login, roles, database සහ reports එක්ක business web systems: class records, stock, appointments, customer requests. ලොකු portals (student / employee / multi-store) custom quote එකෙන්.",
+      intro: "ඔයාගේ business එකේ වැඩ computer එකෙන් හරි phone එකෙන් හරි කරන්න පුළුවන් web system එකක්: login, user roles, database, dashboard, reports. Advanced Business Web System package එක fixed price; ලොකු portals වලට Custom quote.",
+      tags: ["Dashboards", "User roles", "Supabase"],
+      packages: true, pkgCat: "web", pkgKeys: ["web-advanced", "web-custom"],
       includes: [
-        "Dashboard + Admin panel (include)",
-        "Reports & user roles",
+        "Login, roles (Admin / Staff / Viewer), database (Supabase PostgreSQL)",
+        "Dashboard, reports / charts, CSV export",
+        "Business workflow එකක් (Ex: class records, appointments, stock, requests)",
         "ඕන device එකක වැඩ කරනවා",
-        "ඔයාගේ team එකට training & user guide ඕන නම්"
+        "Admin training, revisions 3ක්, දවස් 30ක් bug-fix support",
+        "Database / hosting usage ඔයාගේ accounts වලින් වෙනම (Supabase Pro USD 25 / මාසයට ඉඳන්)"
       ],
-      prices: [{ type: "webapp", featured: true }, { extra: "training" }, { maint: "medium" }],
+      prices: [],
       faq: [
-        { q: "System එකක් හදන්න කොච්චර කල් යනවද?", a: "පොඩි system එකකට සති 5 – 7 ක් විතර. ලොකු systems වලට මාස 2 – 4 ක් යන්න පුළුවන්." },
-        { q: "Admin panel එක වෙනම ගෙවන්න ඕනද?", a: "නෑ. Web system එකක admin panel එක දැනටම include." },
-        { q: "මගේ staff එකට use කරන විදිය කියලා දෙනවද?", a: "ඔව්. Training & user guide එක ඕන නම් add කරන්න පුළුවන් ({extra:training})." }
+        { q: "System එකක් හදන්න කොච්චර කල් යනවද?", a: "Advanced Business Web System එකකට සති 8 – 12ක් විතර. Custom portals වලට project එක අනුව, quote එකේ timeline එක." },
+        { q: "Admin panel එක වෙනම ගෙවන්න ඕනද?", a: "නෑ. Dashboard / admin එක package එකේම include (modules 3, reports 2 වගේ limits එක්ක). ඊට වැඩි modules, workflows ඕන නම් වෙනම quote එකක්." },
+        { q: "POS, accounting, payroll වගේ ඒවා?", a: "ඒවා Advanced package එකේ include නෑ — Custom Web Portal (LKR 399,000 ඉඳන්) එකෙන් scope එකට quote කරනවා." },
+        { q: "මගේ staff එකට use කරන විදිය කියලා දෙනවද?", a: "ඔව්. Admin training පැය 1ක් package එකේ include. ලොකු team එකකට වැඩි training ඕන නම් add කරන්න පුළුවන් ({extra:training})." }
       ]
     },
     {

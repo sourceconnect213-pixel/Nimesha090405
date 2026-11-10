@@ -1,5 +1,6 @@
 /* HEXORA — "Project eka patan ganna" form + live estimate
-   Two tracks: "dev" (apps / websites / systems) and "creative" (logo, design, video). */
+   Tracks: "pkg" (mobile app packages), "web" (website packages), "creative" (logo, design, video);
+   "dev" (the old generic type / size / features estimate) stays in the code but is no longer offered. */
 (function () {
   "use strict";
   const C = window.HEXORA, P = window.HXPrice;
@@ -38,8 +39,9 @@
   }
   function buildOptions() {
     $("#opt-type").innerHTML = Object.entries(C.types).filter(([, t]) => t.kind !== "app" && t.kind !== "both").map(([k, t]) => tile("radio", "type", k, t.label, t.note, "")).join("");
+    // one radio group for every package; a label is shown only on its category's track (data-track, see applyTrack)
     $("#opt-pkg").innerHTML = Object.entries(C.packages || {}).map(([k, p]) =>
-      '<label class="opt pkg"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
+      '<label class="opt pkg" data-track="' + ((p.cat || "app") === "web" ? "web" : "pkg") + '"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
       '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + esc([p.platform, p.screens, p.time].filter(Boolean).join(" · ") || ((p.includes || []).length + " features")) + ' · select කළාම බලන්න</span><ul class="pkg-inc">' +
       [p.platform, p.screens].filter(Boolean).map(x => '<li class="meta">' + esc(x) + "</li>").join("") + (p.includes || []).map(x => "<li>" + esc(x) + "</li>").join("") +
       (p.excludes || []).map(x => '<li class="no">' + esc(x) + "</li>").join("") + "</ul></span>" + (p.badge ? '<span class="pkg-badge">' + esc(p.badge) + "</span>" : "") + "</label>").join("");   // the badge comes after .opt-box so "input:checked + .opt-box" still matches
@@ -73,7 +75,9 @@
   /* ---------- read selection ---------- */
   const val = name => { const el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ""; };
   const vals = name => $$('input[name="' + name + '"]:checked', form).map(i => i.value);
-  const track = () => val("track") || "dev";
+  const track = () => val("track") || "pkg";
+  const isPkg = t => t === "pkg" || t === "web";   // both package tracks use the package estimate
+  const pkgCatOf = t => (t === "web" ? "web" : "app");
   function qtyOf(k) {
     const el = form.querySelector('input[name="' + qName(k) + '"]');
     const n = el ? parseInt(el.value, 10) : 0;
@@ -98,6 +102,8 @@
     const t = track();
     $$("[data-track]", form).forEach(el => { el.hidden = el.getAttribute("data-track").split(/\s+/).indexOf(t) === -1; });
     $$("[data-tracks]").forEach(el => { el.hidden = el.getAttribute("data-tracks").split(/\s+/).indexOf(t) === -1; });
+    // a package of the other category stays unchecked when the track changes
+    if (isPkg(t)) { const cur = C.packages[val("pkg")]; if (cur && (cur.cat || "app") !== pkgCatOf(t)) $$('input[name="pkg"]', form).forEach(i => { i.checked = false; }); }
     // number what is shown 1, 2, 3 … (steps 4 and 5 belong to some tracks only, so the numbers must not skip)
     let n = 0;
     $$("[data-stepper]").forEach(li => { if (!li.hidden) li.textContent = li.textContent.replace(/^\d+/, ++n); });
@@ -108,7 +114,7 @@
     const note = $(".estimate .est-note");
     if (note) note.textContent = t === "dev"
       ? "මේක estimate එකක්. Final price එක free call එකෙන් පස්සේ fixed quote එකක් විදියට දෙනවා. Google / Apple / domain fees වෙනම."
-      : t === "pkg"
+      : isPkg(t)
         ? (C.packagesFixedLkr
           ? "Package එකේ fixed development price එක. Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න — ඒකට වෙනම quote එකක්. Urgent ඕන නම් call එකෙන් confirm කරනවා. " + (C.packageNote || "")
           : "Package එකයි තෝරපු වෙනස්කම් ටිකයි එකතු කරපු price එක. අද dollar rate එකට අනුව වෙනස් වෙනවා. Final price එක call එකෙන් පස්සේ confirm කරනවා. Google / Apple fees වෙනම.")
@@ -160,7 +166,7 @@
       return { kind: "creative", lo: e.totalLKR, hi: null, usdText: "≈ USD " + e.usd, time: "දවස් " + e.daysLow + " – " + e.daysHigh,
         advance: e.advanceLKR, lines: e.lines, raw: e };
     }
-    if (track() === "pkg") {
+    if (isPkg(track())) {
       const e = P.estimatePackage(C, pkgSel(), rate.rate);
       if (!e) return null;
       return { kind: "pkg", lo: e.totalLKR, hi: null, usdText: "≈ USD " + e.usd.toLocaleString("en-US"), time: e.time || ("සති " + e.weeksLow + " – " + e.weeksHigh),
@@ -178,8 +184,8 @@
     const e = currentEstimate();
     const total = $("#est-total"), bar = $("#bar-total");
     if (!e) {
-      total.textContent = track() === "creative" ? "Items තෝරගන්න" : track() === "pkg" ? "Package එක තෝරගන්න" : "Type & size තෝරගන්න";
-      bar.textContent = track() === "creative" ? "Items තෝරගන්න" : track() === "pkg" ? "Package එක තෝරගන්න" : "Type එක තෝරගන්න";
+      total.textContent = track() === "creative" ? "Items තෝරගන්න" : isPkg(track()) ? "Package එක තෝරගන්න" : "Type & size තෝරගන්න";
+      bar.textContent = track() === "creative" ? "Items තෝරගන්න" : isPkg(track()) ? "Package එක තෝරගන්න" : "Type එක තෝරගන්න";
       $("#est-usd").textContent = "";
       ["#est-weeks", "#est-adv", "#est-maint"].forEach(s => $(s).textContent = "—");
       $("#est-lines").innerHTML = "";
@@ -222,7 +228,7 @@
   /* ---------- stepper / completed sections ---------- */
   function stepDone(n) {
     const v = id => ($("#" + id).value || "").trim();
-    const dev = track() === "dev", pkg = track() === "pkg";
+    const dev = track() === "dev", pkg = isPkg(track());
     switch (n) {
       case 1: return v("f-name").length > 1 && phoneOk(v("f-phone"));
       case 2: return v("f-desc").length >= 15;
@@ -248,7 +254,7 @@
   }
   const emailBad = em => !!em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
   function checks() {
-    const dev = track() === "dev", pkg = track() === "pkg";
+    const dev = track() === "dev", pkg = isPkg(track());
     return {
       name: $("#f-name").value.trim().length < 2,
       phone: !phoneOk($("#f-phone").value),
@@ -348,7 +354,7 @@
     } else if (est.kind === "pkg") {
       const ps = pkgSel(), p = C.packages[ps.pkg];
       const ad = ps.addons.map(k => C.addons[k].label).concat(Object.keys(ps.qty).map(k => C.addons[k].label + " × " + ps.qty[k]));
-      L.push("*Project — Mobile App Package*");
+      L.push(p.cat === "web" ? "*Project — Website Package*" : "*Project — Mobile App Package*");
       L.push("Package: " + p.label + " (" + (p.from ? "from " : "") + pk(p.lkr) + (p.from ? "+" : "") + (p.platform ? " · " + p.platform : "") + ")");
       L.push("Changes / add-ons: " + (ad.length ? ad.join(", ") : "-"));
     } else {
@@ -526,12 +532,10 @@
   const pick = (name, v) => { const el = form.querySelector('input[name="' + name + '"][value="' + v + '"]'); if (el) el.checked = true; };
   const qTrack = q.get("track"), qType = q.get("type"), qItem = q.get("item");
   const qPkg = q.get("package"), own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k);
-  if (qPkg && own(C.packages, qPkg)) { pick("track", "pkg"); pick("pkg", qPkg); }
-  else if (qTrack === "pkg") pick("track", "pkg");
-  if (qType && own(C.types, qType)) {
-    if (C.types[qType].kind === "app" || C.types[qType].kind === "both") pick("track", "pkg");
-    else { pick("track", "dev"); pick("type", qType); }
-  }
+  if (qPkg && own(C.packages, qPkg)) { pick("track", (C.packages[qPkg].cat || "app") === "web" ? "web" : "pkg"); pick("pkg", qPkg); }
+  else if (qTrack === "pkg" || qTrack === "web") pick("track", qTrack);
+  else if (qTrack === "dev") pick("track", "web");   // old links: the generic estimate is now the website packages
+  if (qType && own(C.types, qType)) pick("track", C.types[qType].kind === "web" ? "web" : "pkg");   // old ?type= links
   if (qTrack === "creative" || (qItem && own(C.creative, qItem))) {
     pick("track", "creative");
     if (qItem && C.creative[qItem] && !qtyOf(qItem)) form.querySelector('input[name="cr-' + qItem + '"]').value = 1;

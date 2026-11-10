@@ -57,9 +57,15 @@
 
   // the Mobile Apps page shows the app packages (set "packages" in the admin panel; old saved data without it: slug mobile-apps)
   const showPk = s => !!C.packages && (s.packages === true || (s.packages === undefined && s.slug === "mobile-apps"));
-  const pricesOf = s => (s.prices || []).filter(r => !(showPk(s) && r.type && C.types[r.type] && C.types[r.type].kind !== "web"));
+  const pkCat = s => s.pkgCat || "app";   // which package list a service page shows
+  // a service that shows packages does not also show the old generic project-type prices of that kind
+  const pricesOf = s => (s.prices || []).filter(r => !(showPk(s) && r.type && C.types[r.type] && (pkCat(s) === "web" ? C.types[r.type].kind === "web" : C.types[r.type].kind !== "web")));
   function ctaHref(s) {
-    if (showPk(s)) return "start-project.html?track=pkg";
+    if (showPk(s)) return "start-project.html?track=" + (pkCat(s) === "web" ? "web" : "pkg");
+    for (const ref of s.prices || []) {
+      const r = refOf(ref);
+      if (r && r.kind === "type" && C.types[r.key].kind === "web") return "start-project.html?track=web";
+    }
     for (const ref of s.prices || []) {
       const r = refOf(ref);
       if (r && r.kind === "type") return "start-project.html?type=" + r.key;
@@ -183,7 +189,7 @@
           '<p class="lead">මේක පටන් ගන්න ගණන්. අද dollar rate එකෙන් LKR වලට auto මාරු වෙනවා. Final price එක ඔයාට ඕන features, items ගණන අනුව වෙනස් වෙනවා.</p>' +
           '<span class="rate-pill" data-rate-pill><span class="live"></span><span data-rate-text>1 USD = LKR ' + Number(C.fallbackRate).toFixed(2) + " · approx.</span></span></div>" +
         (pricesOf(s).length ? '<div class="prices svc-prices">' + pricesOf(s).map(priceCard).join("") + "</div>" : "") +
-        (showPk(s) && window.HXPkg ? '<div class="rv">' + window.HXPkg.html(C, P) + "</div>" : "") +
+        (showPk(s) && window.HXPkg ? '<div class="rv">' + window.HXPkg.html(C, P, pkCat(s), s.pkgKeys) + "</div>" : "") +
       "</div></section>" +
 
       '<section id="svc-faq"><div class="wrap faq-wrap">' +

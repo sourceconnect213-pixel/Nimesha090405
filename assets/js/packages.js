@@ -8,8 +8,9 @@
   const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const weeks = p => { if (p.time) return p.time; if (!p.weeks) return ""; const lo = Math.max(1, Math.round(p.weeks)); return "සති " + lo + " – " + Math.max(lo + 1, Math.round(p.weeks * 1.3)); };   // same range as the estimate (pricing.js)
 
-  function html(C, P) {
-    const fixed = !!C.packagesFixedLkr, keys = Object.keys(C.packages || {});
+  // cat: "app" (default) or "web"; only: optional list of package keys to show
+  function html(C, P, cat, only) {
+    const fixed = !!C.packagesFixedLkr, list = P.packagesOf(C, cat || "app", only), keys = Object.keys(list);
     if (!keys.length) return "";
     const first = keys.find(k => C.packages[k].badge) || keys[0];   // the most popular package is open to begin with
     let rungs = "", panels = "";
@@ -34,15 +35,17 @@
         ((p.excludes || []).length ? '<div class="pk-ex"><b>Include නෑ</b><ul>' + p.excludes.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></div>" : "") +
         (p.infra ? '<div class="pk-ex pk-infra"><b>වෙනම ගෙවන fees</b><p>' + esc(p.infra) + "</p></div>" : "") +
         '<a class="btn btn-primary" href="' + href + '">' + (from ? "Quote එකක් ගන්න" : "මේක තෝරගන්න") + "</a></div>";
+      // (the project form opens the right track from ?package=)
     });
     const foot = (C.packageTerms || []).length || C.packageNote
       ? '<p class="ladder-note">' + (C.packageTerms || []).map(esc).join(" · ") + ((C.packageTerms || []).length && C.packageNote ? "<br>" : "") + esc(C.packageNote || "") + "</p>" : "";
     // what the customer pays third parties (store accounts, Firebase, PayHere, domain) + the quote wording
-    const fees = (C.packageFees || []).length || C.packageQuote
-      ? '<details class="pk-fees"><summary><span>මොනවද වෙනම ගෙවන්නේ? <small>Google / Apple accounts, Firebase, PayHere, domain</small></span></summary><div class="pk-fees-body">' +
-        ((C.packageFees || []).length ? "<dl>" + C.packageFees.map(f => "<dt>" + esc(f.t) + "</dt><dd>" + esc(f.d) + "</dd>").join("") + "</dl>" : "") +
+    const feeList = (cat === "web" ? C.packageFeesWeb : C.packageFees) || [];
+    const fees = feeList.length || C.packageQuote
+      ? '<details class="pk-fees"><summary><span>මොනවද වෙනම ගෙවන්නේ? <small>' + (cat === "web" ? "Domain, hosting, database, email, PayHere" : "Google / Apple accounts, Firebase, PayHere, domain") + '</small></span></summary><div class="pk-fees-body">' +
+        (feeList.length ? "<dl>" + feeList.map(f => "<dt>" + esc(f.t) + "</dt><dd>" + esc(f.d) + "</dd>").join("") + "</dl>" : "") +
         (C.packageQuote ? '<p class="pk-quote"><b>Quote එකේ ලියන්නේ:</b> ' + esc(C.packageQuote) + "</p>" : "") + "</div></details>" : "";
-    return '<div class="ladder" data-ladder><div class="ladder-list" tabindex="0" role="tablist" aria-label="App packages" aria-orientation="vertical">' + rungs + '</div><div class="ladder-panel">' + panels + "</div></div>" + foot + fees;
+    return '<div class="ladder" data-ladder><div class="ladder-list" tabindex="0" role="tablist" aria-label="' + (cat === "web" ? "Website packages" : "App packages") + '" aria-orientation="vertical">' + rungs + '</div><div class="ladder-panel">' + panels + "</div></div>" + foot + fees;
   }
   root.HXPkg = { html: html };
 })(window);

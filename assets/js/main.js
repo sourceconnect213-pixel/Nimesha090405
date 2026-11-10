@@ -14,13 +14,19 @@
 
   /* ---------- package ladder + "from" prices (built first so every later step sees them) ---------- */
   const homePk = $("#home-packages");
-  if (homePk && window.HXPkg && P && C.packages) homePk.innerHTML = window.HXPkg.html(C, P);
-  // [data-from-pkg]: the cheapest package, as a "from" price (a fixed LKR list is written as it is, not rescaled)
-  const pkgLkr = Object.keys(C.packages || {}).map(k => C.packages[k].lkr).filter(Boolean);
-  if (pkgLkr.length) $$("[data-from-pkg]").forEach(el => {
-    if (C.packagesFixedLkr) { el.removeAttribute("data-price-usd"); el.textContent = P ? P.formatLKR(Math.min.apply(null, pkgLkr)) : ""; }
-    else el.setAttribute("data-price-usd", (Math.min.apply(null, pkgLkr) / (C.packageBaseRate || 369)).toFixed(4));
-  });
+  if (homePk && window.HXPkg && P && C.packages) homePk.innerHTML = window.HXPkg.html(C, P, "app");
+  const homeWeb = $("#home-web-packages");
+  if (homeWeb && window.HXPkg && P && C.packages) homeWeb.innerHTML = window.HXPkg.html(C, P, "web");
+  // [data-from-pkg] / [data-from-webpkg]: the cheapest package of that category, as a "from" price (a fixed LKR list is written as it is, not rescaled)
+  const fromOf = (cat, sel) => {
+    const lkrs = P ? Object.values(P.packagesOf(C, cat)).map(p => p.lkr).filter(Boolean) : [];
+    if (!lkrs.length) return;
+    $$(sel).forEach(el => {
+      if (C.packagesFixedLkr) { el.removeAttribute("data-price-usd"); el.removeAttribute("data-price-type"); el.textContent = P.formatLKR(Math.min.apply(null, lkrs)); }
+      else el.setAttribute("data-price-usd", (Math.min.apply(null, lkrs) / (C.packageBaseRate || 369)).toFixed(4));
+    });
+  };
+  fromOf("app", "[data-from-pkg]"); fromOf("web", "[data-from-webpkg]");
 
   /* ---------- tabs: [data-tabs] (pricing) and [data-ladder] (packages) ---------- */
   function tabset(tabs, panelOf, after) {

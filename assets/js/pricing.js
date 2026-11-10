@@ -117,6 +117,12 @@
     if (cfg.packagesFixedLkr) return smartRound(baseLkr, cfg);
     return smartRound(baseLkr * rate / (cfg.packageBaseRate || 369), cfg);
   }
+  /* packages of one category ("app" | "web"); a package without cat counts as "app" */
+  function packagesOf(cfg, cat, keys) {
+    const out = {};
+    Object.keys(cfg.packages || {}).forEach(k => { const p = cfg.packages[k]; if ((p.cat || "app") === (cat || "app") && (!keys || keys.indexOf(k) !== -1)) out[k] = p; });
+    return out;
+  }
   /* "≈ USD" for a package price: at today's rate when the list is fixed LKR, else at the list rate */
   function packageUSD(cfg, lkr, rate) {
     return lkr / (cfg.packagesFixedLkr ? (rate || cfg.fallbackRate || 369) : (cfg.packageBaseRate || 369));
@@ -207,6 +213,6 @@
     };
   }
 
-  root.HXPrice = { getRate: getRate, estimate: estimate, estimateCreative: estimateCreative, estimatePackage: estimatePackage, packageLKR: packageLKR, packageUSD: packageUSD, roundLKR: roundLKR, smartRound: smartRound, formatLKR: formatLKR };
+  root.HXPrice = { getRate: getRate, estimate: estimate, estimateCreative: estimateCreative, estimatePackage: estimatePackage, packageLKR: packageLKR, packageUSD: packageUSD, packagesOf: packagesOf, roundLKR: roundLKR, smartRound: smartRound, formatLKR: formatLKR };
   if (typeof module !== "undefined") module.exports = root.HXPrice;
 })(typeof window !== "undefined" ? window : globalThis);
