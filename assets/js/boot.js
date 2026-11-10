@@ -30,6 +30,10 @@
       const conf = c.config ? JSON.parse(c.config) : null, svc = c.services ? JSON.parse(c.services) : null;
       if (conf && typeof conf === "object") {
         const built = window.HEXORA || {};
+        // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
+        if (built.packagesVersion && conf.packagesVersion !== built.packagesVersion) {
+          ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms"].forEach(k => { conf[k] = built[k]; });
+        }
         fillMissing(conf.packages, built.packages); fillMissing(conf.addons, built.addons);
         window.HEXORA = Object.assign({}, built, conf);
       }

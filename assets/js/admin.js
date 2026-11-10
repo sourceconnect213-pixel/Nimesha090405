@@ -251,7 +251,9 @@
   function normalize() {
     const c = S.data.config, d = window.HEXORA || {};
     if (!c.notice) c.notice = { show: false, text: "", linkText: "", link: "" };
-    ["packages", "addons", "packageBaseRate"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
+    // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
+    if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms"].forEach(k => { c[k] = clone(d[k]); });
+    ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
     if (S.data.services && S.data.services.list) S.data.services.list.forEach(x => { if (x.packages === undefined && x.slug === "mobile-apps") x.packages = true; });
     if (S.data.services && !S.data.services.home && window.HX_SERVICES && window.HX_SERVICES.home) S.data.services.home = clone(window.HX_SERVICES.home);
@@ -732,9 +734,10 @@
       fields: [["label", "Name"], ["note", "Note"], ["usd", "USD", "num", 1], ["weeks", "Weeks", "num"], ["kind", "Kind", "kind"], ["includesAdmin", "Admin panel include", "bool"]] },
     { key: "sizes", title: "Size", note: "Small = ×1. Medium / Large price එකයි කාලයයි ගුණ වෙනවා.", fixed: true,
       fields: [["label", "Name"], ["note", "Note"], ["priceX", "Price ×", "num"], ["weeksX", "Time ×", "num"], ["maintenanceUsd", "Maintenance USD / මාසයට", "num", 1]] },
-    { key: "packages", title: "Mobile app packages", note: "LKR prices (Package price list rate එකට). Customer ට site එකේ අද rate එකට වෙනස් වෙලා පේනවා. Includes: line එකකට එකක්.", base: true,
-      fields: [["label", "Name"], ["badge", "Badge (Ex: ගොඩක් අය තෝරන්නේ). හිස් නම් නෑ"], ["lkr", "Price (LKR)", "num", 0, "lkr"], ["weeks", "Weeks", "num"], ["includes", "Includes (line එකකට එකක්)", "lines"]], tpl: { label: "New package", badge: "", lkr: 10000, weeks: 1, includes: [] } },
-    { key: "addons", title: "Package add-ons", note: "Package එකකට customer ට එකතු කරන්න පුළුවන් පොඩි වෙනස්කම්. \"Qty\" = customer ට කීයක් ඕනද කියලා තෝරන්න පුළුවන්.", base: true,
+    { key: "packages", title: "Mobile app packages", note: "Approved price list (2026-11-10): FIXED LKR development prices — dollar rate එකට වෙනස් වෙන්නේ නෑ. Includes / Include නෑ: line එකකට එකක්. \"From\" = පටන් ගන්න price එක (Custom), final price එක quote එකෙන්.", base: true,
+      fields: [["label", "Name"], ["badge", "Badge (Ex: ගොඩක් අය තෝරන්නේ). හිස් නම් නෑ"], ["lkr", "Price (LKR)", "num", 0, "lkr"], ["from", "\"From\" price (final price quote එකෙන්)", "bool"], ["platform", "Platform (Ex: Android only)"], ["screens", "Screens (Ex: Screens 8 ට වෙනකන්)"], ["time", "කාලය (Ex: සති 3 – 5)"], ["weeks", "Weeks (number, estimate එකට)", "num"], ["revisions", "Revisions", "num"], ["includes", "Includes (line එකකට එකක්)", "lines"], ["excludes", "Include නෑ (line එකකට එකක්)", "lines"]],
+      tpl: { label: "New package", badge: "", lkr: 10000, from: false, platform: "Android only", screens: "", time: "", weeks: 1, revisions: 1, includes: [], excludes: [] } },
+    { key: "addons", title: "Package add-ons", note: "Package එකකට customer ට එකතු කරන්න පුළුවන් approved වෙනස්කම් (fixed LKR). හිස් නම් form එකේ add-ons step එක පේන්නේ නෑ — package එකේ නැති දේවල් වෙනම quote වෙනවා. \"Qty\" = customer ට කීයක් ඕනද කියලා තෝරන්න පුළුවන්.", base: true,
       fields: [["label", "Name"], ["note", "Note"], ["lkr", "Price (LKR)", "num", 0, "lkr"], ["weeks", "Weeks", "num"], ["qty", "Qty (ගණනක් තෝරන්න)", "bool"]], tpl: { label: "New add-on", note: "", lkr: 2000, weeks: 0.3 } },
     { key: "features", title: "Features", note: "Project එකට එකතු වෙන add-ons.",
       fields: [["label", "Name"], ["usd", "USD", "num", 1], ["weeks", "Weeks", "num"]], tpl: { label: "New feature", usd: 30, weeks: 0.5 } },
@@ -769,7 +772,9 @@
     const c = S.data.config;
     return foldCard("general", "General", null, grid(
         field("config.fallbackRate", "Fallback rate (LKR for 1 USD)", { type: "num", hint: "Live rate එක load නොවුණොත් use කරනවා." }) +
-        field("config.packageBaseRate", "Package price list rate", { type: "num", hint: "Packages / add-ons වල LKR prices ලියලා තියෙන්නේ 1 USD = මේ rate එකට. අද rate එක මේකට වඩා වැඩි නම් prices වැඩි වෙනවා, අඩු නම් අඩු වෙනවා." }) +
+        field("config.packagesFixedLkr", "App packages fixed LKR", { type: "bool", hint: "ටික් = package prices ලියලා තියෙන LKR එකමයි (approved price list). ටික් නැත්නම් පරණ විදියට: 1 USD = package price list rate එකට ලියලා, අද rate එකට වෙනස් වෙනවා." }) +
+        field("config.packageBaseRate", "Package price list rate", { type: "num", hint: "Fixed LKR නැති විට විතරයි: packages / add-ons වල LKR prices ලියලා තියෙන්නේ 1 USD = මේ rate එකට." }) +
+        field("config.packageNote", "Package note (site එකේ packages යටින්)", { wide: true, hint: "Hosting, Firebase usage, store fees වෙනම කියන note එක." }) +
         field("config.roundTo", "LKR round to", { type: "num", hint: "LKR 20,000 ට වැඩි prices මේකට round වෙනවා." }) +
         field("config.advancePercent", "Advance %", { type: "num" }) +
         field("config.freeSupportMonths", "Free support (months)", { type: "num" }) +
@@ -1020,7 +1025,7 @@
   /* ---------- live bits (LKR previews, names, icon) ---------- */
   function refreshLive() {
     $$("[data-lkr]").forEach(el => { el.textContent = "≈ " + lkr(get(el.dataset.lkr)); });
-    $$("[data-lkrnow]").forEach(el => { const c = S.data.config; el.textContent = "අද rate එකට (" + (Number(c.fallbackRate) || 0) + "): ≈ " + P.formatLKR(P.packageLKR(c, Number(get(el.dataset.lkrnow)) || 0, Number(c.fallbackRate) || 0)); });
+    $$("[data-lkrnow]").forEach(el => { const c = S.data.config, v = Number(get(el.dataset.lkrnow)) || 0; el.textContent = c.packagesFixedLkr ? "Fixed: " + P.formatLKR(v) + " (≈ USD " + Math.round(P.packageUSD(c, v, Number(c.fallbackRate) || 369)) + ")" : "අද rate එකට (" + (Number(c.fallbackRate) || 0) + "): ≈ " + P.formatLKR(P.packageLKR(c, v, Number(c.fallbackRate) || 0)); });
     $$("[data-live]").forEach(el => { const v = get(el.dataset.live); el.textContent = v || (el.dataset.live.endsWith("linkText") ? "බලන්න →" : el.dataset.live.endsWith(".name") ? "(නමක් නෑ)" : ""); });
     $$("[data-live-svg]").forEach(el => { el.innerHTML = safeIcon(get(el.dataset.liveSvg)); });
   }
@@ -1036,7 +1041,7 @@
     if (c.notice.link && !/^(https:\/\/|[\w-]+\.html)/.test(c.notice.link)) out.push("Notice: link එක https://… හරි page.html විදියට දාන්න.");
     if (c.notice.show && !c.notice.text) out.push("Notice: පෙන්නන්න text එකක් දාන්න.");
     if (!(c.fallbackRate > 0)) out.push("Prices: fallback rate එක 0ට වඩා වැඩි වෙන්න ඕන.");
-    if (!(c.packageBaseRate > 0)) out.push("Prices: Package price list rate එක 0ට වඩා වැඩි වෙන්න ඕන (නැත්නම් package prices අනන්ත වෙනවා).");
+    if (!c.packagesFixedLkr && !(c.packageBaseRate > 0)) out.push("Prices: Package price list rate එක 0ට වඩා වැඩි වෙන්න ඕන (නැත්නම් package prices අනන්ත වෙනවා).");
     if (!(c.roundTo > 0)) out.push("Prices: LKR round to එක 0ට වඩා වැඩි වෙන්න ඕන.");
     if (!(c.advancePercent >= 0 && c.advancePercent <= 100)) out.push("Prices: Advance % එක 0 – 100 අතර වෙන්න ඕන.");
     if (!(c.rangeSpread >= 1)) out.push("Prices: Estimate range × එක 1 හරි ඊට වැඩි වෙන්න ඕන.");

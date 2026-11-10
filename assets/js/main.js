@@ -15,9 +15,12 @@
   /* ---------- package ladder + "from" prices (built first so every later step sees them) ---------- */
   const homePk = $("#home-packages");
   if (homePk && window.HXPkg && P && C.packages) homePk.innerHTML = window.HXPkg.html(C, P);
-  // [data-from-pkg]: the cheapest package, as a "from" price
+  // [data-from-pkg]: the cheapest package, as a "from" price (a fixed LKR list is written as it is, not rescaled)
   const pkgLkr = Object.keys(C.packages || {}).map(k => C.packages[k].lkr).filter(Boolean);
-  if (pkgLkr.length) $$("[data-from-pkg]").forEach(el => el.setAttribute("data-price-usd", (Math.min.apply(null, pkgLkr) / (C.packageBaseRate || 369)).toFixed(4)));
+  if (pkgLkr.length) $$("[data-from-pkg]").forEach(el => {
+    if (C.packagesFixedLkr) { el.removeAttribute("data-price-usd"); el.textContent = P ? P.formatLKR(Math.min.apply(null, pkgLkr)) : ""; }
+    else el.setAttribute("data-price-usd", (Math.min.apply(null, pkgLkr) / (C.packageBaseRate || 369)).toFixed(4));
+  });
 
   /* ---------- tabs: [data-tabs] (pricing) and [data-ladder] (packages) ---------- */
   function tabset(tabs, panelOf, after) {

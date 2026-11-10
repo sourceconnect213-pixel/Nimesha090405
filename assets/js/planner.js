@@ -40,8 +40,12 @@
     $("#opt-type").innerHTML = Object.entries(C.types).filter(([, t]) => t.kind !== "app" && t.kind !== "both").map(([k, t]) => tile("radio", "type", k, t.label, t.note, "")).join("");
     $("#opt-pkg").innerHTML = Object.entries(C.packages || {}).map(([k, p]) =>
       '<label class="opt pkg"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
-      '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + (p.includes || []).length + ' features · select කළාම බලන්න</span><ul class="pkg-inc">' + (p.includes || []).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></span>" + (p.badge ? '<span class="pkg-badge">' + esc(p.badge) + "</span>" : "") + "</label>").join("");   // the badge comes after .opt-box so "input:checked + .opt-box" still matches
+      '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + esc([p.platform, p.screens, p.time].filter(Boolean).join(" · ") || ((p.includes || []).length + " features")) + ' · select කළාම බලන්න</span><ul class="pkg-inc">' +
+      [p.platform, p.screens].filter(Boolean).map(x => '<li class="meta">' + esc(x) + "</li>").join("") + (p.includes || []).map(x => "<li>" + esc(x) + "</li>").join("") +
+      (p.excludes || []).map(x => '<li class="no">' + esc(x) + "</li>").join("") + "</ul></span>" + (p.badge ? '<span class="pkg-badge">' + esc(p.badge) + "</span>" : "") + "</label>").join("");   // the badge comes after .opt-box so "input:checked + .opt-box" still matches
     const adds = Object.entries(C.addons || {});
+    // no approved add-ons: the "small changes" step is for the dev track only (anything outside a package is quoted separately)
+    if (!adds.length) { const fs = $('[data-step="4"]'); if (fs) fs.setAttribute("data-track", "dev"); }
     $("#opt-addons").innerHTML = adds.filter(([, a]) => !a.qty).map(([k, a]) => tile("checkbox", "addons", k, a.label, a.note, "+")).join("");
     $("#opt-addqty").innerHTML = adds.filter(([, a]) => a.qty).map(([k, a]) => crItem("pq:" + k, a, "addons:" + k)).join("");
     $("#opt-size").innerHTML = Object.entries(C.sizes).map(([k, s]) => tile("radio", "size", k, s.label, s.note, s.priceX === 1 ? "" : "×" + s.priceX)).join("");
@@ -53,7 +57,7 @@
   }
   const pk = baseLkr => P.formatLKR(P.packageLKR(C, baseLkr, rate.rate));
   function refreshPriceTags() {
-    Object.entries(C.packages || {}).forEach(([k, p]) => { const el = $('[data-p="pkg:' + k + '"]'); if (el) el.textContent = pk(p.lkr); });
+    Object.entries(C.packages || {}).forEach(([k, p]) => { const el = $('[data-p="pkg:' + k + '"]'); if (el) el.textContent = (p.from ? "From " : "") + pk(p.lkr) + (p.from ? "+" : ""); });
     Object.entries(C.addons || {}).forEach(([k, a]) => { const el = $('[data-p="addons:' + k + '"]'); if (el) el.textContent = "+" + pk(a.lkr) + (a.qty ? " / එකක්" : ""); });
     Object.entries(C.features).forEach(([k, f]) => { const el = $('[data-p="features:' + k + '"]'); if (el) el.textContent = "+" + lkr(f.usd); });
     Object.entries(C.extras).forEach(([k, x]) => { const el = $('[data-p="extras:' + k + '"]'); if (el) el.textContent = "+" + lkr(x.usd); });
@@ -105,7 +109,9 @@
     if (note) note.textContent = t === "dev"
       ? "මේක estimate එකක්. Final price එක free call එකෙන් පස්සේ fixed quote එකක් විදියට දෙනවා. Google / Apple / domain fees වෙනම."
       : t === "pkg"
-        ? "Package එකයි තෝරපු වෙනස්කම් ටිකයි එකතු කරපු price එක. අද dollar rate එකට අනුව වෙනස් වෙනවා. Final price එක call එකෙන් පස්සේ confirm කරනවා. Google / Apple fees වෙනම."
+        ? (C.packagesFixedLkr
+          ? "Package එකේ fixed development price එක. Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න — ඒකට වෙනම quote එකක්. Urgent ඕන නම් call එකෙන් confirm කරනවා. " + (C.packageNote || "")
+          : "Package එකයි තෝරපු වෙනස්කම් ටිකයි එකතු කරපු price එක. අද dollar rate එකට අනුව වෙනස් වෙනවා. Final price එක call එකෙන් පස්සේ confirm කරනවා. Google / Apple fees වෙනම.")
         : "මේක estimate එකක්. Revisions include. Final price එක chat එකෙන් confirm කරලා වැඩ පටන් ගන්නවා.";
   }
 
@@ -157,8 +163,8 @@
     if (track() === "pkg") {
       const e = P.estimatePackage(C, pkgSel(), rate.rate);
       if (!e) return null;
-      return { kind: "pkg", lo: e.totalLKR, hi: null, usdText: "≈ USD " + e.usd.toLocaleString("en-US"), time: "සති " + e.weeksLow + " – " + e.weeksHigh,
-        advance: e.advanceLKR, lines: e.lines, raw: e };
+      return { kind: "pkg", lo: e.totalLKR, hi: null, usdText: "≈ USD " + e.usd.toLocaleString("en-US"), time: e.time || ("සති " + e.weeksLow + " – " + e.weeksHigh),
+        advance: e.advanceLKR, lines: e.lines, from: e.from, raw: e };
     }
     const e = P.estimate(C, selection(), rate.rate);
     if (!e) return null;
@@ -182,7 +188,7 @@
       return;
     }
     const prev = last && last.kind === e.kind ? last : null;
-    const sub = "Estimate · revisions include";
+    const sub = e.kind === "pkg" ? (e.from ? "ඉඳන් · final price එක quote එකෙන්" : "Fixed package price") : "Estimate · revisions include";
     if (!reduce && prev) {
       const t0 = performance.now(), dur = 550;
       const step = t => {
@@ -343,7 +349,7 @@
       const ps = pkgSel(), p = C.packages[ps.pkg];
       const ad = ps.addons.map(k => C.addons[k].label).concat(Object.keys(ps.qty).map(k => C.addons[k].label + " × " + ps.qty[k]));
       L.push("*Project — Mobile App Package*");
-      L.push("Package: " + p.label + " (" + pk(p.lkr) + ")");
+      L.push("Package: " + p.label + " (" + (p.from ? "from " : "") + pk(p.lkr) + (p.from ? "+" : "") + (p.platform ? " · " + p.platform : "") + ")");
       L.push("Changes / add-ons: " + (ad.length ? ad.join(", ") : "-"));
     } else {
       L.push("*Project — Logo, Design & Video*");

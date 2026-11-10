@@ -1581,3 +1581,18 @@ body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height
 .acc-swap .acc-form > :nth-child(1) { --n: 1; } .acc-swap .acc-form > :nth-child(2) { --n: 2; } .acc-swap .acc-form > :nth-child(3) { --n: 3; } .acc-swap .acc-form > :nth-child(4) { --n: 4; } .acc-swap .acc-form > :nth-child(5) { --n: 5; }
 .acc-swap > .acc-form { animation: none; }
 @media (prefers-reduced-motion: reduce) { .acc-tab-ind { transition: none; } .acc-swap > *, .acc-swap .acc-form > * { animation: none; } }
+
+/* ---------- approved app packages: platform / screens tags, "include නෑ" list, From price ---------- */
+.pk-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pk-tags span { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.pk-ex { padding-top: 12px; border-top: 1px dashed var(--line); color: var(--faint); font-size: .84rem; }
+.pk-ex b { display: block; margin-bottom: 6px; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; font-family: var(--f-mono); font-weight: 600; }
+.pk-ex ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.pk-ex li { display: flex; gap: 8px; }
+.pk-ex li::before { content: "✕"; opacity: .6; }
+.price-pre, .rung-from { font-size: .5em; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .75; vertical-align: middle; }
+.rung-from { font-size: .7em; }
+.pkg-inc li.meta { color: var(--muted); }
+.pkg-inc li.meta::before { content: "• "; color: var(--muted); }
+.pkg-inc li.no { opacity: .7; }
+.pkg-inc li.no::before { content: "✕ "; color: var(--faint); }

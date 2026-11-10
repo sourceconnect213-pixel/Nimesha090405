@@ -111,14 +111,22 @@
     };
   }
 
-  /* LKR price written for 1 USD = packageBaseRate (369) → LKR at today's rate */
+  /* Package price in LKR. Fixed price list (cfg.packagesFixedLkr): the LKR is shown as written.
+     Old style: LKR written for 1 USD = packageBaseRate (369) → LKR at today's rate. */
   function packageLKR(cfg, baseLkr, rate) {
+    if (cfg.packagesFixedLkr) return smartRound(baseLkr, cfg);
     return smartRound(baseLkr * rate / (cfg.packageBaseRate || 369), cfg);
+  }
+  /* "≈ USD" for a package price: at today's rate when the list is fixed LKR, else at the list rate */
+  function packageUSD(cfg, lkr, rate) {
+    return lkr / (cfg.packagesFixedLkr ? (rate || cfg.fallbackRate || 369) : (cfg.packageBaseRate || 369));
   }
 
   /*
    * Mobile app package + add-ons. sel = { pkg, addons: [keys], qty: { key: n }, urgency }
-   * The package and add-ons are priced in LKR at cfg.packageBaseRate, then scaled by today's rate.
+   * Fixed LKR list: the price is exactly the package price (+ approved add-ons). Urgent delivery is NOT a
+   * surcharge on a package (it is confirmed per project), so urgency only shortens the time shown.
+   * Old style list: LKR at cfg.packageBaseRate, scaled by today's rate, +urgent %.
    */
   function estimatePackage(cfg, sel, rate) {
     const p = (cfg.packages || {})[sel.pkg];
@@ -139,7 +147,7 @@
       base += a.lkr * n; weeks += (a.weeks || 0) * n;
       lines.push({ label: a.label + " × " + n, base: a.lkr * n });
     });
-    if (urg.percent) {
+    if (urg.percent && !cfg.packagesFixedLkr) {
       const u = base * urg.percent / 100;
       base += u;
       lines.push({ label: "Urgent delivery (+" + urg.percent + "%)", base: u });
@@ -148,7 +156,9 @@
     const total = packageLKR(cfg, base, rate);
     const wLow = Math.max(1, Math.round(weeks));
     return {
-      usd: Math.round(base / (cfg.packageBaseRate || 369)),
+      usd: Math.round(packageUSD(cfg, base, rate)),
+      from: !!p.from,
+      time: p.time || "",
       totalLKR: total,
       advanceLKR: smartRound(total * (cfg.advancePercent || 50) / 100, cfg),
       weeksLow: wLow,
@@ -197,6 +207,6 @@
     };
   }
 
-  root.HXPrice = { getRate: getRate, estimate: estimate, estimateCreative: estimateCreative, estimatePackage: estimatePackage, packageLKR: packageLKR, roundLKR: roundLKR, smartRound: smartRound, formatLKR: formatLKR };
+  root.HXPrice = { getRate: getRate, estimate: estimate, estimateCreative: estimateCreative, estimatePackage: estimatePackage, packageLKR: packageLKR, packageUSD: packageUSD, roundLKR: roundLKR, smartRound: smartRound, formatLKR: formatLKR };
   if (typeof module !== "undefined") module.exports = root.HXPrice;
 })(typeof window !== "undefined" ? window : globalThis);

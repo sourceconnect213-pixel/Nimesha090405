@@ -61,9 +61,10 @@ window.HX_SERVICES = {
       { time: "ඊට පස්සේ", t: "Support", d: "{support} එකක් free bug fixes. ඊට පස්සේ monthly maintenance plan එකක් ගන්න පුළුවන්." }
     ],
     faq: [
-      { q: "Project එකක් ඉවර කරන්න කොච්චර කල් යනවද?", a: "Logo එකකට දවස් 3ක් විතර, reel එකකට දවස් 1 – 2ක්. පොඩි app එකකට සති 4 – 6 ක්, ලොකු systems වලට මාස 2 – 4 ක් යන්න පුළුවන්. Project form එකේ ඔයාගේ project එකට ගැළපෙන time එක පෙන්නනවා." },
+      { q: "Project එකක් ඉවර කරන්න කොච්චර කල් යනවද?", a: "Logo එකකට දවස් 3ක් විතර, reel එකකට දවස් 1 – 2ක්. Basic Android app එකකට දවස් 5 – 7ක්, Firebase app එකකට සති 3 – 5ක්, ලොකු systems වලට මාස 2 – 4 ක් යන්න පුළුවන්. Project form එකේ ඔයාගේ project එකට ගැළපෙන time එක පෙන්නනවා." },
       { q: "පටන් ගන්න මට මොකද ඕන?", a: "ඔයාගේ idea එක විතරයි. මොකද ඕන, කවුද use කරන්නේ කියලා කියන්න. ඔයාට කැමති apps, logos, videos තියෙනවා නම් ඒවත් එවන්න. Design සහ technical වැඩ ඔක්කොම අපි කරනවා." },
-      { q: "Play Store / App Store එකට දාන්න පුළුවන්ද?", a: "ඔව්. Listing එක, screenshots, builds ඔක්කොම හදලා ඔයාගේ developer account එකෙන් publish කරනවා. එතකොට app එක ඔයාගේ නමින් තියෙන්නේ. Google USD 25 එකපාරයි, Apple USD 99 අවුරුද්දට." },
+      { q: "Play Store / App Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා. එතකොට app එක ඔයාගේ නමින් තියෙන්නේ. Google USD 25 එකපාරයි, Apple USD 99 අවුරුද්දට (ඒ fees ඔයාගේ). App packages 01 – 05 Android only." },
+      { q: "App package price එකට hosting / Firebase fees include ද?", a: "නෑ. Package prices development charges විතරයි (fixed LKR). Firebase / database usage, hosting, domain, PayHere fees, Google / Apple developer accounts ඕන වුණොත් ඔයාගේ accounts වලින් වෙනම. Basic / Standard apps වලට server එකක් ඕනම නෑ." },
       { q: "Source code එක මට ලැබෙනවද?", a: "ඔව්. Final payment එක කළාම full source code එක සහ project එකේ logins ඔක්කොම ඔයාට දෙනවා." },
       { q: "Launch කළාට පස්සේ මොකද වෙන්නේ?", a: "{support} එකක් bug fixes free. ඊට පස්සේ updates, අලුත් features, server checks වලට monthly maintenance plan එකක් ගන්න පුළුවන්." },
       { q: "Logo එකකට revisions කීයක් දෙනවද?", a: "Concepts 3ක් පෙන්නනවා. ඔයාට කැමති එක revisions 3ක් වෙනකන් free. Final files PNG, JPG, SVG, PDF විදියට දෙනවා, print වලටයි online වලටයි දාන්න පුළුවන්." },
@@ -77,24 +78,26 @@ window.HX_SERVICES = {
     {
       slug: "mobile-apps", cat: "dev", name: "Mobile Apps", anim: "phone",
       icon: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
-      short: "Android සහ iPhone දෙකටම එක Flutter app එකක්",
-      summary: "Flutter වලින් හදන එක app එකක් Android සහ iPhone දෙකටම. Fast, smooth, Play Store සහ App Store වලට ready.",
-      intro: "Order, booking, delivery, class වගේ ඔයාගේ business එකට ඕන app එක Flutter වලින් හදනවා. එක code එකෙන් Android සහ iPhone දෙකටම app එක ලැබෙනවා.",
-      tags: ["Flutter", "Android", "iOS"],
+      short: "Android apps Flutter වලින්. Fixed LKR packages 5ක් + custom",
+      summary: "Flutter වලින් හදන Android apps. LKR 14,000 ඉඳන් fixed price packages 5ක්, ලොකු projects වලට custom quote (iOS / Web එක්ක).",
+      intro: "Order, booking, delivery, class වගේ ඔයාගේ business එකට ඕන Android app එක Flutter වලින් හදනවා. Package 01 – 05 Android only; iOS, Web, ලොකු systems Custom package එකෙන් quote කරනවා.",
+      tags: ["Flutter", "Android", "Firebase"],
       packages: true,
       includes: [
-        "Android සහ iOS දෙකටම එක app එකක්",
-        "Login, OTP, payments (PayHere), push notifications වගේ features ඕන විදියට",
-        "Firebase backend",
-        "කොටස් වලට test versions, ඔයාට use කරලා බලන්න පුළුවන්",
-        "Play Store / App Store එකට publish කරලා දෙනවා",
-        "Final payment එකෙන් පස්සේ full source code එක ඔයාට"
+        "Fixed LKR development price (dollar rate එකට වෙනස් වෙන්නේ නෑ)",
+        "Package එකේ කියලා තියෙන screens, features විතරයි. ඊට වැඩි දෙයක් ඕන නම් වෙනම quote එකක්",
+        "Android only (Package 01 – 05). iOS / Web Custom එකෙන්",
+        "Test APK, revisions, දවස් 30ක් bug-fix support",
+        "{advance} advance, final payment එකෙන් පස්සේ full source code එක ඔයාට",
+        "Firebase usage, hosting, domain, PayHere fees, Google / Apple accounts වෙනම (ඔයාගේ accounts වලින්)"
       ],
-      prices: [{ type: "android" }, { type: "cross", featured: true }, { type: "appadmin" }],
+      prices: [],
       faq: [
-        { q: "App එකක් හදන්න කොච්චර කල් යනවද?", a: "තෝරන package එක අනුව සති 1 ඉඳන් 8 ක් විතර. Screens සහ features වැඩි වෙන්න වෙන්න කාලය වැඩි වෙනවා. Project form එකේ package එකයි වෙනස්කම් ටිකයි තෝරද්දී ඔයාගේ app එකට ගැළපෙන time එක පෙන්නනවා." },
-        { q: "Screen එකක් කියන්නේ මොකක්ද?", a: "App එකේ වෙන වෙනම page එකක් (Ex: Login, Home, Cart, Profile). හැම package එකකම screens ගණන වෙනස්. Package එකේ නැති screens ඕන නම් project form එකේ extra screens විදියට එකතු කරන්න පුළුවන්." },
-        { q: "Play Store / App Store එකට දාන්න පුළුවන්ද?", a: "ඔව්. Listing එක, screenshots, builds ඔක්කොම හදලා ඔයාගේ developer account එකෙන් publish කරනවා. එතකොට app එක ඔයාගේ නමින් තියෙන්නේ. Google USD 25 එකපාරයි, Apple USD 99 අවුරුද්දට." }
+        { q: "App එකක් හදන්න කොච්චර කල් යනවද?", a: "Basic app එකකට දවස් 5 – 7ක්, Standard එකකට සති 2 – 3ක්, Firebase app එකකට සති 3 – 5ක්, Business app එකකට සති 6 – 9ක්, Premium එකකට සති 10 – 14ක් විතර. Content, approvals, accounts වෙලාවට ලැබුණොත්." },
+        { q: "Screen එකක් කියන්නේ මොකක්ද?", a: "App එකේ වෙන වෙනම page එකක් (Ex: Login, Home, Cart, Profile). හැම package එකකම screens ගණනක් තියෙනවා (3, 5, 8, 12, 20). ඊට වැඩි screens හෝ package එකේ නැති features ඕන නම් වෙනම quote එකක් දෙනවා." },
+        { q: "iPhone (iOS) app එකක් හදන්න පුළුවන්ද?", a: "Package 01 – 05 Android only. iOS හෝ Web version එකක් ඕන නම් Custom App Development (LKR 299,000 ඉඳන්) එකෙන් scope එකට quote කරනවා. Apple developer account එක (USD 99 / අවුරුද්දට) ඔයාගේ." },
+        { q: "Price එකට hosting / Firebase / Play Store fees include ද?", a: "නෑ. Package price එක development charge එක විතරයි. Firebase / database usage, hosting, domain, PayHere merchant fees, Google developer account (USD 25 එකපාරයි) ඔයාගේ accounts වලින් වෙනම. Basic සහ Standard apps වලට server එකක් ඕනම නෑ." },
+        { q: "Play Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා — app එක ඔයාගේ නමින්. Google USD 25 එකපාරයි (Google ට)." }
       ]
     },
     {

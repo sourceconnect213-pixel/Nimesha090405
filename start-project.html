@@ -15,7 +15,7 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261013c">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261110a">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body class="planner-page">
@@ -49,7 +49,7 @@
       <nav aria-label="Breadcrumb"><ol class="crumbs"><li><a href="index.html">Home</a></li><li>Project එක පටන් ගන්න</li></ol></nav>
       <span class="eyebrow fade-up" style="--d:100ms">Free estimate</span>
       <h1 class="display fade-up" style="--d:100ms">ඔයාගේ <span class="grad-text">Project</span> එක ගැන කියන්න</h1>
-      <p class="lead fade-up" style="--d:550ms">App, website, logo, design හරි video, ඕන දෙයක් තෝරගන්න. Price එක අද dollar rate එකෙන් LKR වලින් live calculate වෙනවා. ඉවර උනාම WhatsApp හරි Email එකෙන් අපිට එවන්න.</p>
+      <p class="lead fade-up" style="--d:550ms">App, website, logo, design හරි video, ඕන දෙයක් තෝරගන්න. App packages fixed LKR prices; අනිත් ඒවා අද dollar rate එකෙන් LKR වලින් live calculate වෙනවා. ඉවර උනාම WhatsApp හරි Email එකෙන් අපිට එවන්න.</p>
       <p class="auth-hint fade-up" style="--d:650ms" data-auth-out>Account එකක් තියෙනවද? <a href="account.html">Login</a> වෙලා ඉන්නකොට ඔයාගේ details ඉබේම පුරවනවා, project status බලන්නයි Developer ට chat කරන්නයි පුළුවන්. අලුත් ද? <a href="account.html?new=1">Register</a></p>
       <p class="auth-hint fade-up" style="--d:650ms" data-auth-in><svg class="ic-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> <b data-user-name></b> විදියට login වෙලා ඉන්නේ. Project එක යැව්වම <a href="account.html">මගේ projects</a> එකේ status එක බලන්න පුළුවන්.</p>
       <ol class="stepper fade-up" style="--d:700ms" role="list" aria-label="Form එකේ කොටස්">
@@ -72,13 +72,13 @@
             <legend class="sr-only">Service එක</legend>
             <div class="step-head"><span class="n">01</span><div><h2>Service එක</h2><p>මොන වගේ දෙයක්ද ඕන?</p></div></div>
             <div class="options track-opts" role="radiogroup" aria-label="Service type">
-              <label class="opt"><input type="radio" name="track" value="pkg"><span class="opt-box"><span class="tick"></span><span class="t">Mobile App (Package)</span><span class="s">LKR 10,000 ඉඳන් packages 9ක්</span></span></label>
+              <label class="opt"><input type="radio" name="track" value="pkg"><span class="opt-box"><span class="tick"></span><span class="t">Mobile App (Package)</span><span class="s">Android · LKR 14,000 ඉඳන් fixed packages 5ක් + custom</span></span></label>
               <label class="opt"><input type="radio" name="track" value="dev"><span class="opt-box"><span class="tick"></span><span class="t">Website / Web system</span><span class="s">Business sites, POS, booking systems</span></span></label>
               <label class="opt"><input type="radio" name="track" value="creative"><span class="opt-box"><span class="tick"></span><span class="t">Logo, Design &amp; Video</span><span class="s">Logo, branding, posts, photo &amp; video editing</span></span></label>
             </div>
             <div class="opt-group" data-field="pkg" data-track="pkg" hidden>
               <span class="group-label">App package එක තෝරගන්න <span class="req">*</span></span>
-              <span class="group-hint">ඔයාගේ app එකට ළඟම package එක තෝරන්න. ඊළඟ step එකෙන් පොඩි වෙනස්කම් එකතු කරන්න පුළුවන්, price එක auto update වෙනවා.</span>
+              <span class="group-hint">ඔයාගේ app එකට ළඟම package එක තෝරන්න (fixed development price). Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න — ඒකට වෙනම quote එකක් දෙනවා. Firebase usage, hosting, store fees වෙනම.</span>
               <div class="options pkg-list" id="opt-pkg" role="radiogroup" aria-label="App package"></div>
               <span class="err">Package එකක් තෝරගන්න.</span>
             </div>
@@ -149,12 +149,12 @@
                 <label for="f-budget">Budget එක</label>
                 <select class="input" id="f-budget" name="budget">
                   <option value="">තෝරගන්න</option>
-                  <option>LKR 10,000 ට අඩුයි</option>
-                  <option>LKR 10,000 – 50,000</option>
+                  <option>LKR 15,000 ට අඩුයි</option>
+                  <option>LKR 15,000 – 50,000</option>
                   <option>LKR 50,000 – 100,000</option>
-                  <option>LKR 100,000 – 200,000</option>
-                  <option>LKR 200,000 – 400,000</option>
-                  <option>LKR 400,000 ට වැඩි</option>
+                  <option>LKR 100,000 – 250,000</option>
+                  <option>LKR 250,000 – 500,000</option>
+                  <option>LKR 500,000 ට වැඩි</option>
                   <option>තාම sure නෑ</option>
                 </select>
               </div>
@@ -347,11 +347,11 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script defer src="assets/js/firebase-config.js?v=20261013c"></script>
-<script defer src="assets/js/config.js?v=20261013c"></script>
-<script defer src="assets/js/fb.js?v=20261013c"></script>
-<script defer src="assets/js/nav.js?v=20261013c"></script>
-<script defer src="assets/js/scrollfx.js?v=20261013c"></script>
-<script defer src="assets/js/boot.js?v=20261013c" data-load="pricing.js main.js planner.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261110a"></script>
+<script defer src="assets/js/config.js?v=20261110a"></script>
+<script defer src="assets/js/fb.js?v=20261110a"></script>
+<script defer src="assets/js/nav.js?v=20261110a"></script>
+<script defer src="assets/js/scrollfx.js?v=20261110a"></script>
+<script defer src="assets/js/boot.js?v=20261110a" data-load="pricing.js main.js planner.js sitetext.js"></script>
 </body>
 </html>

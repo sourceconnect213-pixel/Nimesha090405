@@ -35,7 +35,7 @@
   function usdOf(ref) {
     const r = refOf(ref);
     if (!r) return null;
-    if (r.kind === "package") return r.item.lkr / (C.packageBaseRate || 369);
+    if (r.kind === "package") return P.packageUSD(C, r.item.lkr, C.fallbackRate);
     return r.kind === "maint" ? r.item.maintenanceUsd : r.item.usd;
   }
   const weeksText = w => { const lo = Math.max(1, Math.round(w)); return "සති " + lo + " – " + Math.max(lo + 1, Math.round(w * 1.3)); };
@@ -83,8 +83,14 @@
       points = [it.note, daysText(it.days) + " විතර"];
       href = "start-project.html?track=creative&item=" + r.key;
     } else if (r.kind === "package") {
-      from = "Package"; price = amt(it.lkr / (C.packageBaseRate || 369)); sub = "≈ USD " + Math.round(it.lkr / (C.packageBaseRate || 369));
-      points = it.includes || []; href = "start-project.html?package=" + r.key;
+      const pu = P.packageUSD(C, it.lkr, C.fallbackRate);
+      from = it.from ? "පටන් ගන්නේ · quote එකට" : "Package · fixed price";
+      // a fixed LKR price is written as it is (no data-price-usd, so main.js never rescales it)
+      price = C.packagesFixedLkr
+        ? '<div class="price-amt' + (hot ? " grad-text" : "") + '">' + (it.from ? '<small class="price-pre">From</small> ' : "") + P.formatLKR(P.packageLKR(C, it.lkr, C.fallbackRate)) + (it.from ? "+" : "") + "</div>"
+        : amt(pu);
+      sub = "≈ USD " + Math.round(pu) + (it.time ? " · " + it.time : "");
+      points = [it.platform, it.screens].filter(Boolean).concat(it.includes || []); href = "start-project.html?package=" + r.key;
     } else if (r.kind === "feature") {
       from = "Add-on feature"; price = amt(it.usd); sub = "≈ USD " + it.usd;
       points = ["App / website / system එකකට එකතු කරන්න", "කාලයට සති " + it.weeks + " ක් එකතු වෙනවා"];
