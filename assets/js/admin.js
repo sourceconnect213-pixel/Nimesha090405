@@ -252,8 +252,8 @@
     const c = S.data.config, d = window.HEXORA || {};
     if (!c.notice) c.notice = { show: false, text: "", linkText: "", link: "" };
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
-    if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageQuote"].forEach(k => { c[k] = clone(d[k]); });
-    ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
+    if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageQuote"].forEach(k => { c[k] = clone(d[k]); });
+    ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
     if (S.data.services && S.data.services.list) {
       const bl = (window.HX_SERVICES && window.HX_SERVICES.list) || [];
@@ -739,7 +739,7 @@
       fields: [["label", "Name"], ["note", "Note"], ["usd", "USD", "num", 1], ["weeks", "Weeks", "num"], ["kind", "Kind", "kind"], ["includesAdmin", "Admin panel include", "bool"]] },
     { key: "sizes", title: "Size", note: "Small = ×1. Medium / Large price එකයි කාලයයි ගුණ වෙනවා.", fixed: true,
       fields: [["label", "Name"], ["note", "Note"], ["priceX", "Price ×", "num"], ["weeksX", "Time ×", "num"], ["maintenanceUsd", "Maintenance USD / මාසයට", "num", 1]] },
-    { key: "packages", title: "App & website packages", note: "Approved price lists (2026-11-10): FIXED LKR development prices. Category = Mobile App හෝ Website. — dollar rate එකට වෙනස් වෙන්නේ නෑ. Includes / Include නෑ: line එකකට එකක්. \"From\" = පටන් ගන්න price එක (Custom), final price එක quote එකෙන්.", base: true,
+    { key: "packages", title: "App & website packages", note: "Approved price lists (2026-11-10): FIXED LKR development prices. Category = Mobile App, Website හෝ Backend & Admin. — dollar rate එකට වෙනස් වෙන්නේ නෑ. Includes / Include නෑ: line එකකට එකක්. \"From\" = පටන් ගන්න price එක (Custom), final price එක quote එකෙන්.", base: true,
       fields: [["label", "Name"], ["cat", "Category", "pkgcat"], ["badge", "Badge (Ex: ගොඩක් අය තෝරන්නේ). හිස් නම් නෑ"], ["lkr", "Price (LKR)", "num", 0, "lkr"], ["from", "\"From\" price (final price quote එකෙන්)", "bool"], ["platform", "Platform (Ex: Android only)"], ["screens", "Screens (Ex: Screens 8 ට වෙනකන්)"], ["time", "කාලය (Ex: සති 3 – 5)"], ["weeks", "Weeks (number, estimate එකට)", "num"], ["revisions", "Revisions", "num"], ["blurb", "Short description (card එකේ උඩින්)"], ["includes", "Includes (line එකකට එකක්)", "lines"], ["excludes", "Include නෑ (line එකකට එකක්)", "lines"], ["infra", "වෙනම ගෙවන fees (මේ package එකට)"]],
       tpl: { label: "New package", cat: "app", badge: "", lkr: 10000, from: false, platform: "Android only", screens: "", time: "", weeks: 1, revisions: 1, blurb: "", includes: [], excludes: [], infra: "" } },
     { key: "addons", title: "Package add-ons", note: "Package එකකට customer ට එකතු කරන්න පුළුවන් approved වෙනස්කම් (fixed LKR). හිස් නම් form එකේ add-ons step එක පේන්නේ නෑ — package එකේ නැති දේවල් වෙනම quote වෙනවා. \"Qty\" = customer ට කීයක් ඕනද කියලා තෝරන්න පුළුවන්.", base: true,
@@ -761,7 +761,7 @@
       const p = base + "." + f;
       if (type === "lines") return field(p, label, { type: "lines", rows: 5, wide: true });
       if (type === "kind") return field(p, label, { type: "select", options: [["web", "Web"], ["app", "App"], ["both", "App + Web"]] });
-      if (type === "pkgcat") return field(p, label, { type: "select", options: [["app", "Mobile App"], ["web", "Website"]] });
+      if (type === "pkgcat") return field(p, label, { type: "select", options: [["app", "Mobile App"], ["web", "Website"], ["backend", "Backend & Admin"]] });
       if (type === "bool") return field(p, label, { type: "bool" });
       if (type === "for") {
         const cur = get(p) || [];
@@ -844,7 +844,7 @@
             field(base + ".video", "Video (optional)", { ph: "assets/video/file.mp4", hint: "දැම්මොත් animation එක වෙනුවට video එක පේනවා." }) +
             field(base + ".tags", "Tags (comma වලින්)", { type: "list" }) +
             field(base + ".packages", "Packages පෙන්නන්න", { type: "bool", hint: "ටික් කළොත් මේ service page එකේ packages ටික (Pricing කොටසේ) පේනවා. Mobile Apps, Websites, Business Systems pages වලට on." }) +
-            field(base + ".pkgCat", "Package category", { type: "select", options: [["app", "Mobile App"], ["web", "Website"]] }) +
+            field(base + ".pkgCat", "Package category", { type: "select", options: [["app", "Mobile App"], ["web", "Website"], ["backend", "Backend & Admin"]] }) +
             field(base + ".short", "Short line (services list එකේ)", { wide: true, hint: "පේළි එකකට ගැළපෙන කෙටි විස්තරයක්. හිස් නම් Summary එක පෙන්නනවා." }) +
             field(base + ".summary", "Summary (card එකේ)", { type: "area", rows: 2, wide: true }) +
             field(base + ".intro", "Intro (page එකේ උඩ)", { type: "area", rows: 3, wide: true }) +

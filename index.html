@@ -20,7 +20,7 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261110d">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261110e">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body>
@@ -156,6 +156,7 @@
         <div class="tabs-bar" role="tablist" aria-label="Pricing categories">
           <button type="button" class="tab" role="tab" id="pt-app" aria-controls="pp-app" aria-selected="true">Mobile Apps <small>PACKAGES</small></button>
           <button type="button" class="tab" role="tab" id="pt-web" aria-controls="pp-web" aria-selected="false" tabindex="-1">Websites <small>PACKAGES</small></button>
+          <button type="button" class="tab" role="tab" id="pt-backend" aria-controls="pp-backend" aria-selected="false" tabindex="-1">Backend &amp; Admin</button>
           <button type="button" class="tab" role="tab" id="pt-design" aria-controls="pp-design" aria-selected="false" tabindex="-1">Design &amp; Video</button>
         </div>
 
@@ -173,6 +174,15 @@
           <div id="home-web-packages"></div>
           <div class="sec-cta">
             <a class="btn btn-primary" href="start-project.html?track=web">Package එකක් තෝරලා Project එක පටන් ගන්න</a>
+            <button class="btn" type="button" data-open-chat>කිසිම package එකක් ගැලපෙන්නේ නැද්ද? Chat කරන්න</button>
+          </div>
+        </div>
+
+        <div class="tp" role="tabpanel" id="pp-backend" aria-labelledby="pt-backend">
+          <p class="muted ladder-intro">ඔයාගේ දැනට තියෙන app එකට හෝ site එකට Firebase backend එකක් සහ web admin panel එකක්: fixed LKR packages 4ක්, ලොකු custom backends වලට quote. හැම package එකකම scope එක, "Include නෑ" සහ Firebase billing (Blaze) ඕන වෙන තැන් පැහැදිලිව.</p>
+          <div id="home-backend-packages"></div>
+          <div class="sec-cta">
+            <a class="btn btn-primary" href="start-project.html?track=backend">Package එකක් තෝරලා Project එක පටන් ගන්න</a>
             <button class="btn" type="button" data-open-chat>කිසිම package එකක් ගැලපෙන්නේ නැද්ද? Chat කරන්න</button>
           </div>
         </div>
@@ -298,13 +308,13 @@
 </a>
 </aside>
 
-<script defer src="assets/js/firebase-config.js?v=20261110d"></script>
-<script defer src="assets/js/config.js?v=20261110d"></script>
-<script defer src="assets/js/services.js?v=20261110d"></script>
-<script defer src="assets/js/fb.js?v=20261110d"></script>
-<script defer src="assets/js/chat.js?v=20261110d"></script>
-<script defer src="assets/js/nav.js?v=20261110d"></script>
-<script defer src="assets/js/scrollfx.js?v=20261110d"></script>
-<script defer src="assets/js/boot.js?v=20261110d" data-load="pricing.js packages.js svcui.js home.js main.js livechat.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261110e"></script>
+<script defer src="assets/js/config.js?v=20261110e"></script>
+<script defer src="assets/js/services.js?v=20261110e"></script>
+<script defer src="assets/js/fb.js?v=20261110e"></script>
+<script defer src="assets/js/chat.js?v=20261110e"></script>
+<script defer src="assets/js/nav.js?v=20261110e"></script>
+<script defer src="assets/js/scrollfx.js?v=20261110e"></script>
+<script defer src="assets/js/boot.js?v=20261110e" data-load="pricing.js packages.js svcui.js home.js main.js livechat.js sitetext.js"></script>
 </body>
 </html>

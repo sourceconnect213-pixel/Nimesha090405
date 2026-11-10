@@ -64,7 +64,7 @@ window.HX_SERVICES = {
       { q: "Project එකක් ඉවර කරන්න කොච්චර කල් යනවද?", a: "Logo එකකට දවස් 3ක් විතර, reel එකකට දවස් 1 – 2ක්. Landing page එකකට දවස් 3 – 5ක්, WordPress site එකකට සති 3 – 4ක්, Basic Android app එකකට දවස් 5 – 7ක්, Firebase app එකකට සති 3 – 5ක්, ලොකු systems වලට මාස 2 – 3ක් යන්න පුළුවන්. හැම package එකකම time එක පෙන්නනවා." },
       { q: "පටන් ගන්න මට මොකද ඕන?", a: "ඔයාගේ idea එක විතරයි. මොකද ඕන, කවුද use කරන්නේ කියලා කියන්න. ඔයාට කැමති apps, logos, videos තියෙනවා නම් ඒවත් එවන්න. Design සහ technical වැඩ ඔක්කොම අපි කරනවා." },
       { q: "Play Store / App Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා. එතකොට app එක ඔයාගේ නමින් තියෙන්නේ. Google USD 25 එකපාරයි, Apple USD 99 අවුරුද්දට (ඒ fees ඔයාගේ). App packages 01 – 05 Android only." },
-      { q: "Package price එකට hosting / domain / Firebase fees include ද?", a: "නෑ. App සහ website package prices development charges විතරයි (fixed LKR). Hosting, domain, Firebase / Supabase / database usage, email, PayHere fees, Google / Apple developer accounts ඕන වුණොත් ඔයාගේ accounts වලින් වෙනම. Basic / Standard apps වලටයි Basic / Standard websites වලටයි server එකක් ඕනම නෑ." },
+      { q: "Package price එකට hosting / domain / Firebase fees include ද?", a: "නෑ. App, website සහ backend package prices development charges විතරයි (fixed LKR). Hosting, domain, Firebase / Supabase / database usage, email, PayHere fees, Google / Apple developer accounts ඕන වුණොත් ඔයාගේ accounts වලින් වෙනම. Basic / Standard apps වලටයි Basic / Standard websites වලටයි server එකක් ඕනම නෑ." },
       { q: "Source code එක මට ලැබෙනවද?", a: "ඔව්. Final payment එක කළාම full source code එක සහ project එකේ logins ඔක්කොම ඔයාට දෙනවා." },
       { q: "Launch කළාට පස්සේ මොකද වෙන්නේ?", a: "{support} එකක් bug fixes free. ඊට පස්සේ updates, අලුත් features, server checks වලට monthly maintenance plan එකක් ගන්න පුළුවන්." },
       { q: "Logo එකකට revisions කීයක් දෙනවද?", a: "Concepts 3ක් පෙන්නනවා. ඔයාට කැමති එක revisions 3ක් වෙනකන් free. Final files PNG, JPG, SVG, PDF විදියට දෙනවා, print වලටයි online වලටයි දාන්න පුළුවන්." },
@@ -152,23 +152,29 @@ window.HX_SERVICES = {
       ]
     },
     {
-      slug: "backend-admin", cat: "dev", name: "Backend & Admin Panel", anim: "backend",
+      slug: "backend-admin", cat: "dev", name: "Backend & Admin Panel", anim: "backend", pkgv: 4,   // pkgv: this text goes with the approved backend package list
       icon: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6M4 11.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
-      short: "Secure login, database සහ admin panel එකක්",
-      summary: "Secure login, database සහ admin panel එකක්. Prices, content, users ඔක්කොම ඔයාටම update කරන්න පුළුවන්.",
-      intro: "App එකට හරි website එකට හරි secure login එකක්, database එකක් සහ admin panel එකක්. Prices, content, users ඔක්කොම ඔයාටම update කරන්න පුළුවන්.",
-      tags: ["Firebase", "Auth", "Cloud"],
+      short: "දැනට තියෙන app / site එකට Firebase backend + admin panel. Fixed LKR packages",
+      summary: "ඔයාගේ දැනට තියෙන app එකට හෝ site එකට secure login, Firestore database සහ web admin panel එකක්. LKR 29,000 ඉඳන් fixed packages 4ක්, custom backends quote එකෙන්.",
+      intro: "ඔයාගේ දැනට තියෙන app එකට හෝ website එකට Firebase backend එකක් (email / password login, database, security rules) සහ web admin panel එකක්. Package එකේ කියලා තියෙන modules, admin views, roles විතරයි — ඊට වැඩි දෙයක් ඕන නම් වෙනම quote එකක්. අලුත් app / site එකක් ඕන නම් Mobile Apps / Websites packages බලන්න.",
+      tags: ["Firebase", "Firestore", "Admin panel"],
+      packages: true, pkgCat: "backend",
       includes: [
-        "Login & sign up",
-        "OTP verification (SMS / Email)",
-        "Admin panel එකෙන් prices, content, users manage කරන්න",
-        "Firebase backend",
-        "Photo / PDF upload"
+        "Fixed LKR development price (dollar rate එකට වෙනස් වෙන්නේ නෑ)",
+        "Email / password Firebase login, Firestore data modules, security rules",
+        "Web admin panel (package එක අනුව views 4 – 10, roles 2 – 4)",
+        "ඔයාගේ existing app / site 1කට wire කරලා දෙනවා",
+        "Revisions (package එක අනුව 1 – 3), දවස් 30ක් bug-fix support",
+        "{advance} advance, final payment එකෙන් පස්සේ source code ඔයාට",
+        "Firebase usage, Blaze billing (uploads / functions), hosting, domain ඔයාගේ accounts වලින් වෙනම"
       ],
-      prices: [{ type: "appadmin", featured: true }, { feature: "admin" }, { feature: "login" }, { feature: "otp" }],
+      prices: [],
       faq: [
-        { q: "App එක සහ admin panel එක එකට ගන්න පුළුවන්ද?", a: "ඔව්. \"App + Admin panel\" එකේ app එක සහ manage කරන්න web dashboard එක දෙකම තියෙනවා." },
-        { q: "OTP කියන්නේ මොකක්ද?", a: "Login වෙනකොට SMS එකට හරි email එකට හරි එන code එකක්. එතකොට වෙන කෙනෙක්ට ඔයාගේ account එකට යන්න අමාරුයි." }
+        { q: "මට දැනටමත් app / site එකක් තියෙනවා. ඒකට backend එකක් විතරක් ගන්න පුළුවන්ද?", a: "ඔව් — මේ packages හැදුවේ ඒකටම. Basic Firebase Backend (LKR 29,000) එකෙන් login + data module 1ක් ඔයාගේ existing app / site එකට wire කරනවා. Frontend එක integration-ready ද කියලා code audit එකකින් බලලා timeline එක confirm කරනවා." },
+        { q: "මට backend එකක් තියෙනවා, admin panel එකක් විතරයි ඕන?", a: "Basic Web Admin Panel (LKR 49,000): ඔයාගේ වැඩ කරන Firebase backend එකට admin views 4ක් (dashboard, records list, add / edit, read-only users). Backend එකක් නැත්නම් Advanced package එක (backend + admin දෙකම) බලන්න." },
+        { q: "Firebase Blaze කියන්නේ මොකක්ද? ගෙවන්න වෙනවද?", a: "Firebase ගේ pay-as-you-go billing plan එක. Photo / PDF uploads (Cloud Storage) සහ Cloud Functions වලට Blaze on කරලා ඕනමයි — Advanced සහ Professional packages වලට. Free allowance ඇතුළේ නම් bill එක 0 වෙන්නත් පුළුවන්, ඒත් guarantee නෑ; ඔයාගේ Google account එකේ billing + budget alerts set කරනවා. Basic packages 2ට Blaze ඕන නෑ." },
+        { q: "OTP (SMS) login ගන්න පුළුවන්ද?", a: "Packages වල include නෑ (SMS fees + වෙනම setup). ඕන නම් වෙනම quote කරනවා. Email / password login හැම package එකකම include." },
+        { q: "App එකයි admin panel එකයි දෙකම අලුතෙන් ඕන නම්?", a: "ඒකට Mobile Apps packages (Business / Premium එකේ admin එකත් එක්ක) හරි Custom Backend & Admin (LKR 349,000 ඉඳන්) හරි. දැනට තියෙන app එකකට backend / admin එකතු කරන එකයි මේ page එකේ packages." }
       ]
     },
     {

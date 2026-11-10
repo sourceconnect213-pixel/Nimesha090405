@@ -40,12 +40,12 @@
     const foot = (C.packageTerms || []).length || C.packageNote
       ? '<p class="ladder-note">' + (C.packageTerms || []).map(esc).join(" · ") + ((C.packageTerms || []).length && C.packageNote ? "<br>" : "") + esc(C.packageNote || "") + "</p>" : "";
     // what the customer pays third parties (store accounts, Firebase, PayHere, domain) + the quote wording
-    const feeList = (cat === "web" ? C.packageFeesWeb : C.packageFees) || [];
+    const feeList = (cat === "web" ? C.packageFeesWeb : cat === "backend" ? C.packageFeesBackend : C.packageFees) || [];
     const fees = feeList.length || C.packageQuote
-      ? '<details class="pk-fees"><summary><span>මොනවද වෙනම ගෙවන්නේ? <small>' + (cat === "web" ? "Domain, hosting, database, email, PayHere" : "Google / Apple accounts, Firebase, PayHere, domain") + '</small></span></summary><div class="pk-fees-body">' +
+      ? '<details class="pk-fees"><summary><span>මොනවද වෙනම ගෙවන්නේ? <small>' + (cat === "web" ? "Domain, hosting, database, email, PayHere" : cat === "backend" ? "Firebase quotas, Blaze billing, hosting, Supabase" : "Google / Apple accounts, Firebase, PayHere, domain") + '</small></span></summary><div class="pk-fees-body">' +
         (feeList.length ? "<dl>" + feeList.map(f => "<dt>" + esc(f.t) + "</dt><dd>" + esc(f.d) + "</dd>").join("") + "</dl>" : "") +
         (C.packageQuote ? '<p class="pk-quote"><b>Quote එකේ ලියන්නේ:</b> ' + esc(C.packageQuote) + "</p>" : "") + "</div></details>" : "";
-    return '<div class="ladder" data-ladder><div class="ladder-list" tabindex="0" role="tablist" aria-label="' + (cat === "web" ? "Website packages" : "App packages") + '" aria-orientation="vertical">' + rungs + '</div><div class="ladder-panel">' + panels + "</div></div>" + foot + fees;
+    return '<div class="ladder" data-ladder><div class="ladder-list" tabindex="0" role="tablist" aria-label="' + (cat === "web" ? "Website packages" : cat === "backend" ? "Backend & admin packages" : "App packages") + '" aria-orientation="vertical">' + rungs + '</div><div class="ladder-panel">' + panels + "</div></div>" + foot + fees;
   }
   root.HXPkg = { html: html };
 })(window);

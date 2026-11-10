@@ -30,14 +30,15 @@ window.HEXORA = {
   rangeSpread: 1.25,                     // top of estimate range = lowest × this
 
   /* ---------- App + website packages (approved price lists, 2026-11-10) ----------
-     cat: "app" = Mobile App packages 01–06, cat: "web" = Website Development packages WEB-01–06.
+     cat: "app" = Mobile App packages 01–06, cat: "web" = Website Development packages WEB-01–06,
+     cat: "backend" = Backend & Admin Panel packages BACKEND-01–05.
      FIXED LKR prices: they are NOT scaled by the dollar rate ("packagesFixedLkr": true). The price is the
      DEVELOPMENT charge only: Firebase usage, domain, hosting, PayHere fees, Google / Apple accounts are the
      customer's (paid separately). Packages 01–05 are Android only (Flutter). "from": true = starting price,
      final price by quotation (Custom). "packagesVersion" guards an older copy saved from the admin panel:
      when it differs, the packages below replace the saved ones. */
   packagesFixedLkr: true,
-  packagesVersion: 3,
+  packagesVersion: 4,
   packageBaseRate: 369,                  // only used to show "≈ USD" next to LKR prices
   packageNote: "මේවා development charges විතරයි. Hosting, domain, database / cloud usage, email, payment gateway fees, Google / Apple developer accounts, premium plugins ඕන වුණොත් වෙනම (ඔයාගේ accounts වලින්).",
   packageTerms: ["50% advance", "දවස් 30ක් bug-fix support (approved scope එකට)", "Final payment එකෙන් පස්සේ source code"],
@@ -57,6 +58,14 @@ window.HEXORA = {
     { t: "Supabase / Vercel (WEB-05, 06)", d: "Supabase Pro USD 25 / මාසයට ඉඳන් (usage අනුව වැඩි වෙන්න පුළුවන්), Vercel Pro USD 20 / මාසයට (ඕන නම්), Resend email free 3,000 / මාසයට. VPS default ඕන නෑ." },
     { t: "PayHere (WEB-04)", d: "Merchant fees PayHere ට: Lite LKR 0 / මාසයට + 3.30%, Plus LKR 3,990 + 2.99%, Premium LKR 9,990 + 2.69%. Merchant approval එක PayHere එකෙන්." },
     { t: "Email, SMS, premium plugins", d: "Business email, SMTP, SMS, premium themes / plugins, paid stock assets ඕන වුණොත් ඒ provider ට වෙනම." }
+  ],
+  packageFeesBackend: [
+    { t: "Firebase Auth + Firestore (01 – 04)", d: "Email / password login free. Firestore free quota (project එකකට): 1 GiB, දවසකට reads 50,000 / writes 20,000 / deletes 20,000, outbound 10 GiB / මාසයට. ඊට වැඩි usage, backups, special indexes Google ට. Firebase project එක ඔයාගේ Google account එකේ." },
+    { t: "Cloud Storage uploads (03, 04) — Blaze", d: "Photo / PDF uploads වලට Firebase Blaze (pay-as-you-go) plan එක ඕනමයි — free allowance ඇතුළේ උනත් billing enable කරන්න ඕන. Bill එක region, stored GB, downloads අනුව. Budget alert එකක් spend cap එකක් නෙවෙයි." },
+    { t: "Cloud Functions (04)", d: "Server-side operations වලටත් Blaze ඕන. Invocations වලට free allowance තියෙනවා; compute, networking, builds වලට charges එන්න පුළුවන්." },
+    { t: "Admin panel hosting", d: "Admin web app එක Firebase Hosting free tier එකේ (10 GB storage, දවසකට ~360 MB transfer) දාන්න පුළුවන්. Custom domain optional, registrar ට වෙනම. VPS default ඕන නෑ." },
+    { t: "Supabase (custom, 05)", d: "Custom backend එකකට Supabase තෝරුවොත් Pro USD 25 / මාසයට ඉඳන් (≈ LKR 9,225) — usage අනුව වැඩි වෙන්න පුළුවන්. Firebase / Supabase / VPS එකක් තෝරන එකයි, තුනම ගන්න ඕන නෑ." },
+    { t: "SMS / OTP, email, APIs, premium tools", d: "Quote එකේ include කළොත් විතරයි; ඒ provider ට ඔයාගේ account එකෙන් වෙනම." }
   ],
   packageQuote: "Development charge: package price එක (හෝ approved custom quote එක). Advance 50%. Package එකේ කියලා තියෙන scope එක විතරයි include. Hosting, domain, Firebase / Supabase / database usage, email / SMS, payment gateway fees, Google / Apple developer accounts, store publishing, premium plugins සහ third-party software fees ලිඛිතව itemize කරලා නැත්නම් exclude. දවස් 30 free support එක deliver කරපු features වල bugs වලට විතරයි, අලුත් features වලට නෙවෙයි. Final payment එකෙන් පස්සේ agreed source code එක ඔයාට.",
   packages: {
@@ -121,7 +130,35 @@ window.HEXORA = {
       blurb: "ඔයාගේ business එකට හදන web portal / enterprise web app එකක්: student / customer / employee portals, multi-store systems, custom workflows. Roles, dashboards, workflows, databases, reports, integrations — approved proposal එක අනුව.",
       includes: ["Custom-designed responsive portal (quote එකට, Ex: views 20ක් විතර)", "User roles (Ex: 4), CRUD modules (Ex: 4)", "Business workflows 1 – 2ක් agreed rules එක්ක", "Admin dashboard, reports / charts, search, CSV export", "File upload, API integration, transactional email", "RLS / permissions, security testing, deployment", "Admin orientation, revisions (quote එකේ)", "දවස් 30 bug-fix support, source + DB handover"],
       excludes: ["LKR 399,000 ට ඔක්කොම include නෑ — scope එක proposal එකෙන්", "Multi-company tenancy, SSO, real-time chat, deep AI, mobile apps වෙනම estimate", "Hosting, cloud usage, APIs, email / SMS, maintenance වෙනම"],
-      infra: "Architecture එක අනුව: Supabase Pro USD 25 / මාසයට, Vercel Pro USD 20 / මාසයට, Resend, domain — quote එකේ one-time / monthly / annual වෙන වෙනම itemize කරනවා." }
+      infra: "Architecture එක අනුව: Supabase Pro USD 25 / මාසයට, Vercel Pro USD 20 / මාසයට, Resend, domain — quote එකේ one-time / monthly / annual වෙන වෙනම itemize කරනවා." },
+
+    /* ---------- Backend & Admin Panel packages BACKEND-01 – 05 (approved 2026-11-10, fixed LKR development prices) ----------
+       Every package wires the backend / admin into ONE existing app or site of the customer (a new app / site is a separate package). */
+    "backend-basic": { cat: "backend", label: "Basic Firebase Backend Setup", lkr: 29000, weeks: 1.5, time: "සති 1 – 2", platform: "Firebase · existing app / site 1ක්", screens: "Login + CRUD module 1 · admin panel නෑ", revisions: 1,
+      blurb: "ඔයාගේ දැනට තියෙන app එකට හෝ site එකට Firebase backend එකක්: email / password login, Firestore data module 1ක්, security rules. Admin dashboard එකක් නෑ.",
+      includes: ["Firebase project / connection 1ක් setup", "Email / password register, login, password reset", "Simple Firestore CRUD module 1ක් (validation එක්ක)", "User profile data (module එකට ඕන තරම්)", "Firestore security rules (අනිත් අයගේ data බලන්න බෑ)", "දැනට තියෙන, integration-ready frontend 1කට wire කරලා", "Testing, setup / handover docs", "Revision 1ක්, දවස් 30 bug-fix support", "Final payment එකෙන් පස්සේ source code"],
+      excludes: ["අලුත් screens / frontend design, admin panel, dashboards, roles", "SMS / phone OTP, social login", "Photo / PDF uploads (Cloud Storage)", "Payments, custom API server, data migration, analytics, chat, AI", "Hosting, domain, third-party fees"],
+      infra: "Firebase Auth (email) + Firestore free quota ඇතුළේ නම් LKR 0 (guarantee නෑ). VPS, domain, Storage ඕන නෑ. ඔයාගේ app / site එකේ hosting එක ඒ විදියටම." },
+    "backend-admin": { cat: "backend", label: "Basic Web Admin Panel", lkr: 49000, weeks: 2.5, time: "සති 2 – 3", platform: "දැනට තියෙන Firebase backend එකකට", screens: "Admin views 4 · roles 2", revisions: 1,
+      blurb: "දැනටමත් වැඩ කරන Firebase backend එකකට web admin panel එකක්: dashboard counters, records list / search / filter, add / edit form, read-only user profiles. Admin / user roles 2ක්.",
+      includes: ["Dashboard overview (record totals, counters)", "Records list: දැනට තියෙන Firestore module 1කට list, search, filter, delete", "ඒ module එකටම add / edit form", "User profiles — read-only list / search", "Existing Firebase email login එකෙන් admin access", "Roles 2: Admin + user (Firestore rules වලින් enforce)", "Responsive desktop / tablet / phone layout", "Static admin frontend deploy, admin training විනාඩි 30", "Revision 1ක්, දවස් 30 bug-fix support, source handover"],
+      excludes: ["අලුත් Firebase backend එකක් හදන එක (Backend 01 / 03 බලන්න)", "Firebase Auth accounts create / disable / bulk manage", "Modules 2ක් හෝ වැඩි, file uploads, advanced reports", "APIs, payments, multi-branch, AI", "Paid cloud services, maintenance"],
+      infra: "Prerequisite: ඔයාගේම වැඩ කරන Firebase backend එකක් ඕන. Admin එක Firebase Hosting free tier එකේ දාන්න පුළුවන්. Domain optional. LKR 0 / මාසයට වෙන්න පුළුවන්, guarantee නෑ." },
+    "backend-advanced": { cat: "backend", label: "Advanced Firebase Backend & Admin System", badge: "ගොඩක් අය තෝරන්නේ", lkr: 129000, weeks: 5.5, time: "සති 4 – 7", platform: "Firebase backend + web admin", screens: "CRUD modules 3 · admin views 8 · roles 3 · upload module 1", revisions: 2,
+      blurb: "Firebase backend එකයි web admin එකයි දෙකම: data modules 3ක්, admin views 8ක් දක්වා, Admin / Editor / Viewer roles, image / PDF upload module 1ක්, basic report 1ක්. ඔයාගේ existing app / site 1කට wire කරනවා.",
+      includes: ["Firebase project setup + email / password Auth", "Simple Firestore CRUD modules 3ක් (lists, forms, validation)", "Responsive web admin views 8 ට වෙනකන් (overview, data, users, files, report / settings)", "Roles 3: Admin, Editor, Viewer (authorization matrix)", "Image / PDF upload module 1ක් (Cloud Storage; types, size limit, role actions)", "Dashboard counters + basic report / chart 1ක්", "Search / filter, read-only user profile list", "Firestore + Storage security rules", "Existing frontend 1කට integration, integration tests, deployment", "Admin training පැය 1, revisions 2ක්, දවස් 30 bug-fix support, source handover"],
+      excludes: ["අලුත් customer-facing app / site එකක් හදන එක", "Bulk Auth account admin, invitation / permission lifecycle, multi-tenant / multi-branch", "Payments, automation, heavy PDF processing, AI, SMS OTP, external APIs", "Unlimited uploads, ලොකු data migration", "VPS, paid maintenance, vendor fees"],
+      infra: "Cloud Storage (uploads) වලට Firebase Blaze (pay-as-you-go) billing on කරන්න ඕන — free allowance ඇතුළේ නම් bill එක 0 වෙන්නත් පුළුවන්, ඒත් billing enable කරලා ඕන. Firestore / Hosting free quotas. VPS ඕන නෑ. Domain optional." },
+    "backend-professional": { cat: "backend", label: "Professional Backend & Admin System", badge: "Business වලට හොඳයි", lkr: 219000, weeks: 8.5, time: "සති 7 – 10", platform: "Firebase + Cloud Functions + web admin", screens: "CRUD modules 4 · admin views 10 · roles 4 · uploads 2 · reports 3", revisions: 3,
+      blurb: "Professional Firebase backend + admin: modules 4, admin views 10, Super Admin / Manager / Editor / Viewer roles, upload modules 2, reports 3, basic audit log, scoped Cloud Functions, external API 1ක්.",
+      includes: ["Firebase backend + email / password Auth", "Simple Firestore CRUD modules 4ක්", "Responsive web admin views 10 ට වෙනකන්", "Roles 4: Super Admin, Manager, Editor, Viewer (role-action matrix, rules වලින් enforce)", "Image / PDF upload-management modules 2ක්", "Basic reports / charts 3ක්, filtered lists, pagination", "Basic audit log (කවුද, මොකද, කවදද — agreed modules වලට)", "Scoped Cloud Functions / server-side operations (quote එකේ triggers)", "External API integration 1ක් (ඔයාගේ access එකෙන්)", "Existing frontend 1කට integration, security rules, validation, testing, deployment", "Admin training පැය 1, revisions 3ක්, දවස් 30 bug-fix support, source handover"],
+      excludes: ["ලොකු customer-facing app / site UI එකක්, frontends කීපයක්", "Multi-tenant SaaS / enterprise multi-store", "Complex payments / banking, POS, payroll / accounting, AI", "Unlimited functions / integrations, heavy real-time workloads", "Cloud operations, SLAs, paid infrastructure" ],
+      infra: "Cloud Storage + Cloud Functions වලට Firebase Blaze billing ඕන (usage-based; free allowances තියෙනවා). Auth, Firestore, Hosting, Functions compute, domain, API fees ඔයාගේ account එකෙන් වෙනම. VPS ඕන නෑ." },
+    "backend-custom": { cat: "backend", label: "Custom Backend & Admin Development", lkr: 349000, from: true, weeks: 0, time: "Project එක අනුව", platform: "Firebase / Supabase / custom (quote එකට)", screens: "Scope එක අනුව", revisions: 0,
+      blurb: "ඔයාගේ business එකට හදන custom backend එකක් සහ secure admin system එකක්: custom database schema, APIs, advanced dashboards, roles, workflows, integrations. Features, timeline, final price dedicated project quote එකෙන්.",
+      includes: ["Firebase, Supabase, PostgreSQL හෝ custom backend architecture", "Custom database schema + server-side APIs (REST ආදී)", "Advanced admin dashboards, role management, workflow orchestration", "Complex records, scoped file / image / PDF management, reports / exports", "API, payments, notifications, automation, AI integrations (quote කළොත්)", "Security / access control, testing, deployment, documentation (quote එකේ items වලට)", "Existing frontend integration (agreed කළොත්)", "දවස් 30 bug-fix support, source + DB handover"],
+      excludes: ["LKR 349,000 ට ඔක්කොම include නෑ — scope එක quote එකෙන්", "අලුත් customer-facing app / website එකක් (වෙනම scope)", "Revisions / timeline quote එකේ (unlimited නෑ)", "Infrastructure / third-party fees වෙනම"],
+      infra: "Architecture එක අනුව (Firebase Blaze usage, Supabase Pro USD 25 / මාසයට ඉඳන්, domain, APIs) — quote එකේ one-time / monthly වෙන වෙනම itemize කරනවා. VPS ඕන නම් විතරයි." }
   },
 
   /* ---------- Package add-ons ----------

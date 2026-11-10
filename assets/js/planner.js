@@ -1,5 +1,5 @@
 /* HEXORA — "Project eka patan ganna" form + live estimate
-   Tracks: "pkg" (mobile app packages), "web" (website packages), "creative" (logo, design, video);
+   Tracks: "pkg" (mobile app packages), "web" (website packages), "backend" (backend & admin packages), "creative" (logo, design, video);
    "dev" (the old generic type / size / features estimate) stays in the code but is no longer offered. */
 (function () {
   "use strict";
@@ -41,7 +41,7 @@
     $("#opt-type").innerHTML = Object.entries(C.types).filter(([, t]) => t.kind !== "app" && t.kind !== "both").map(([k, t]) => tile("radio", "type", k, t.label, t.note, "")).join("");
     // one radio group for every package; a label is shown only on its category's track (data-track, see applyTrack)
     $("#opt-pkg").innerHTML = Object.entries(C.packages || {}).map(([k, p]) =>
-      '<label class="opt pkg" data-track="' + ((p.cat || "app") === "web" ? "web" : "pkg") + '"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
+      '<label class="opt pkg" data-track="' + ((p.cat || "app") === "web" ? "web" : (p.cat === "backend" ? "backend" : "pkg")) + '"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
       '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + esc([p.platform, p.screens, p.time].filter(Boolean).join(" · ") || ((p.includes || []).length + " features")) + ' · select කළාම බලන්න</span><ul class="pkg-inc">' +
       [p.platform, p.screens].filter(Boolean).map(x => '<li class="meta">' + esc(x) + "</li>").join("") + (p.includes || []).map(x => "<li>" + esc(x) + "</li>").join("") +
       (p.excludes || []).map(x => '<li class="no">' + esc(x) + "</li>").join("") + "</ul></span>" + (p.badge ? '<span class="pkg-badge">' + esc(p.badge) + "</span>" : "") + "</label>").join("");   // the badge comes after .opt-box so "input:checked + .opt-box" still matches
@@ -76,8 +76,8 @@
   const val = name => { const el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ""; };
   const vals = name => $$('input[name="' + name + '"]:checked', form).map(i => i.value);
   const track = () => val("track") || "pkg";
-  const isPkg = t => t === "pkg" || t === "web";   // both package tracks use the package estimate
-  const pkgCatOf = t => (t === "web" ? "web" : "app");
+  const isPkg = t => t === "pkg" || t === "web" || t === "backend";   // every package track uses the package estimate
+  const pkgCatOf = t => (t === "web" ? "web" : t === "backend" ? "backend" : "app");
   function qtyOf(k) {
     const el = form.querySelector('input[name="' + qName(k) + '"]');
     const n = el ? parseInt(el.value, 10) : 0;
@@ -354,7 +354,7 @@
     } else if (est.kind === "pkg") {
       const ps = pkgSel(), p = C.packages[ps.pkg];
       const ad = ps.addons.map(k => C.addons[k].label).concat(Object.keys(ps.qty).map(k => C.addons[k].label + " × " + ps.qty[k]));
-      L.push(p.cat === "web" ? "*Project — Website Package*" : "*Project — Mobile App Package*");
+      L.push(p.cat === "web" ? "*Project — Website Package*" : p.cat === "backend" ? "*Project — Backend & Admin Package*" : "*Project — Mobile App Package*");
       L.push("Package: " + p.label + " (" + (p.from ? "from " : "") + pk(p.lkr) + (p.from ? "+" : "") + (p.platform ? " · " + p.platform : "") + ")");
       L.push("Changes / add-ons: " + (ad.length ? ad.join(", ") : "-"));
     } else {
@@ -532,10 +532,10 @@
   const pick = (name, v) => { const el = form.querySelector('input[name="' + name + '"][value="' + v + '"]'); if (el) el.checked = true; };
   const qTrack = q.get("track"), qType = q.get("type"), qItem = q.get("item");
   const qPkg = q.get("package"), own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k);
-  if (qPkg && own(C.packages, qPkg)) { pick("track", (C.packages[qPkg].cat || "app") === "web" ? "web" : "pkg"); pick("pkg", qPkg); }
-  else if (qTrack === "pkg" || qTrack === "web") pick("track", qTrack);
+  if (qPkg && own(C.packages, qPkg)) { pick("track", C.packages[qPkg].cat === "web" ? "web" : C.packages[qPkg].cat === "backend" ? "backend" : "pkg"); pick("pkg", qPkg); }
+  else if (qTrack === "pkg" || qTrack === "web" || qTrack === "backend") pick("track", qTrack);
   else if (qTrack === "dev") pick("track", "web");   // old links: the generic estimate is now the website packages
-  if (qType && own(C.types, qType)) pick("track", C.types[qType].kind === "web" ? "web" : "pkg");   // old ?type= links
+  if (qType && own(C.types, qType)) pick("track", C.types[qType].kind === "web" ? "web" : qType === "appadmin" ? "backend" : "pkg");   // old ?type= links
   if (qTrack === "creative" || (qItem && own(C.creative, qItem))) {
     pick("track", "creative");
     if (qItem && C.creative[qItem] && !qtyOf(qItem)) form.querySelector('input[name="cr-' + qItem + '"]').value = 1;

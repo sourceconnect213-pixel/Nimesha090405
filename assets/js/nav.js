@@ -100,13 +100,13 @@
   function target(hash, select) {
     const id = idOf(hash);
     if (!id) return null;
-    let m = id.match(/^pricing-(app|web|design)$/);
+    let m = id.match(/^pricing-(app|web|backend|design)$/);
     if (m) { const t = $("#pt-" + m[1]); if (t) { if (select && t.getAttribute("aria-selected") !== "true") t.click(); return t.closest("section[id]") || t; } return null; }
     m = id.match(/^pkg-([\w-]+)$/);
     if (m) { const r = $("#rung-" + m[1]); if (r) { if (select && r.getAttribute("aria-selected") !== "true") r.click(); return r.closest("section[id]") || r; } return null; }
     return document.getElementById(id);
   }
-  const isAlias = hash => /^#?(pricing-(app|web|design)|pkg-[\w-]+)$/.test(hash || "");
+  const isAlias = hash => /^#?(pricing-(app|web|backend|design)|pkg-[\w-]+)$/.test(hash || "");
   const marginOf = el => parseFloat(getComputedStyle(el).scrollMarginTop) || ((header ? header.getBoundingClientRect().height : 0) + 12);
   function bring(el, smooth) {
     const top = el.getBoundingClientRect().top + window.scrollY - marginOf(el);

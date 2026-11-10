@@ -59,9 +59,9 @@
   const showPk = s => !!C.packages && (s.packages === true || (s.packages === undefined && s.slug === "mobile-apps"));
   const pkCat = s => s.pkgCat || "app";   // which package list a service page shows
   // a service that shows packages does not also show the old generic project-type prices of that kind
-  const pricesOf = s => (s.prices || []).filter(r => !(showPk(s) && r.type && C.types[r.type] && (pkCat(s) === "web" ? C.types[r.type].kind === "web" : C.types[r.type].kind !== "web")));
+  const pricesOf = s => (s.prices || []).filter(r => !(showPk(s) && ((r.type && C.types[r.type] && (pkCat(s) === "web" ? C.types[r.type].kind === "web" : C.types[r.type].kind !== "web")) || (pkCat(s) === "backend" && r.feature))));
   function ctaHref(s) {
-    if (showPk(s)) return "start-project.html?track=" + (pkCat(s) === "web" ? "web" : "pkg");
+    if (showPk(s)) return "start-project.html?track=" + (pkCat(s) === "web" ? "web" : pkCat(s) === "backend" ? "backend" : "pkg");
     for (const ref of s.prices || []) {
       const r = refOf(ref);
       if (r && r.kind === "type" && C.types[r.key].kind === "web") return "start-project.html?track=web";
