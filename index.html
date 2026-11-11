@@ -20,7 +20,7 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261111a">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261111b">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body>
@@ -157,6 +157,8 @@
           <button type="button" class="tab" role="tab" id="pt-app" aria-controls="pp-app" aria-selected="true">Mobile Apps <small>PACKAGES</small></button>
           <button type="button" class="tab" role="tab" id="pt-web" aria-controls="pp-web" aria-selected="false" tabindex="-1">Websites <small>PACKAGES</small></button>
           <button type="button" class="tab" role="tab" id="pt-backend" aria-controls="pp-backend" aria-selected="false" tabindex="-1">Backend &amp; Admin</button>
+          <button type="button" class="tab" role="tab" id="pt-ai" aria-controls="pp-ai" aria-selected="false" tabindex="-1">AI &amp; Automation</button>
+          <button type="button" class="tab" role="tab" id="pt-maint" aria-controls="pp-maint" aria-selected="false" tabindex="-1">Maintenance</button>
           <button type="button" class="tab" role="tab" id="pt-design" aria-controls="pp-design" aria-selected="false" tabindex="-1">Design &amp; Video</button>
         </div>
 
@@ -184,6 +186,24 @@
           <div class="sec-cta">
             <a class="btn btn-primary" href="start-project.html?track=backend">Package එකක් තෝරලා Project එක පටන් ගන්න</a>
             <button class="btn" type="button" data-open-chat>කිසිම package එකක් ගැලපෙන්නේ නැද්ද? Chat කරන්න</button>
+          </div>
+        </div>
+
+        <div class="tp" role="tabpanel" id="pp-ai" aria-labelledby="pt-ai">
+          <p class="muted ladder-intro">AI Features &amp; Automation: ඔයාගේ website එකට FAQ chatbot එකක ඉඳන් documents වලින් උත්තර දෙන assistant, human-approved content automation, business data assistant, multi-step AI agent දක්වා fixed LKR packages 5ක් — enterprise AI වලට custom quote. AI tokens, automation platform, hosting වෙනම.</p>
+          <div id="home-ai-packages"></div>
+          <div class="sec-cta">
+            <a class="btn btn-primary" href="start-project.html?track=ai">Package එකක් තෝරලා Project එක පටන් ගන්න</a>
+            <button class="btn" type="button" data-open-chat>කිසිම package එකක් ගැලපෙන්නේ නැද්ද? Chat කරන්න</button>
+          </div>
+        </div>
+
+        <div class="tp" role="tabpanel" id="pp-maint" aria-labelledby="pt-maint">
+          <p class="muted ladder-intro">Maintenance &amp; Hosting: ඔයාගේ website, WordPress site, online shop, web app, database සහ VPS වලට මාසික නඩත්තු plans 5ක් + custom SLA. Price එක Hexora ගේ මාසික service fee එක විතරයි — hosting, domain, cloud, backups වෙනම.</p>
+          <div id="home-maint-packages"></div>
+          <div class="sec-cta">
+            <a class="btn btn-primary" href="start-project.html?track=maint">Plan එකක් තෝරලා quote එකක් ගන්න</a>
+            <button class="btn" type="button" data-open-chat>මොන plan එකද දන්නේ නැද්ද? Chat කරන්න</button>
           </div>
         </div>
 
@@ -308,13 +328,13 @@
 </a>
 </aside>
 
-<script defer src="assets/js/firebase-config.js?v=20261111a"></script>
-<script defer src="assets/js/config.js?v=20261111a"></script>
-<script defer src="assets/js/services.js?v=20261111a"></script>
-<script defer src="assets/js/fb.js?v=20261111a"></script>
-<script defer src="assets/js/chat.js?v=20261111a"></script>
-<script defer src="assets/js/nav.js?v=20261111a"></script>
-<script defer src="assets/js/scrollfx.js?v=20261111a"></script>
-<script defer src="assets/js/boot.js?v=20261111a" data-load="pricing.js packages.js svcui.js home.js main.js livechat.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261111b"></script>
+<script defer src="assets/js/config.js?v=20261111b"></script>
+<script defer src="assets/js/services.js?v=20261111b"></script>
+<script defer src="assets/js/fb.js?v=20261111b"></script>
+<script defer src="assets/js/chat.js?v=20261111b"></script>
+<script defer src="assets/js/nav.js?v=20261111b"></script>
+<script defer src="assets/js/scrollfx.js?v=20261111b"></script>
+<script defer src="assets/js/boot.js?v=20261111b" data-load="pricing.js packages.js svcui.js home.js main.js livechat.js sitetext.js"></script>
 </body>
 </html>

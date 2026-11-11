@@ -15,7 +15,7 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261111a">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261111b">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body class="planner-page">
@@ -75,9 +75,11 @@
               <label class="opt"><input type="radio" name="track" value="pkg"><span class="opt-box"><span class="tick"></span><span class="t">Mobile App (Package)</span><span class="s">Android · LKR 14,000 ඉඳන් fixed packages 5ක් + custom</span></span></label>
               <label class="opt"><input type="radio" name="track" value="web"><span class="opt-box"><span class="tick"></span><span class="t">Website / Web system (Package)</span><span class="s">LKR 10,000 ඉඳන් fixed packages 5ක් + custom portal</span></span></label>
               <label class="opt"><input type="radio" name="track" value="backend"><span class="opt-box"><span class="tick"></span><span class="t">Backend &amp; Admin Panel (Package)</span><span class="s">දැනට තියෙන app / site එකකට · LKR 29,000 ඉඳන් 4ක් + custom</span></span></label>
+              <label class="opt"><input type="radio" name="track" value="ai"><span class="opt-box"><span class="tick"></span><span class="t">AI Features &amp; Automation (Package)</span><span class="s">Chatbot, knowledge assistant, automation, agents · LKR 40,000 ඉඳන්</span></span></label>
+              <label class="opt"><input type="radio" name="track" value="maint"><span class="opt-box"><span class="tick"></span><span class="t">Maintenance &amp; Hosting (මාසික plan)</span><span class="s">Website, WordPress, shop, web app, VPS care · LKR 5,500 / මාසයට ඉඳන්</span></span></label>
               <label class="opt"><input type="radio" name="track" value="creative"><span class="opt-box"><span class="tick"></span><span class="t">Logo, Design &amp; Video</span><span class="s">Logo, branding, posts, photo &amp; video editing</span></span></label>
             </div>
-            <div class="opt-group" data-field="pkg" data-track="pkg web backend" hidden>
+            <div class="opt-group" data-field="pkg" data-track="pkg web backend ai maint" hidden>
               <span class="group-label">Package එක තෝරගන්න <span class="req">*</span></span>
               <span class="group-hint">ඔයාගේ project එකට ළඟම package එක තෝරන්න (fixed development price). Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න — ඒකට වෙනම quote එකක් දෙනවා. Hosting, domain, Firebase / database usage, store fees වෙනම.</span>
               <div class="options pkg-list" id="opt-pkg" role="radiogroup" aria-label="App package"></div>
@@ -134,7 +136,7 @@
           </fieldset>
 
           <!-- 6 -->
-          <fieldset class="form-step" data-step="6">
+          <fieldset class="form-step" data-step="6" data-track="pkg web backend ai creative dev">
             <legend class="sr-only">Timeline සහ budget</legend>
             <div class="step-head"><span class="n">04</span><div><h2>Timeline &amp; budget</h2><p>කවද්ද ඕන ද, budget එක කොච්චර ද?</p></div></div>
             <div class="opt-group">
@@ -189,6 +191,8 @@
               <div class="field full" data-field="desc">
                 <label for="f-desc">ඔයාට මොකද කරලා ඕන? <span class="req">*</span></label>
                 <textarea class="input" id="f-desc" name="desc" placeholder="Ex: Customersලා phone එකෙන් order දාන්න app එකක් ඕන. / මගේ cake shop එකට logo එකක් ඕන, blue සහ white colours. / YouTube video 4ක් edit කරන්න ඕන, subtitles එක්ක."></textarea>
+                <span class="hint" data-track="ai" hidden>AI එකකට උදව්: මොන website / dashboard එකටද, chatbot එකට FAQ කීයක්ද, documents තියෙනවද (කීයක්, pages කීයක්), මොන database එකද (Firebase / Supabase), automation එකේ input / output මොනවද, language එක, දැනට OpenAI / Make / n8n accounts තියෙනවද. Package එකේ නැති දෙයක් ඕන නම් මෙතන ලියන්න — වෙනම quote එකක්.</span>
+                <span class="hint" data-track="maint" hidden>Maintenance එකකට උදව්: site / app / server එක මොකක්ද (static, WordPress, WooCommerce, Firebase / Supabase, VPS), pages / plugins / products කීයක්ද, hosting / backups කොහෙද, දැනට ප්‍රශ්න තියෙනවද (hacked, outdated), මොන වෙලාවට support ඕනද. Unhealthy system එකකට initial audit එකක් වෙනම quote වෙනවා.</span>
                 <span class="hint" data-track="backend" hidden>Backend / admin එකකට උදව්: දැනට තියෙන app / site එක මොකක්ද (Flutter / web, code access තියෙනවද), Firebase project එකක් දැනටමත් තියෙනවද, save කරන data modules මොනවද, admin එකේ කවුද වැඩ කරන්නේ (roles), uploads / reports / APIs ඕනද, users කීයක් විතරද. Package එකේ නැති දෙයක් ඕන නම් මෙතන ලියන්න — වෙනම quote එකක්.</span>
                 <span class="hint" data-track="web" hidden>Website එකකට උදව්: pages / views මොනවද, products හෝ services කීයක්ද, photos තියෙනවද, enquiry form / payments / login ඕනද, දැනට domain / hosting / WordPress account තියෙනවද. Package එකේ නැති දෙයක් ඕන නම් මෙතන ලියන්න — වෙනම quote එකක් දෙනවා.</span>
                 <span class="hint" data-track="pkg" hidden>App එකකට උදව්: screens මොනවද (නම්), කවුද use කරන්නේ (customer / staff / admin), save කරන data, photos / files uploads, payments, notifications, දැනට තියෙන Firebase / Play Store accounts. Package එකේ නැති දෙයක් ඕන නම් මෙතන ලියන්න — වෙනම quote එකක් දෙනවා.</span>
@@ -289,8 +293,8 @@
           <div class="est-usd" id="est-usd"></div>
         </div>
         <div class="est-meta">
-          <div><b id="est-weeks">—</b><span>කල් යන වෙලාව</span></div>
-          <div><b id="est-adv">—</b><span>Advance (<span data-advance>50%</span>)</span></div>
+          <div><b id="est-weeks">—</b><span id="est-weeks-label">කල් යන වෙලාව</span></div>
+          <div><b id="est-adv">—</b><span id="est-adv-label">Advance (<span data-advance>50%</span>)</span></div>
         </div>
         <ul class="est-lines" id="est-lines"></ul>
         <div class="est-meta" id="est-maint-box" style="grid-template-columns:1fr">
@@ -351,11 +355,11 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script defer src="assets/js/firebase-config.js?v=20261111a"></script>
-<script defer src="assets/js/config.js?v=20261111a"></script>
-<script defer src="assets/js/fb.js?v=20261111a"></script>
-<script defer src="assets/js/nav.js?v=20261111a"></script>
-<script defer src="assets/js/scrollfx.js?v=20261111a"></script>
-<script defer src="assets/js/boot.js?v=20261111a" data-load="pricing.js main.js planner.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261111b"></script>
+<script defer src="assets/js/config.js?v=20261111b"></script>
+<script defer src="assets/js/fb.js?v=20261111b"></script>
+<script defer src="assets/js/nav.js?v=20261111b"></script>
+<script defer src="assets/js/scrollfx.js?v=20261111b"></script>
+<script defer src="assets/js/boot.js?v=20261111b" data-load="pricing.js main.js planner.js sitetext.js"></script>
 </body>
 </html>

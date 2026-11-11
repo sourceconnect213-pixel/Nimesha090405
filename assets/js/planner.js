@@ -1,5 +1,6 @@
 /* HEXORA — "Project eka patan ganna" form + live estimate
-   Tracks: "pkg" (mobile app packages), "web" (website packages), "backend" (backend & admin packages), "creative" (logo, design, video);
+   Tracks: "pkg" (mobile app packages), "web" (website packages), "backend" (backend & admin packages), "ai" (AI packages),
+   "maint" (monthly maintenance plans), "creative" (logo, design, video);
    "dev" (the old generic type / size / features estimate) stays in the code but is no longer offered. */
 (function () {
   "use strict";
@@ -41,7 +42,7 @@
     $("#opt-type").innerHTML = Object.entries(C.types).filter(([, t]) => t.kind !== "app" && t.kind !== "both").map(([k, t]) => tile("radio", "type", k, t.label, t.note, "")).join("");
     // one radio group for every package; a label is shown only on its category's track (data-track, see applyTrack)
     $("#opt-pkg").innerHTML = Object.entries(C.packages || {}).map(([k, p]) =>
-      '<label class="opt pkg" data-track="' + ((p.cat || "app") === "web" ? "web" : (p.cat === "backend" ? "backend" : "pkg")) + '"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
+      '<label class="opt pkg" data-track="' + trackOfCat(p.cat) + '"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
       '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + esc([p.platform, p.screens, p.time].filter(Boolean).join(" · ") || ((p.includes || []).length + " features")) + ' · select කළාම බලන්න</span><ul class="pkg-inc">' +
       [p.platform, p.screens].filter(Boolean).map(x => '<li class="meta">' + esc(x) + "</li>").join("") + (p.includes || []).map(x => "<li>" + esc(x) + "</li>").join("") +
       (p.excludes || []).map(x => '<li class="no">' + esc(x) + "</li>").join("") + "</ul></span>" + (p.badge ? '<span class="pkg-badge">' + esc(p.badge) + "</span>" : "") + "</label>").join("");   // the badge comes after .opt-box so "input:checked + .opt-box" still matches
@@ -76,8 +77,10 @@
   const val = name => { const el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ""; };
   const vals = name => $$('input[name="' + name + '"]:checked', form).map(i => i.value);
   const track = () => val("track") || "pkg";
-  const isPkg = t => t === "pkg" || t === "web" || t === "backend";   // every package track uses the package estimate
-  const pkgCatOf = t => (t === "web" ? "web" : t === "backend" ? "backend" : "app");
+  const PKG_TRACKS = { app: "pkg", web: "web", backend: "backend", ai: "ai", maint: "maint" };
+  const trackOfCat = cat => PKG_TRACKS[cat || "app"] || "pkg";
+  const isPkg = t => Object.values(PKG_TRACKS).indexOf(t) !== -1;   // every package track uses the package estimate
+  const pkgCatOf = t => Object.keys(PKG_TRACKS).find(c => PKG_TRACKS[c] === t) || "app";
   function qtyOf(k) {
     const el = form.querySelector('input[name="' + qName(k) + '"]');
     const n = el ? parseInt(el.value, 10) : 0;
@@ -169,8 +172,8 @@
     if (isPkg(track())) {
       const e = P.estimatePackage(C, pkgSel(), rate.rate);
       if (!e) return null;
-      return { kind: "pkg", lo: e.totalLKR, hi: null, usdText: "≈ USD " + e.usd.toLocaleString("en-US"), time: e.time || ("සති " + e.weeksLow + " – " + e.weeksHigh),
-        advance: e.advanceLKR, lines: e.lines, from: e.from, raw: e };
+      return { kind: "pkg", lo: e.totalLKR, hi: null, usdText: "≈ USD " + e.usd.toLocaleString("en-US") + (e.monthly ? " / මාසයට" : ""), time: e.time || ("සති " + e.weeksLow + " – " + e.weeksHigh),
+        advance: e.advanceLKR, advancePercent: e.advancePercent, monthly: e.monthly, lines: e.lines, from: e.from, raw: e };
     }
     const e = P.estimate(C, selection(), rate.rate);
     if (!e) return null;
@@ -194,7 +197,10 @@
       return;
     }
     const prev = last && last.kind === e.kind ? last : null;
-    const sub = e.kind === "pkg" ? (e.from ? "ඉඳන් · final price එක quote එකෙන්" : "Fixed package price") : "Estimate · revisions include";
+    const sub = e.kind === "pkg" ? (e.monthly ? (e.from ? "/ මාසයට ඉඳන් · quote එකෙන්" : "/ මාසයට · fixed service fee") : (e.from ? "ඉඳන් · final price එක quote එකෙන්" : "Fixed package price")) : "Estimate · revisions include";
+    // the advance box: a monthly plan is prepaid in full, a project pays the advance %
+    const advLabel = $("#est-adv-label"); if (advLabel) advLabel.textContent = e.monthly ? "පළවෙනි මාසය (100% prepaid)" : "Advance (" + (e.advancePercent || C.advancePercent || 50) + "%)";
+    const weeksLabel = $("#est-weeks-label"); if (weeksLabel) weeksLabel.textContent = e.monthly ? "Billing" : "කල් යන වෙලාව";
     if (!reduce && prev) {
       const t0 = performance.now(), dur = 550;
       const step = t => {
@@ -354,8 +360,8 @@
     } else if (est.kind === "pkg") {
       const ps = pkgSel(), p = C.packages[ps.pkg];
       const ad = ps.addons.map(k => C.addons[k].label).concat(Object.keys(ps.qty).map(k => C.addons[k].label + " × " + ps.qty[k]));
-      L.push(p.cat === "web" ? "*Project — Website Package*" : p.cat === "backend" ? "*Project — Backend & Admin Package*" : "*Project — Mobile App Package*");
-      L.push("Package: " + p.label + " (" + (p.from ? "from " : "") + pk(p.lkr) + (p.from ? "+" : "") + (p.platform ? " · " + p.platform : "") + ")");
+      L.push({ web: "*Project — Website Package*", backend: "*Project — Backend & Admin Package*", ai: "*Project — AI Features & Automation Package*", maint: "*Maintenance plan (monthly)*" }[p.cat] || "*Project — Mobile App Package*");
+      L.push("Package: " + p.label + " (" + (p.from ? "from " : "") + pk(p.lkr) + (p.from ? "+" : "") + (p.monthly ? " / month" : "") + (p.platform ? " · " + p.platform : "") + ")");
       L.push("Changes / add-ons: " + (ad.length ? ad.join(", ") : "-"));
     } else {
       L.push("*Project — Logo, Design & Video*");
@@ -371,7 +377,7 @@
     if (est.kind === "dev") L.push(P.formatLKR(est.lo) + " – " + P.formatLKR(est.hi) + " (" + est.usdText + ")");
     else L.push(P.formatLKR(est.lo) + " (" + est.usdText + ")");
     L.push("Time: " + est.time);
-    L.push("Advance (" + C.advancePercent + "%): " + P.formatLKR(est.advance));
+    L.push(est.monthly ? "First month (100% prepaid): " + P.formatLKR(est.advance) : "Advance (" + (est.advancePercent || C.advancePercent) + "%): " + P.formatLKR(est.advance));
     if (est.kind === "dev") L.push("Maintenance: " + P.formatLKR(est.maintenance) + " / මාසයට (optional)");
     L.push("Rate: 1 USD = LKR " + rate.rate.toFixed(2) + " (" + rd + ")");
     return L.join("\n");
@@ -532,8 +538,8 @@
   const pick = (name, v) => { const el = form.querySelector('input[name="' + name + '"][value="' + v + '"]'); if (el) el.checked = true; };
   const qTrack = q.get("track"), qType = q.get("type"), qItem = q.get("item");
   const qPkg = q.get("package"), own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k);
-  if (qPkg && own(C.packages, qPkg)) { pick("track", C.packages[qPkg].cat === "web" ? "web" : C.packages[qPkg].cat === "backend" ? "backend" : "pkg"); pick("pkg", qPkg); }
-  else if (qTrack === "pkg" || qTrack === "web" || qTrack === "backend") pick("track", qTrack);
+  if (qPkg && own(C.packages, qPkg)) { pick("track", trackOfCat(C.packages[qPkg].cat)); pick("pkg", qPkg); }
+  else if (isPkg(qTrack)) pick("track", qTrack);
   else if (qTrack === "dev") pick("track", "web");   // old links: the generic estimate is now the website packages
   if (qType && own(C.types, qType)) pick("track", C.types[qType].kind === "web" ? "web" : qType === "appadmin" ? "backend" : "pkg");   // old ?type= links
   if (qTrack === "creative" || (qItem && own(C.creative, qItem))) {

@@ -164,9 +164,12 @@
     return {
       usd: Math.round(packageUSD(cfg, base, rate)),
       from: !!p.from,
+      monthly: !!p.monthly,
       time: p.time || "",
       totalLKR: total,
-      advanceLKR: smartRound(total * (cfg.advancePercent || 50) / 100, cfg),
+      // a monthly service fee is prepaid in full each month; a one-time project pays the advance %
+      advancePercent: p.monthly ? 100 : (cfg.advancePercent || 50),
+      advanceLKR: p.monthly ? total : smartRound(total * (cfg.advancePercent || 50) / 100, cfg),
       weeksLow: wLow,
       weeksHigh: Math.max(wLow + 1, Math.round(weeks * 1.3)),
       lines: lines.map(l => ({ label: l.label, lkr: packageLKR(cfg, l.base, rate) }))

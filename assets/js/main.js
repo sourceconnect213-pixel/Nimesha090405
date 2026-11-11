@@ -19,6 +19,10 @@
   if (homeWeb && window.HXPkg && P && C.packages) homeWeb.innerHTML = window.HXPkg.html(C, P, "web");
   const homeBe = $("#home-backend-packages");
   if (homeBe && window.HXPkg && P && C.packages) homeBe.innerHTML = window.HXPkg.html(C, P, "backend");
+  const homeAi = $("#home-ai-packages");
+  if (homeAi && window.HXPkg && P && C.packages) homeAi.innerHTML = window.HXPkg.html(C, P, "ai");
+  const homeMaint = $("#home-maint-packages");
+  if (homeMaint && window.HXPkg && P && C.packages) homeMaint.innerHTML = window.HXPkg.html(C, P, "maint");
   // [data-from-pkg] / [data-from-webpkg]: the cheapest package of that category, as a "from" price (a fixed LKR list is written as it is, not rescaled)
   const fromOf = (cat, sel) => {
     const lkrs = P ? Object.values(P.packagesOf(C, cat)).map(p => p.lkr).filter(Boolean) : [];
@@ -28,7 +32,7 @@
       else el.setAttribute("data-price-usd", (Math.min.apply(null, lkrs) / (C.packageBaseRate || 369)).toFixed(4));
     });
   };
-  fromOf("app", "[data-from-pkg]"); fromOf("web", "[data-from-webpkg]"); fromOf("backend", "[data-from-bepkg]");
+  fromOf("app", "[data-from-pkg]"); fromOf("web", "[data-from-webpkg]"); fromOf("backend", "[data-from-bepkg]"); fromOf("ai", "[data-from-aipkg]"); fromOf("maint", "[data-from-maintpkg]");
 
   /* ---------- tabs: [data-tabs] (pricing) and [data-ladder] (packages) ---------- */
   function tabset(tabs, panelOf, after) {

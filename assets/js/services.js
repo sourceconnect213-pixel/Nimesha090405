@@ -66,7 +66,7 @@ window.HX_SERVICES = {
       { q: "Play Store / App Store එකට දාන්න පුළුවන්ද?", a: "ඔව්, වෙනම publishing service එකක් විදියට. Listing එක, screenshots, builds හදලා ඔයාගේ developer account එකෙන් publish කරනවා. එතකොට app එක ඔයාගේ නමින් තියෙන්නේ. Google USD 25 එකපාරයි, Apple USD 99 අවුරුද්දට (ඒ fees ඔයාගේ). App packages 01 – 05 Android only." },
       { q: "Package price එකට hosting / domain / Firebase fees include ද?", a: "නෑ. App, website සහ backend package prices development charges විතරයි (fixed LKR). Hosting, domain, Firebase / Supabase / database usage, email, PayHere fees, Google / Apple developer accounts ඕන වුණොත් ඔයාගේ accounts වලින් වෙනම. Basic / Standard apps වලටයි Basic / Standard websites වලටයි server එකක් ඕනම නෑ." },
       { q: "Source code එක මට ලැබෙනවද?", a: "ඔව්. Final payment එක කළාම full source code එක සහ project එකේ logins ඔක්කොම ඔයාට දෙනවා." },
-      { q: "Launch කළාට පස්සේ මොකද වෙන්නේ?", a: "{support} එකක් bug fixes free. ඊට පස්සේ updates, අලුත් features, server checks වලට monthly maintenance plan එකක් ගන්න පුළුවන්." },
+      { q: "Launch කළාට පස්සේ මොකද වෙන්නේ?", a: "දවස් 30ක් agreed scope එකේ bug fixes free. ඊට පස්සේ monitoring, updates, backups review, පොඩි edits වලට මාසික maintenance plan එකක් (Basic Website Care LKR 5,500 / මාසයට ඉඳන්) ගන්න පුළුවන් — hosting / cloud fees වෙනම." },
       { q: "Logo එකකට revisions කීයක් දෙනවද?", a: "Concepts 3ක් පෙන්නනවා. ඔයාට කැමති එක revisions 3ක් වෙනකන් free. Final files PNG, JPG, SVG, PDF විදියට දෙනවා, print වලටයි online වලටයි දාන්න පුළුවන්." },
       { q: "Video editing වලට footage එවන්නේ කොහොමද?", a: "Google Drive link එකක් හරි WhatsApp එකෙන් එවන්න පුළුවන්. Reel එකක් usually දවස් 1 – 2කින්, YouTube video එකක් දවස් 2 – 4කින් deliver කරනවා." },
       { q: "Payment කරන්නේ කොහොමද?", a: "වැඩ පටන් ගන්න {advance} advance, ඉතුරු ටික deliver කරද්දී, bank transfer එකෙන්. ලොකු projects milestones වලට කඩලා ගෙවන්න පුළුවන්." }
@@ -178,41 +178,54 @@ window.HX_SERVICES = {
       ]
     },
     {
-      slug: "ai-features", cat: "dev", name: "AI Features", anim: "chat",
+      slug: "ai-features", cat: "dev", name: "AI Features & Automation", anim: "chat", pkgv: 5,   // pkgv: this text goes with the approved AI package list
       icon: '<path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
-      short: "Chatbots, smart search, text-to-speech, automation",
-      summary: "Chatbots, smart search, text-to-speech, automation. ඔයාගේ customersලාගේ සහ staff එකේ වෙලාව ඉතුරු කරනවා.",
-      intro: "ඔයාගේ app එකට, website එකට හරි system එකට AI features. Customersලා අහන ප්‍රශ්න වලට chatbot එක උත්තර දෙනවා, smart search එකෙන් ඕන දෙයක් ඉක්මනට හොයාගන්න පුළුවන්.",
-      tags: ["Chatbots", "TTS", "Automation"],
+      short: "Chatbot, knowledge assistant, automation, AI agents. Fixed LKR packages",
+      summary: "ඔයාගේ website එකට FAQ chatbot එකක ඉඳන් documents වලින් උත්තර දෙන assistant, human-approved content automation, business data assistant සහ multi-step AI agent දක්වා. LKR 40,000 ඉඳන් fixed packages 5ක්, enterprise AI custom quote.",
+      intro: "ඔයාගේ දැනට තියෙන website, dashboard හෝ database එකට practical AI: approved FAQ වලින් උත්තර දෙන chatbot, ඔයාගේ documents වලින් උත්තර දෙන knowledge assistant, ඔයාගේ approval එකෙන් වැඩ කරන content automation, business data assistant, scoped AI agent. හැම package එකකම scope caps පැහැදිලිව — AI outcomes probabilistic, 100% accuracy guarantee එකක් නෑ.",
+      tags: ["Chatbot", "RAG", "Automation", "Agents"],
+      packages: true, pkgCat: "ai",
       includes: [
-        "Chatbots",
-        "Smart search",
-        "Text-to-speech",
-        "Automation"
+        "Fixed LKR one-time development / integration fee (dollar rate එකට වෙනස් වෙන්නේ නෑ)",
+        "API keys server-side විතරයි — browser එකේ හෝ public code එකේ නෑ",
+        "දන්නේ නැති ප්‍රශ්නයකට fallback; write actions වලට human approval",
+        "Revisions (package එක අනුව 1 – 3), දවස් 30ක් bug-fix support",
+        "{advance} advance, final payment එකෙන් පස්සේ source + workflow export",
+        "AI tokens, File Search, Make / n8n plans, hosting, database ඔයාගේ accounts වලින් වෙනම"
       ],
-      prices: [{ feature: "ai", featured: true }],
+      prices: [],
       faq: [
-        { q: "AI features ගන්න පුළුවන් කොහොමද?", a: "AI features add කරන්නේ app එකකට, website එකකට හරි system එකකට. Project form එකේ Features වලින් \"AI features\" tick කරන්න." },
-        { q: "Text-to-speech කියන්නේ මොකක්ද?", a: "Text එක හඬින් කියවන feature එක. Notes, articles, messages කියවන්න වෙනුවට අහන්න පුළුවන්." }
+        { q: "Chatbot එක හැම ප්‍රශ්නයකටම හරියටම උත්තර දෙනවද?", a: "නෑ — AI probabilistic. Basic chatbot එක ඔයාගේ approved FAQ 30 වලින් උත්තර දෙනවා, දන්නේ නැති එකකට ඔයාගේ contact එකට යොමු කරනවා. Knowledge assistant එක ඔයාගේ documents වලින් evidence එක්ක උත්තර දෙනවා, source reference පෙන්නනවා; evidence නැති නම් fallback. 100% accuracy / hallucination-free guarantee එකක් දෙන්නේ නෑ." },
+        { q: "AI API costs කීයද? Package එකේ include ද?", a: "නෑ. Package price එක development / integration fee එක විතරයි. AI tokens usage අනුව ඔයාගේ OpenAI account එකෙන් (Ex: knowledge answer එකක් ≈ USD 0.011, content draft එකක් ≈ USD 0.0055 — assumptions). Make / n8n plans, Cloudflare Workers, Supabase usage ඒ provider ට. Work පටන් ගන්න කලින් ඔයාගේ expected usage එකට infrastructure estimate එකක් දෙනවා." },
+        { q: "Package එකක් එකකට උඩ එක ඔක්කොම include ද?", a: "නෑ — හැම package එකක්ම වෙනම scope එකක්. Ex: Advanced AI Business Assistant එකේ Knowledge Base එකේ 12-document RAG එක default නෑ; AI Agent එකේ multi-file ingestion නෑ. දෙකම ඕන නම් combined quote එකක්. Include වෙච්ච feature එකකට දෙපාරක් ගණන් වෙන්නේ නෑ." },
+        { q: "AI එකට මගේ data / database එකට access දෙන්න ආරක්ෂිතද?", a: "Business Assistant / Agent packages වල allowlisted read tools විතරයි, approved entities වලට විතරයි; write action එකක් කරන්නේ authorized කෙනෙක් preview බලලා approve කළාමයි — server එක නැවත permissions check කරනවා, audit log එකක් ලියනවා. Roles server-side enforce; prompt එකකින් access වැඩි කරගන්න බෑ. Secrets public code එකේ නෑ." },
+        { q: "WhatsApp chatbot එකක් / voice AI එකක් ගන්න පුළුවන්ද?", a: "මේ packages වල නෑ (WhatsApp Business verification, SMS / voice fees වෙනම). ඕන නම් Custom AI Solutions එකෙන් scope එකට quote කරනවා." }
       ]
     },
     {
-      slug: "maintenance-hosting", cat: "dev", name: "Maintenance & Hosting", anim: "server",
+      slug: "maintenance-hosting", cat: "dev", name: "Maintenance & Hosting", anim: "server", pkgv: 5,
       icon: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',
-      short: "Updates, bug fixes, domain, hosting, server checks",
-      summary: "Launch උනාට පස්සේ updates, bug fixes, domain, hosting සහ server checks ඔක්කොම බලාගන්නවා.",
-      intro: "Launch කළාට පස්සේ ඔයාගේ app එක හරි site එක හරියට වැඩ කරන්න බලාගන්නවා. Updates, bug fixes, domain, hosting සහ server checks ඔක්කොම අපි කරනවා.",
-      tags: ["Updates", "Domain", "Support"],
+      short: "Website, WordPress, shop, web app, VPS මාසික care plans",
+      summary: "ඔබේ website, web app, database සහ VPS පද්ධති සඳහා මාසික නඩත්තු සේවා: monitoring, updates, backups review, පොඩි edits, reports. LKR 5,500 / මාසයට ඉඳන් plans 5ක් + custom SLA. Hosting, domain, cloud වියදම් වෙනම.",
+      intro: "Launch කළාට පස්සේ ඔයාගේ website, WordPress site, online shop, web app හෝ VPS එක නිරෝගීව තියාගන්න මාසික plans. හැම plan එකකම scope එක (pages, plugins, products, edits, windows, triages) ලිඛිතව. Business-hours support; automated monitoring 24/7 උනත් staffed 24/7 support එකක්, uptime guarantee එකක් නෑ.",
+      tags: ["Monitoring", "Updates", "Backups"],
+      packages: true, pkgCat: "maint",
       includes: [
-        "Launch උනාට පස්සේ {support} එකක් bug fixes free",
-        "Updates සහ bug fixes",
-        "Domain & hosting setup",
-        "Server checks"
+        "Hexora ගේ මාසික maintenance service fee එක විතරයි — hosting, VPS, cloud, backups, domain, plugins, gateway fees ඔයාගේ",
+        "මාසික fee 100% prepaid (මාසය පටන් ගද්දී); cancel කරන්න දවස් 30 notice",
+        "Scope caps පැහැදිලිව: edits / changes / triages ඊළඟ මාසෙට යන්නේ නෑ",
+        "Business-hours support (initial response targets: plans 01 – 03 business days 2, 04 – 05 business day 1, custom SLA)",
+        "Backup monitoring + verification — guaranteed restore එකක් නෙවෙයි; quarterly safe restore rehearsal (plans 04 – 06)",
+        "අලුත් features, redesigns, hacked-site recovery, migrations වෙනම quote"
       ],
-      prices: [{ maint: "small" }, { maint: "medium", featured: true }, { maint: "large" }, { extra: "hosting" }],
+      prices: [],
       faq: [
-        { q: "Free support කොච්චර කල් තියෙනවද?", a: "Launch කළාට පස්සේ {support} එකක් bug fixes free. ඊට පස්සේ monthly maintenance plan එකක් ගන්න පුළුවන්." },
-        { q: "Monthly plan එකේ price එක කොහොමද තීරණය වෙන්නේ?", a: "App එකේ හරි site එකේ size එක අනුව: small {maint:small}, medium {maint:medium}, large {maint:large} මාසයට." }
+        { q: "Hosting එක මේ price එකේ include ද?", a: "නෑ. Price එක Hexora ගේ මාසික maintenance / management fee එක විතරයි. Hosting, VPS, database, backup storage, domain renewal, premium plugins, payment gateway fees, monitoring tools ඔයාගේ accounts වලින් කෙලින්ම ගෙවනවා. Static site එකක් free tier එකක නම් hosting LKR 0 වෙන්න පුළුවන් — ඒත් maintenance fee එක ඒකෙන් free වෙන්නේ නෑ." },
+        { q: "අලුතෙන් හදපු project එකට free support තියෙනවා නේද?", a: "ඔව් — development package එකක දවස් 30ක් agreed scope එකේ bug fixes free. ඒ bug එකකට maintenance plan එකෙන් දෙපාරක් ගණන් වෙන්නේ නෑ. Monitoring, backups, content updates වගේ warranty එකේ නැති දේවල් ඕන නම් ඒ කාලෙම plan එකක් පටන් ගන්න පුළුවන්." },
+        { q: "24/7 support ද?", a: "Monitoring automated විදියට 24/7 වුණත්, support business hours වලදී (සඳුදා – සිකුරාදා 09:00 – 18:00 SL). Custom SLA එකේ P1 පැය 2 / P2 පැය 4 / P3 business day 1 — ඒවා initial response targets, resolution deadlines නෙවෙයි. 24/7 staffed coverage ඕන නම් staffing model එකකින් වෙනම quote." },
+        { q: "Backups ගැන guarantee එකක් තියෙනවද?", a: "Backup jobs configure කරලා monitor කරනවා, status / retention review කරනවා, plans 04 – 06 වල quarter එකකට non-production restore rehearsal එකක් කරනවා. ඒත් restore / zero data loss / RTO / RPO guarantee එකක් standard prices වල නෑ — ඒවා ඔයාගේ paid storage, provider, architecture අනුව. WooCommerce store එකක් උඩින් පරණ DB එකක් blind restore කරන්නේ නෑ." },
+        { q: "මගේ site එක දැනටම hacked / outdated නම්?", a: "Routine plan එකට කලින් initial technical audit + cleanup / update / migration වෙනම quote කරනවා. Plans හදලා තියෙන්නේ healthy systems වලට." },
+        { q: "Web app එකයි VPS එකයි දෙකම තියෙනවා නම් plans දෙකක්ද?", a: "Combined quote එකක් — overlap වෙන monitoring / reporting වැඩ දෙපාරක් ගණන් කරන්නේ නෑ." }
       ]
     },
 

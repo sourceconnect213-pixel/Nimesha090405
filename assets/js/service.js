@@ -59,9 +59,9 @@
   const showPk = s => !!C.packages && (s.packages === true || (s.packages === undefined && s.slug === "mobile-apps"));
   const pkCat = s => s.pkgCat || "app";   // which package list a service page shows
   // a service that shows packages does not also show the old generic project-type prices of that kind
-  const pricesOf = s => (s.prices || []).filter(r => !(showPk(s) && ((r.type && C.types[r.type] && (pkCat(s) === "web" ? C.types[r.type].kind === "web" : C.types[r.type].kind !== "web")) || (pkCat(s) === "backend" && r.feature))));
+  const pricesOf = s => (s.prices || []).filter(r => !(showPk(s) && ((r.type && C.types[r.type] && (pkCat(s) === "web" ? C.types[r.type].kind === "web" : C.types[r.type].kind !== "web")) || ((pkCat(s) === "backend" || pkCat(s) === "ai") && r.feature) || (pkCat(s) === "maint" && (r.maint || r.extra)))));
   function ctaHref(s) {
-    if (showPk(s)) return "start-project.html?track=" + (pkCat(s) === "web" ? "web" : pkCat(s) === "backend" ? "backend" : "pkg");
+    if (showPk(s)) return "start-project.html?track=" + ({ web: "web", backend: "backend", ai: "ai", maint: "maint" }[pkCat(s)] || "pkg");
     for (const ref of s.prices || []) {
       const r = refOf(ref);
       if (r && r.kind === "type" && C.types[r.key].kind === "web") return "start-project.html?track=web";

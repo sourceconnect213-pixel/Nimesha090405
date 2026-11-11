@@ -1780,3 +1780,8 @@ h1.display { font-size: clamp(2.6rem, 6.4vw, 5.2rem); letter-spacing: -0.045em; 
 @media (max-width: 560px) { .tab { flex: 0 0 auto; min-width: max-content; padding: 0 14px; } .tabs-bar { gap: 4px; } }
 .btn-wa, .btn-wa:focus-visible { border: 0; }
 .btn-wa::before { display: none; }
+
+/* monthly maintenance plans: the "/ month" after a price */
+.price-per { font-size: .42em; font-weight: 600; letter-spacing: 0; opacity: .75; margin-left: 2px; }
+.rung-per { display: block; font-size: .68rem; font-weight: 500; color: var(--faint); text-align: right; }
+.rung[aria-selected="true"] .rung-per { color: #BDBDBD; }
