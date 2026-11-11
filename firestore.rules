@@ -77,7 +77,7 @@ service cloud.firestore {
         && text('ref', 20) && text('name', 100) && data().name.size() > 1
         && text('phone', 30) && text('message', 6000)
         && optText('title', 100) && optText('email', 120) && optText('business', 120) && optText('contact', 20) && optText('estimate', 60)
-        && (!('track' in data()) || data().track in ['dev', 'creative', 'pkg'])
+        && (!('track' in data()) || data().track in ['dev', 'creative', 'pkg', 'web', 'backend', 'ai', 'maint'])
         && (!('uid' in data()) || (signedIn() && data().uid == request.auth.uid))
         && (!('claim' in data()) || (data().claim is string && data().claim.size() >= 20 && data().claim.size() <= 60))
         && data().status == 'new'

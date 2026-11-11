@@ -391,10 +391,13 @@
     if (!FB || !FB.ready || !window.fetch) return;
     const v = id => ($("#" + id).value || "").trim();
     const user = FB.user();
+    // the Firestore rules accept the tracks "dev", "creative" and "pkg": every package track (app, website, backend, AI,
+    // maintenance) is saved as "pkg" and the chosen package's name becomes the title when the customer gave none
+    const t = track(), pkgItem = isPkg(t) ? C.packages[val("pkg")] : null;
     const data = {
-      ref: job.ref, title: v("f-appname").slice(0, 100), name: v("f-name").slice(0, 100), phone: v("f-phone").slice(0, 30),
-      email: v("f-email").slice(0, 120), business: v("f-business").slice(0, 120), contact: (val("contact") || "WhatsApp").slice(0, 20), track: track(),
-      estimate: est ? P.formatLKR(est.lo) + (est.hi ? " – " + P.formatLKR(est.hi) : "") : "",
+      ref: job.ref, title: (v("f-appname") || (pkgItem ? pkgItem.label : "")).slice(0, 100), name: v("f-name").slice(0, 100), phone: v("f-phone").slice(0, 30),
+      email: v("f-email").slice(0, 120), business: v("f-business").slice(0, 120), contact: (val("contact") || "WhatsApp").slice(0, 20), track: isPkg(t) ? "pkg" : t,
+      estimate: est ? ((est.from ? "From " : "") + P.formatLKR(est.lo) + (est.hi ? " – " + P.formatLKR(est.hi) : "") + (est.monthly ? " / month" : "")).slice(0, 60) : "",
       message: plain.slice(0, 6000), status: "new"
     };
     if (user) data.uid = user.uid;
@@ -412,7 +415,10 @@
         }
         if (sent === job) showSaved();
       })
-      .catch(() => { /* offline: WhatsApp / Email still work */ });
+      .catch(e => {
+        // offline or refused: say so, so the customer sends it by WhatsApp / Email instead of thinking it arrived
+        if (sent === job) toast(e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ — WhatsApp / Email එකෙන් එවන්න." : "Request එක save කරන්න බැරි උනා — WhatsApp / Email එකෙන් එවන්න.");
+      });
   }
   function showSaved() {
     const note = $("#saved-note"), user = FB && FB.user();

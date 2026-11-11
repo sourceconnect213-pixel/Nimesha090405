@@ -317,7 +317,8 @@
   const SEEN = "hx_admin_seen_v1";   // { projectId: time of the last customer message already read }
   const seenMap = () => store.get(SEEN) || {};
   const ms = iso => { const t = Date.parse(iso); return isNaN(t) ? 0 : t; };
-  const isUnread = rid => { const c = S.chats[rid]; return !!c && c.lastFrom === "c" && ms(c.lastAt) > (seenMap()[rid] || 0); };
+  const reqExists = rid => !S.reqs || S.reqs.some(r => r.id === rid);   // a chat summary left over from a deleted project is not counted
+  const isUnread = rid => { const c = S.chats[rid]; return !!c && reqExists(rid) && c.lastFrom === "c" && ms(c.lastAt) > (seenMap()[rid] || 0); };
   const unreadCount = () => Object.keys(S.chats).filter(isUnread).length;
   const isUnreadG = gid => { const g = S.guests[gid]; return !!g && g.lastFrom === "c" && ms(g.lastAt) > (seenMap()[gid] || 0); };
   const unreadGuests = () => Object.keys(S.guests).filter(isUnreadG).length;
@@ -586,7 +587,8 @@
         '<button type="button" class="btn ad-small" data-act="reload-reqs">' + icon(I.reload) + " Refresh</button></div>" +
       '<div class="ad-add"><input class="input ad-search" id="req-search" type="search" placeholder="නම, phone, ref, project නම…" aria-label="Requests search කරන්න" value="' + esc(S.reqQuery) + '">' +
         '<button type="button" class="btn ad-small" data-act="req-toggle-all">සියල්ල open / close</button>' +
-        '<button type="button" class="btn ad-small" data-act="csv-req" title="දැන් පේන list එක CSV (Excel) එකක් විදියට">⬇ CSV</button></div>' +
+        '<button type="button" class="btn ad-small" data-act="csv-req" title="දැන් පේන list එක CSV (Excel) එකක් විදියට">⬇ CSV</button>' +
+        (reqShown().length ? '<button type="button" class="btn ad-small ad-danger" data-act="req-del-shown">' + icon(I.del) + " පේන " + reqShown().length + " ම මකන්න</button>" : "") + "</div>" +
       (S.newOpen ? newProjectForm() : "") +
       '<div class="ad-reqs" id="req-list">' + reqListHtml() + "</div>",
       "Project form එකෙන් එන requests සහ ඔයා හදන projects. Stage එක, %, ඉවර වෙන දවස සහ update එක customer ට එයාගේ account එකේ (මගේ projects) පේනවා. " +
@@ -638,7 +640,7 @@
       '<summary class="ad-req-head"><div><b>' + esc(r.title || r.name || "—") + "</b><small>" + (r.title ? esc(r.name) + " · " : "") + esc(fmtDate(r.createdAt)) + " · <code>" + esc(r.ref) + "</code></small></div>" +
         '<span class="ad-req-end"><span class="ad-badge" data-adot="' + id + '"' + (isUnread(r.id) ? "" : " hidden") + '>අලුත්</span><span class="ad-pill">' + esc(STAGE_EN[r.status] || r.status) + " · " + pct + "%</span></span></summary>" +
       '<div class="ad-req-body">' +
-      '<div class="ad-req-meta">' + [r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Mobile App package" : "App / Website / System", r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
+      '<div class="ad-req-meta">' + [r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
       linkBox(r) +
       '<div class="ad-grid tight ad-req-edit">' +
         '<div class="ad-field"><label for="rq-status-' + id + '">Stage</label><select class="input"' + fid("status") + ' data-rf="status">' +
@@ -706,13 +708,15 @@
         '<div class="ad-req-actions">' + (c && c.pin ? '<a class="btn btn-wa ad-small" href="' + esc(wa) + '" target="_blank" rel="noopener">PIN එක WhatsApp කරන්න</a>' : "") +
         '<button type="button" class="btn ad-small" data-act="pin-done" data-id="' + esc(r.id) + '">එව්වා ✓ (list එකෙන් අයින් කරන්න)</button></div></article>';
     });
-    const list = S.customers.map(c => '<div class="ad-hist"><div><b>' + esc(c.name || "—") + "</b><small>" + esc(phoneLabel(c.phone)) + " · " + esc(fmtDate(c.createdAt)) + "</small></div>" +
+    const projOf = uid => (S.reqs || []).filter(r => r.uid === uid).length;
+    const list = S.customers.map(c => '<div class="ad-hist"><div><b>' + esc(c.name || "—") + "</b><small>" + esc(phoneLabel(c.phone)) + " · " + esc(fmtDate(c.createdAt)) + " · projects " + projOf(c.id) + "</small></div>" +
       '<div class="ad-hist-actions">' + (c.pin ? '<code class="ad-pin">' + (S.show[c.id] ? esc(c.pin) : "••••••") + "</code>" +
-        '<button type="button" class="btn ad-small" data-act="pin-show" data-id="' + esc(c.id) + '">' + (S.show[c.id] ? "හංගන්න" : "PIN බලන්න") + "</button>" : '<span class="ad-hint">PIN නෑ</span>') + "</div></div>").join("");
-    return card("PIN requests", reqs.length ? '<div class="ad-reqs">' + reqs.join("") + "</div>" : '<p class="muted">PIN requests නෑ.</p>',
+        '<button type="button" class="btn ad-small" data-act="pin-show" data-id="' + esc(c.id) + '">' + (S.show[c.id] ? "හංගන්න" : "PIN බලන්න") + "</button>" : '<span class="ad-hint">PIN නෑ</span>') +
+        mini("cust-del", I.del, "Account එක මකන්න", ' data-id="' + esc(c.id) + '"') + "</div></div>").join("");
+    return card("PIN requests", reqs.length ? (reqs.length > 1 ? '<div class="ad-add"><button type="button" class="btn ad-small ad-danger" data-act="pin-clear">' + icon(I.del) + " PIN requests " + reqs.length + " ම අයින් කරන්න</button></div>" : "") + '<div class="ad-reqs">' + reqs.join("") + "</div>" : '<p class="muted">PIN requests නෑ.</p>',
         "Customer ට PIN එක අමතක උනාම \"PIN එක අමතක උනාද?\" එබුවම මෙතන පේනවා. PIN එක යවන්න ඕන account එකේ phone number එකටමයි. Customer ටයිප් කරපු එකට නෙවෙයි.") +
       card("Customer accounts (" + S.customers.length + ")", (S.customers.length ? '<div class="ad-add"><button type="button" class="btn ad-small" data-act="csv-cust">⬇ CSV (PIN නැතුව)</button></div><div class="ad-history">' + list + "</div>" : '<p class="muted">තාම accounts නෑ.</p>'),
-        "PIN එක customer ගේ secret එකක්. WhatsApp එකෙන් ඒ customer ට විතරක් එවන්න.");
+        "PIN එක customer ගේ secret එකක්. WhatsApp එකෙන් ඒ customer ට විතරක් එවන්න. 🗑 = customer profile එක මකනවා, එයාගේ projects account එකෙන් අයින් කරනවා (projects මැකෙන්නේ නෑ). ඒ phone number එකේ login එකත් සම්පූර්ණයෙන් අයින් කරන්න Firebase console → Authentication → Users එකේ c<phone>@… user ව delete කරන්න.");
   };
 
   VIEWS.notice = () => {
@@ -1238,8 +1242,40 @@
         if (installEv) { installEv.prompt(); try { await installEv.userChoice; } catch (err) { /* closed */ } installEv = null; renderTab(); }
         break;
       case "pin-show": S.show[d.id] = !S.show[d.id]; renderTab(); break;
+      case "pin-clear": {
+        if (!armed(b, "ඔක්කොම අයින් කරන්නද?")) return;
+        b.disabled = true;
+        const ids = S.pinReqs.map(r => r.id); let fail = 0;
+        for (const id of ids) { try { await fs("DELETE", "/pinRequests/" + encodeURIComponent(id)); S.pinReqs = S.pinReqs.filter(r => r.id !== id); } catch (err) { if (!gone(err)) fail++; else S.pinReqs = S.pinReqs.filter(r => r.id !== id); } }
+        paintTabs(); renderTab(); toast(fail ? fail + " ක් අයින් කරන්න බැරි උනා." : "PIN requests ඔක්කොම අයින් කළා.", !!fail);
+        break;
+      }
+      case "cust-del": {
+        const c = S.customers.find(x => x.id === d.id); if (!c) return;
+        if (!armed(b, "මකන්නද?")) return;
+        b.disabled = true;
+        try {
+          // unlink the customer's projects first (they stay in Requests), then the profile
+          for (const r of (S.reqs || []).filter(x => x.uid === c.id)) { await patchReq(r, {}, ["uid"]); await syncChatOwner(r.id, "").catch(() => {}); }
+          await fs("DELETE", "/customers/" + encodeURIComponent(c.id)).catch(e => { if (!gone(e)) throw e; });
+          S.customers = S.customers.filter(x => x.id !== c.id); delete S.show[c.id];
+          paintTabs(); renderTab(); toast(c.name + " ගේ account එක මැකුවා.");
+        } catch (err) { b.disabled = false; toast(errText(err), true); }
+        break;
+      }
+      case "req-del-shown": {
+        const list = reqShown(); if (!list.length) return;
+        if (!armed(b, list.length + " ම මකන්නද? ආයෙත් ඔබන්න")) return;
+        b.disabled = true; let fail = 0;
+        for (const r of list) {
+          try { await deleteRequest(r.id); S.reqs = S.reqs.filter(x => x.id !== r.id); delete S.chats[r.id]; if (S.chatOpen === r.id) S.chatOpen = null; }
+          catch (err) { if (gone(err)) { S.reqs = S.reqs.filter(x => x.id !== r.id); delete S.chats[r.id]; } else fail++; }
+        }
+        paintTabs(); renderTab(); toast(fail ? fail + " ක් මකන්න බැරි උනා." : list.length + " ක් chats එක්ක මැකුවා.", !!fail);
+        break;
+      }
       case "pin-done":
-        try { await fs("DELETE", "/pinRequests/" + encodeURIComponent(d.id)); S.pinReqs = S.pinReqs.filter(r => r.id !== d.id); paintTabs(); renderTab(); toast("List එකෙන් අයින් කළා."); }
+        try { await fs("DELETE", "/pinRequests/" + encodeURIComponent(d.id)).catch(e => { if (!gone(e)) throw e; }); S.pinReqs = S.pinReqs.filter(r => r.id !== d.id); paintTabs(); renderTab(); toast("List එකෙන් අයින් කළා."); }
         catch (err) { toast(errText(err), true); }
         break;
       case "req-new": S.newOpen = !S.newOpen; renderTab(); if (S.newOpen) $("#np-title").focus(); break;

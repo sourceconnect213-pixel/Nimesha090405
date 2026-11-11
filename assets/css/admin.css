@@ -406,3 +406,6 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
   .btn.ad-small { min-height: 44px; }
   .ad-tabs button { min-height: 44px; }
 }
+
+.btn.ad-danger { border-color: rgba(225, 6, 0, .55); color: #FF6A63; }
+.btn.ad-danger:hover { border-color: #E10600; background: rgba(225, 6, 0, .12); }

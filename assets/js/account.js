@@ -282,7 +282,7 @@
   function card(r) {
     const st = stageOf(r.status), idx = STAGES.indexOf(st);
     const pct = st.key === "done" ? 100 : Math.max(0, Math.min(100, typeof r.progress === "number" ? r.progress : st.pct));
-    const title = r.title || (r.track === "creative" ? "Logo, Design & Video project" : r.track === "pkg" ? "Mobile app project" : "App / Website project");
+    const title = r.title || (r.track === "creative" ? "Logo, Design & Video project" : r.track === "pkg" ? "Package project" : "App / Website project");
     return '<article class="acc-proj s-' + esc(st.key) + '">' +
       '<div class="acc-proj-top"><div><h2>' + esc(title) + "</h2><small>" + esc(r.ref || "") + (r.createdAt ? " · " + esc(fmtDay(r.createdAt)) : "") + "</small></div>" +
         '<span class="acc-stage">' + esc(st.label) + "</span></div>" +
