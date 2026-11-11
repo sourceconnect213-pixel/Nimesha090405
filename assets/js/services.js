@@ -78,7 +78,7 @@ window.HX_SERVICES = {
     {
       slug: "mobile-apps", cat: "dev", name: "Mobile Apps", anim: "phone", pkgv: 2,   // pkgv: this text goes with the approved package list (config.js packagesVersion); an older saved copy is replaced
       icon: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
-      short: "Android apps Flutter වලින්. Fixed LKR packages 5ක් + custom",
+      short: "Android apps Flutter වලින් · LKR 14,000 ඉඳන්",
       summary: "Flutter වලින් හදන Android apps. LKR 14,000 ඉඳන් fixed price packages 5ක්, ලොකු projects වලට custom quote (iOS / Web එක්ක).",
       intro: "Order, booking, delivery, class වගේ ඔයාගේ business එකට ඕන Android app එක Flutter වලින් හදනවා. Package 01 – 05 Android only; iOS, Web, ලොකු systems Custom package එකෙන් quote කරනවා.",
       tags: ["Flutter", "Android", "Firebase"],
@@ -106,7 +106,7 @@ window.HX_SERVICES = {
     {
       slug: "websites", cat: "dev", name: "Websites", anim: "browser", pkgv: 3,   // pkgv: this text goes with the approved website package list
       icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',
-      short: "Landing page, business site, WordPress, online shop. Fixed LKR packages",
+      short: "Landing page, WordPress site, online shop · LKR 10,000 ඉඳන්",
       summary: "Landing pages, business sites, WordPress CMS sites සහ WooCommerce online shops. LKR 10,000 ඉඳන් fixed price packages, phone එකේ ලස්සනට පේන, Google එකේ හොයාගන්න පුළුවන්.",
       intro: "ඔයාගේ business එක online ගෙනියන්න website එකක්: එක page landing site එකක ඉඳන් WordPress CMS site එකක් සහ online shop එකක් වෙනකන්. Package එකේ කියලා තියෙන pages, items විතරයි — ඊට වැඩි දෙයක් ඕන නම් වෙනම quote එකක්.",
       tags: ["Static", "WordPress", "WooCommerce"],
@@ -130,7 +130,7 @@ window.HX_SERVICES = {
     {
       slug: "business-systems", cat: "dev", name: "Business Systems", anim: "dashboard", pkgv: 3,
       icon: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
-      short: "Class, stock, appointment, customer systems සහ custom portals",
+      short: "Class, stock, appointment systems, custom portals",
       summary: "Login, roles, database සහ reports එක්ක business web systems: class records, stock, appointments, customer requests. ලොකු portals (student / employee / multi-store) custom quote එකෙන්.",
       intro: "ඔයාගේ business එකේ වැඩ computer එකෙන් හරි phone එකෙන් හරි කරන්න පුළුවන් web system එකක්: login, user roles, database, dashboard, reports. Advanced Business Web System package එක fixed price; ලොකු portals වලට Custom quote.",
       tags: ["Dashboards", "User roles", "Supabase"],
@@ -154,7 +154,7 @@ window.HX_SERVICES = {
     {
       slug: "backend-admin", cat: "dev", name: "Backend & Admin Panel", anim: "backend", pkgv: 4,   // pkgv: this text goes with the approved backend package list
       icon: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6M4 11.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
-      short: "දැනට තියෙන app / site එකට Firebase backend + admin panel. Fixed LKR packages",
+      short: "Existing app / site එකට Firebase backend + admin panel",
       summary: "ඔයාගේ දැනට තියෙන app එකට හෝ site එකට secure login, Firestore database සහ web admin panel එකක්. LKR 29,000 ඉඳන් fixed packages 4ක්, custom backends quote එකෙන්.",
       intro: "ඔයාගේ දැනට තියෙන app එකට හෝ website එකට Firebase backend එකක් (email / password login, database, security rules) සහ web admin panel එකක්. Package එකේ කියලා තියෙන modules, admin views, roles විතරයි — ඊට වැඩි දෙයක් ඕන නම් වෙනම quote එකක්. අලුත් app / site එකක් ඕන නම් Mobile Apps / Websites packages බලන්න.",
       tags: ["Firebase", "Firestore", "Admin panel"],
@@ -180,7 +180,7 @@ window.HX_SERVICES = {
     {
       slug: "ai-features", cat: "dev", name: "AI Features & Automation", anim: "chat", pkgv: 5,   // pkgv: this text goes with the approved AI package list
       icon: '<path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
-      short: "Chatbot, knowledge assistant, automation, AI agents. Fixed LKR packages",
+      short: "Chatbot, knowledge assistant, automation, AI agents",
       summary: "ඔයාගේ website එකට FAQ chatbot එකක ඉඳන් documents වලින් උත්තර දෙන assistant, human-approved content automation, business data assistant සහ multi-step AI agent දක්වා. LKR 40,000 ඉඳන් fixed packages 5ක්, enterprise AI custom quote.",
       intro: "ඔයාගේ දැනට තියෙන website, dashboard හෝ database එකට practical AI: approved FAQ වලින් උත්තර දෙන chatbot, ඔයාගේ documents වලින් උත්තර දෙන knowledge assistant, ඔයාගේ approval එකෙන් වැඩ කරන content automation, business data assistant, scoped AI agent. හැම package එකකම scope caps පැහැදිලිව — AI outcomes probabilistic, 100% accuracy guarantee එකක් නෑ.",
       tags: ["Chatbot", "RAG", "Automation", "Agents"],
@@ -205,7 +205,7 @@ window.HX_SERVICES = {
     {
       slug: "maintenance-hosting", cat: "dev", name: "Maintenance & Hosting", anim: "server", pkgv: 5,
       icon: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',
-      short: "Website, WordPress, shop, web app, VPS මාසික care plans",
+      short: "Website, WordPress, shop, web app, VPS මාසික care",
       summary: "ඔබේ website, web app, database සහ VPS පද්ධති සඳහා මාසික නඩත්තු සේවා: monitoring, updates, backups review, පොඩි edits, reports. LKR 5,500 / මාසයට ඉඳන් plans 5ක් + custom SLA. Hosting, domain, cloud වියදම් වෙනම.",
       intro: "Launch කළාට පස්සේ ඔයාගේ website, WordPress site, online shop, web app හෝ VPS එක නිරෝගීව තියාගන්න මාසික plans. හැම plan එකකම scope එක (pages, plugins, products, edits, windows, triages) ලිඛිතව. Business-hours support; automated monitoring 24/7 උනත් staffed 24/7 support එකක්, uptime guarantee එකක් නෑ.",
       tags: ["Monitoring", "Updates", "Backups"],

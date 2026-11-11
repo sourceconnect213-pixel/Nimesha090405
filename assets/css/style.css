@@ -1785,3 +1785,19 @@ h1.display { font-size: clamp(2.6rem, 6.4vw, 5.2rem); letter-spacing: -0.045em; 
 .price-per { font-size: .42em; font-weight: 600; letter-spacing: 0; opacity: .75; margin-left: 2px; }
 .rung-per { display: block; font-size: .68rem; font-weight: 500; color: var(--faint); text-align: right; }
 .rung[aria-selected="true"] .rung-per { color: #BDBDBD; }
+
+/* ---- every device: tap targets of 44px, no iOS zoom on inputs, service lines never cut mid-sentence ---- */
+.nav-links a:not(.btn) { padding: 11px 2px; }
+.notice-close { width: 36px; height: 36px; margin-top: -18px; }
+.svx-t small { -webkit-line-clamp: 3; }
+@media (hover: none) and (pointer: coarse) {
+  .input, select.input, textarea.input, .ad-field .input { font-size: 16px; }   /* iOS zooms into any field smaller than 16px */
+  .faq summary, .pk-fees summary, .rung, .opt-box, .tab, .svc-chip, .svx-row { -webkit-tap-highlight-color: transparent; }
+  .svc-chip { min-height: 44px; }
+  .pk-fees summary { min-height: 56px; }
+}
+@media (max-width: 360px) {
+  h1.display { font-size: 2.2rem; }
+  .pk-tags span { font-size: .62rem; }
+  .price-amt, .pk-price .price-amt { font-size: 1.6rem; }
+}

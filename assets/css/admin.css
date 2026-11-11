@@ -399,3 +399,10 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .ad-pill.ok { color: #fff; border-color: #fff; }
 .btn.armed { border-color: #E10600; color: #E10600; }
 .ad-gate-card .btn-primary { border: 0; color: #fff; }
+
+/* admin on a phone: fields never zoom, buttons are finger-sized, the save bar stays reachable */
+@media (hover: none) and (pointer: coarse) {
+  .ad-field .input, .input { font-size: 16px; }
+  .btn.ad-small { min-height: 44px; }
+  .ad-tabs button { min-height: 44px; }
+}
