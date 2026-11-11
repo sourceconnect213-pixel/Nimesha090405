@@ -52,6 +52,11 @@ window.HX_SERVICES = {
      Edited from the admin panel -> Home page. In the text, {support} and {advance} become the
      free-support period and the advance percent from the price settings. */
   home: {
+    /* "අපේ වැඩ" and "Customers කියන දේ" on the home page: filled from the admin panel → Home page. Empty = the section is not shown.
+       work: { t: project name, d: one line about it, tag: "App" / "Website" / "Logo", link: optional address }
+       reviews: { name: customer, biz: their business / place, text: what they said } — only real customers, with their OK. */
+    work: [],
+    reviews: [],
     steps: [
       { time: "විනාඩි 2", t: "Idea එක කියන්න", d: "Project form එක fill කරන්න. Estimate price එක සහ කල් යන වෙලාව එකපාර පෙන්නනවා." },
       { time: "දවස් 1 – 2", t: "Free call & quote", d: "Details කතා කරලා fixed quote එකක් සහ timeline එකක් ඔයාට එවනවා." },

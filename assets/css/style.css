@@ -1801,3 +1801,23 @@ h1.display { font-size: clamp(2.6rem, 6.4vw, 5.2rem); letter-spacing: -0.045em; 
   .pk-tags span { font-size: .62rem; }
   .price-amt, .pk-price .price-amt { font-size: 1.6rem; }
 }
+
+/* ---- why Hexora / our work / reviews ---- */
+.why-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } }
+.work-grid, .reviews-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .work-grid, .reviews-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .work-grid, .reviews-grid { grid-template-columns: 1fr; } }
+.work-card { display: grid; gap: 8px; align-content: start; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); color: var(--fg); text-decoration: none; }
+a.work-card:hover { border-color: var(--fg); }
+.work-tag { font-size: .74rem; font-weight: 700; color: var(--cyan); }
+.work-card h3 { font-size: 1.05rem; }
+.work-card p { color: var(--muted); font-size: .92rem; }
+.work-go { color: var(--cyan); font-weight: 700; font-size: .9rem; }
+.review { margin: 0; display: grid; gap: 14px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); }
+.review blockquote { margin: 0; font-size: 1rem; line-height: 1.6; }
+.review blockquote::before { content: "\201C"; color: var(--cyan); font-size: 2rem; line-height: 0; margin-right: 4px; vertical-align: -.4em; }
+.review figcaption { display: grid; gap: 2px; font-size: .88rem; }
+.review figcaption b { color: var(--fg); }
+.review figcaption span { color: var(--faint); }

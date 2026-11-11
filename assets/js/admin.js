@@ -262,6 +262,7 @@
       S.data.services.list.forEach(x => { if (x.packages === undefined && x.slug === "mobile-apps") x.packages = true; });
     }
     if (S.data.services && !S.data.services.home && window.HX_SERVICES && window.HX_SERVICES.home) S.data.services.home = clone(window.HX_SERVICES.home);
+    if (S.data.services && S.data.services.home) { const h = S.data.services.home; if (!Array.isArray(h.work)) h.work = []; if (!Array.isArray(h.reviews)) h.reviews = []; }
   }
   // the Pages tab's text changes: { "original text": "new text" }
   function parseTexts(s) { let t = {}; try { t = s ? JSON.parse(s) : {}; } catch (e) { t = {}; } return t && typeof t === "object" && !Array.isArray(t) ? t : {}; }
@@ -869,6 +870,10 @@
     return card("වැඩ කරන විදිය (home page steps)",
         arrayEditor("services.home.steps", p => grid(field(p + ".time", "කාලය (Ex: විනාඩි 2)") + field(p + ".t", "Step එකේ නම") + field(p + ".d", "විස්තරය", { type: "area", rows: 2, wide: true })), "Step එකක් add කරන්න", { time: "", t: "", d: "" }),
         "Home page එකේ \"වැඩ කරන විදිය\" කොටස. උඩ ඉඳන් පහළට අංක 01, 02… ලැබෙනවා. විස්තරයේ <code>{support}</code> (free support කාලය) සහ <code>{advance}</code> (advance %) ලියන්න පුළුවන්.") +
+      card("අපේ වැඩ (home page)", arrayEditor("services.home.work", p => grid(field(p + ".t", "Project එකේ නම") + field(p + ".tag", "Type (Ex: App, Website, Logo)") + field(p + ".d", "එක පේළියක විස්තරය", { wide: true }) + field(p + ".link", "Link (optional: site එක, Play Store)", { wide: true, ph: "https://…" })), "Project එකක් add කරන්න", { t: "", tag: "", d: "", link: "" }),
+        "ඔයා හදපු real projects. හිස් නම් home page එකේ මේ කොටස පේන්නේ නෑ. Customer ගේ නමින් දාන්න කලින් ඔවුන්ගේ අවසර ගන්න.") +
+      card("Customers කියන දේ (home page)", arrayEditor("services.home.reviews", p => grid(field(p + ".name", "Customer ගේ නම") + field(p + ".biz", "Business / තැන (Ex: Cake shop, Kandy)") + field(p + ".text", "කියපු දේ", { type: "area", rows: 3, wide: true })), "Review එකක් add කරන්න", { name: "", biz: "", text: "" }),
+        "Real customers ලාගේ, ඔවුන්ගේ අවසරය ඇති reviews විතරයි. හිස් නම් පේන්නේ නෑ.") +
       card("FAQ (home page)", arrayEditor("services.home.faq", faqItem, "ප්‍රශ්නයක් add කරන්න", { q: "", a: "" }),
         "Home page එකේ \"ගොඩක් අය අහන ප්‍රශ්න\". පළවෙනි එක open වෙලා පේනවා. උත්තරයේ <code>{support}</code> සහ <code>{advance}</code> use කරන්න පුළුවන්. හැම service page එකකම FAQ එක වෙනම (Services tab).") +
       card("Services list", '<p class="ad-note">Home page එකේ services list එක (ඒකේ icon, නම, කෙටි විස්තරය) ගන්නේ <b>Services</b> tab එකෙන්. ඒකේ service එකක් add / edit / මකපුවම ඒක home page එකේත් පේනවා.</p><div class="ad-add"><button type="button" class="btn ad-small" data-act="tab" data-tab="services">Services tab එකට</button></div>');
@@ -877,7 +882,7 @@
 
   /* ---------- Pages tab: a live preview of the real page, and every text on it ---------- */
   const PAGES = [["index.html", "Home"], ["service.html", "Services"], ["start-project.html", "Start a project"], ["account.html", "Login / account"], ["terms.html", "Terms"], ["privacy.html", "Privacy"], ["404.html", "404 page"]];
-  const DYN_TAB = { steps: ["content", "Home page"], faq: ["content", "Home page"], packages: ["prices", "Prices"], services: ["services", "Services"], estimate: ["prices", "Prices"] };
+  const DYN_TAB = { steps: ["content", "Home page"], faq: ["content", "Home page"], work: ["content", "Home page"], reviews: ["content", "Home page"], packages: ["prices", "Prices"], services: ["services", "Services"], estimate: ["prices", "Prices"] };
   const DYN_WORD = { steps: "process steps", faq: "FAQ", packages: "app packages", services: "service list", estimate: "estimate / options" };
   VIEWS.pages = () => {
     S.pgFile = S.pgFile || "index.html"; S.pgDev = S.pgDev || (innerWidth < 700 ? "phone" : "desktop");

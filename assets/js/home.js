@@ -23,6 +23,22 @@
     else gone("process");
   }
 
+  // our work: only when the admin has added projects
+  const work = S.home && S.home.work, wk = $("home-work");
+  if (wk && Array.isArray(work) && work.length) {
+    wk.innerHTML = work.map(w => {
+      const inner = (w.tag ? '<span class="work-tag">' + esc(w.tag) + "</span>" : "") + "<h3>" + esc(w.t) + "</h3>" + (w.d ? "<p>" + esc(w.d) + "</p>" : "") + (w.link ? '<span class="work-go">බලන්න →</span>' : "");
+      return w.link ? '<a class="work-card" href="' + esc(w.link) + '" target="_blank" rel="noopener">' + inner + "</a>" : '<div class="work-card">' + inner + "</div>";
+    }).join("");
+    const sec = $("work"); if (sec) sec.hidden = false;
+  }
+  // what customers say: only real, approved reviews the admin added
+  const reviews = S.home && S.home.reviews, rv = $("home-reviews");
+  if (rv && Array.isArray(reviews) && reviews.length) {
+    rv.innerHTML = reviews.map(r => '<figure class="review"><blockquote>' + esc(r.text) + "</blockquote><figcaption><b>" + esc(r.name) + "</b>" + (r.biz ? "<span>" + esc(r.biz) + "</span>" : "") + "</figcaption></figure>").join("");
+    const sec = $("reviews"); if (sec) sec.hidden = false;
+  }
+
   const faq = S.home && S.home.faq, fq = $("home-faq");
   if (fq && Array.isArray(faq)) {
     const SHOW = 4;   // the first questions are enough for most people; the rest sit behind one button

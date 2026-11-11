@@ -230,6 +230,21 @@
   document.title = (cur ? cur.name : "Services") + " | Hexora";
   const meta = $('meta[name="description"]');
   if (meta && cur) meta.setAttribute("content", cur.name + " — " + cur.summary);
+  if (cur) {
+    // the share card and search snippet for this service
+    const setMeta = (sel, v) => { const m = $(sel); if (m) m.setAttribute("content", v); };
+    setMeta('meta[property="og:title"]', cur.name + " | Hexora");
+    setMeta('meta[property="og:description"]', cur.summary);
+    setMeta('meta[property="og:url"]', location.origin + location.pathname + "?s=" + encodeURIComponent(cur.slug));
+    const canon = $('link[rel="canonical"]'); if (canon) canon.setAttribute("href", location.origin + location.pathname + "?s=" + encodeURIComponent(cur.slug));
+    // structured data: this service and the fixed-price packages it lists (LKR)
+    try {
+      const pk = showPk(cur) ? Object.entries(P.packagesOf(C, pkCat(cur), cur.pkgKeys)) : [];
+      const ld = { "@context": "https://schema.org", "@type": "Service", name: cur.name, description: cur.summary, provider: { "@type": "Organization", name: "Hexora" }, areaServed: "LK", url: location.origin + location.pathname + "?s=" + cur.slug };
+      if (pk.length) ld.offers = pk.map(([k, p]) => ({ "@type": "Offer", name: p.label, price: String(p.lkr), priceCurrency: "LKR", url: location.origin + "/start-project.html?package=" + k, description: (p.from ? "Starting price, final by quotation. " : "") + (p.monthly ? "Per month. " : "") + "Development / service fee only; hosting, cloud usage and third-party fees are separate." }));
+      const tag = document.createElement("script"); tag.type = "application/ld+json"; tag.textContent = JSON.stringify(ld); document.head.appendChild(tag);
+    } catch (e) { /* structured data is optional */ }
+  }
   const navServices = $('.nav-links a[href="service.html"]');
   if (navServices && !cur) navServices.setAttribute("aria-current", "page");
 
