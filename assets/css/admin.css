@@ -409,3 +409,17 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 
 .btn.ad-danger { border-color: rgba(225, 6, 0, .55); color: #FF6A63; }
 .btn.ad-danger:hover { border-color: #E10600; background: rgba(225, 6, 0, .12); }
+
+/* Prices → packages: a heading per category, each package a row that opens */
+.ad-pkg-h { margin: 14px 0 2px; font-size: .95rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.ad-pkg { display: block; padding: 0; }
+.ad-pkg > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 10px 14px; font-weight: 700; }
+.ad-pkg > summary::-webkit-details-marker { display: none; }
+.ad-pkg > summary::after { content: "+"; flex: none; width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; font-family: var(--f-mono); }
+.ad-pkg[open] > summary::after { content: "–"; background: #E10600; border-color: #E10600; color: #fff; }
+.ad-pkg-n { min-width: 0; }
+.ad-pkg-p { margin-left: auto; white-space: nowrap; color: #FF6A63; font-family: var(--f-mono); font-size: .86rem; }
+.ad-pkg[open] { padding-bottom: 14px; border-color: var(--line-strong); }
+.ad-pkg[open] > :not(summary) { margin-inline: 14px; }
+.ad-pkg[open] > .ad-item-head { margin-bottom: 10px; }
+@media (max-width: 480px) { .ad-pkg > summary { flex-wrap: wrap; } .ad-pkg-p { margin-left: 0; flex: 1 1 100%; order: 3; } }

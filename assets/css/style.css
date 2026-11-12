@@ -1821,3 +1821,8 @@ a.work-card:hover { border-color: var(--fg); }
 .review figcaption { display: grid; gap: 2px; font-size: .88rem; }
 .review figcaption b { color: var(--fg); }
 .review figcaption span { color: var(--faint); }
+/* the "request received" note sits on the white summary card: dark text, readable */
+.summary .saved-note { background: #F4F4F4; border-color: var(--paper-line-strong); color: var(--paper-ink); }
+.summary .saved-note * { color: inherit; }
+.summary .saved-note b:first-child, .summary .saved-note > b { color: #0A7A3D; }
+.summary .saved-note a { color: var(--cyan); }

@@ -252,7 +252,7 @@
     const c = S.data.config, d = window.HEXORA || {};
     if (!c.notice) c.notice = { show: false, text: "", linkText: "", link: "" };
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
-    if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote"].forEach(k => { c[k] = clone(d[k]); });
+    if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote", "freeSupportMonths", "advancePercent"].forEach(k => { c[k] = clone(d[k]); });
     ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
     if (S.data.services && S.data.services.list) {
@@ -779,26 +779,38 @@
   // a card that folds (the Prices tab has 9 long groups): its open / closed state survives redraws
   const foldCard = (key, title, count, body, note, dflt) => '<details class="ad-card ad-fold" data-fold="' + key + '"' + ((S.fold[key] === undefined ? dflt : S.fold[key]) ? " open" : "") + '><summary><span class="ad-card-head"><h2>' + title +
     (count != null ? ' <span class="ad-count">' + count + "</span>" : "") + "</h2>" + (note ? "<p>" + note + "</p>" : "") + "</span></summary>" + body + "</details>";
+  // the 29 packages: one heading per category, each package a row that opens (name + price always visible)
+  const PKG_CATS = [["app", "Mobile App packages"], ["web", "Website packages"], ["backend", "Backend & Admin packages"], ["ai", "AI & Automation packages"], ["maint", "Maintenance plans (මාසික)"]];
+  function pkgItems(g, c) {
+    const all = Object.keys(c.packages || {}), catOf = k => c.packages[k].cat || "app";
+    const row = k => { const p = c.packages[k], key = "pkg:" + k;
+      return '<details class="ad-item ad-pkg" data-fold="' + esc(key) + '"' + (S.fold[key] ? " open" : "") + '><summary><span class="ad-pkg-n">' + esc(p.label || k) + '</span><span class="ad-pkg-p">' + (p.from ? "From " : "") + "LKR " + (Number(p.lkr) || 0).toLocaleString("en-US") + (p.from ? "+" : "") + (p.monthly ? " / මාසයට" : "") + "</span></summary>" +
+        '<div class="ad-item-head"><code class="ad-key">' + esc(k) + "</code>" + mini("del-key", I.del, "මකන්න", ' data-group="packages" data-key="' + esc(k) + '"') + "</div>" +
+        '<div class="ad-grid tight">' + itemFields(g, k) + "</div></details>"; };
+    const known = PKG_CATS.map(x => x[0]);
+    return PKG_CATS.map(([cat, title]) => { const ks = all.filter(k => catOf(k) === cat); return ks.length ? '<h3 class="ad-pkg-h">' + title + ' <span class="ad-count">' + ks.length + '</span></h3><div class="ad-items">' + ks.map(row).join("") + "</div>" : ""; }).join("") +
+      (all.some(k => known.indexOf(catOf(k)) === -1) ? '<h3 class="ad-pkg-h">වෙනත්</h3><div class="ad-items">' + all.filter(k => known.indexOf(catOf(k)) === -1).map(row).join("") + "</div>" : "");
+  }
   VIEWS.prices = () => {
     const c = S.data.config;
     return foldCard("general", "General", null, grid(
         field("config.fallbackRate", "Fallback rate (LKR for 1 USD)", { type: "num", hint: "Live rate එක load නොවුණොත් use කරනවා." }) +
-        field("config.packagesFixedLkr", "App packages fixed LKR", { type: "bool", hint: "ටික් = package prices ලියලා තියෙන LKR එකමයි (approved price list). ටික් නැත්නම් පරණ විදියට: 1 USD = package price list rate එකට ලියලා, අද rate එකට වෙනස් වෙනවා." }) +
+        field("config.packagesFixedLkr", "Packages fixed LKR", { type: "bool", hint: "ටික් = package prices ලියලා තියෙන LKR එකමයි (approved price list). ටික් නැත්නම් පරණ විදියට: 1 USD = package price list rate එකට ලියලා, අද rate එකට වෙනස් වෙනවා." }) +
         field("config.packageBaseRate", "Package price list rate", { type: "num", hint: "Fixed LKR නැති විට විතරයි: packages / add-ons වල LKR prices ලියලා තියෙන්නේ 1 USD = මේ rate එකට." }) +
-        field("config.packageNote", "Package note (site එකේ packages යටින්)", { wide: true, hint: "Hosting, Firebase usage, store fees වෙනම කියන note එක." }) +
-        field("config.packageQuote", "Quote wording (\"මොනවද වෙනම ගෙවන්නේ?\" යටින්)", { wide: true, hint: "Quote එකක මොනවද include / exclude කියන text එක." }) +
+        field("config.packageNote", "Package note (site එකේ packages යටින්)", { type: "area", rows: 2, wide: true, hint: "Hosting, Firebase usage, store fees වෙනම කියන note එක." }) +
+        field("config.packageQuote", "Quote wording (\"මොනවද වෙනම ගෙවන්නේ?\" යටින්)", { type: "area", rows: 4, wide: true, hint: "Quote එකක මොනවද include / exclude කියන text එක." }) +
         field("config.roundTo", "LKR round to", { type: "num", hint: "LKR 20,000 ට වැඩි prices මේකට round වෙනවා." }) +
         field("config.advancePercent", "Advance %", { type: "num" }) +
-        field("config.freeSupportMonths", "Free support (months)", { type: "num" }) +
+        field("config.freeSupportMonths", "Free support (months)", { type: "num", hint: "Approved: 1 (දවස් 30). Site එකේ \"1 month free fixes\" කියලා පේනවා." }) +
         field("config.rangeSpread", "Estimate range ×", { type: "num", hint: "Estimate එකේ උපරිම = අවම × මේක." }) +
         field("config.rateCacheHours", "Rate cache (hours)", { type: "num" }) +
         field("config.rateApi", "Exchange rate API", { wide: true })),
-      "හැම price එකක්ම USD. Site එක ඒවා LKR වලට හරවනවා. පහළ පේන LKR එක fallback rate එකෙන්.", true) +
+      "Packages (app, website, backend, AI, maintenance) fixed LKR — ලියන ගණනමයි site එකේ පේන්නේ. Design & Video items USD; site එක ඒවා අද rate එකෙන් LKR වලට හරවනවා.", false) +
     GROUPS.map(g => foldCard(g.key, g.title, Object.keys(c[g.key] || {}).length,
-      '<div class="ad-items">' + Object.keys(c[g.key] || {}).map(k =>
+      (g.key === "packages" ? pkgItems(g, c) : '<div class="ad-items">' + Object.keys(c[g.key] || {}).map(k =>
         '<div class="ad-item"><div class="ad-item-head"><code class="ad-key">' + esc(k) + "</code>" +
           (g.fixed ? "" : mini("del-key", I.del, "මකන්න", ' data-group="' + g.key + '" data-key="' + esc(k) + '"')) + "</div>" +
-        '<div class="ad-grid tight">' + itemFields(g, k) + "</div></div>").join("") + "</div>" +
+        '<div class="ad-grid tight">' + itemFields(g, k) + "</div></div>").join("") + "</div>") +
       (g.fixed ? "" : '<div class="ad-add"><input class="input" id="newkey-' + g.key + '" placeholder="අලුත් key එක (ex: seo)" maxlength="20"><button type="button" class="btn ad-small" data-act="add-key" data-group="' + g.key + '">' + icon(I.plus) + " Add</button></div>"),
       g.note, g.key === "packages")).join("");
   };
@@ -1198,7 +1210,7 @@
     const d = e.target;
     if (!d || !d.matches) return;
     if (d.matches("details.ad-req")) S.reqOpen[d.dataset.id] = d.open ? 1 : 0;
-    else if (d.matches("details.ad-fold")) S.fold[d.dataset.fold] = d.open;
+    else if (d.matches("details.ad-fold, details.ad-pkg")) S.fold[d.dataset.fold] = d.open;
   }, true);
   root.addEventListener("click", async e => {
     const b = e.target.closest("[data-act]"); if (!b) return;
