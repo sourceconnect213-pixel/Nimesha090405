@@ -16,8 +16,8 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261119d">
-  <link rel="stylesheet" href="assets/css/hx.css?v=20261119d">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261119e">
+  <link rel="stylesheet" href="assets/css/hx.css?v=20261119e">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body class="planner-page">
@@ -254,40 +254,66 @@
         <!-- SUMMARY (after submit) -->
         <div class="summary" id="summary" hidden>
           <div class="burst" id="burst" aria-hidden="true"></div>
-          <div class="summary-top">
-            <div style="display:flex; gap:16px; align-items:center">
-              <div class="success-hex"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+          <!-- saved in Hexora's inbox -->
+          <div class="sum-ok">
+            <div class="sum-ok-head">
+              <div class="sum-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
               <div>
-                <h2 style="font-size:1.25rem; font-weight:800">Request එක ready!</h2>
-                <p class="muted" style="font-size:.92rem">පහළ button එකකින් අපිට එවන්න.</p>
+                <h2>ඔබගේ request එක ලැබුණා!</h2>
+                <p>Request එක ලැබුණු සැණින් අප ඔබව සම්බන්ධ කරගනු ඇත.</p>
               </div>
             </div>
-            <span class="ref" id="ref-id">HX-000000-0000</span>
+            <div class="sum-ref">Reference <b class="ref" data-ref>HX-000000-0000</b></div>
+            <ol class="sum-steps" aria-label="ඊළඟට වෙන දේ">
+              <li class="done"><b>Request එක ලැබුණා</b><span>දැන්</span></li>
+              <li><b>Developer කෙනෙක් බලනවා</b><span>ඉක්මනින්</span></li>
+              <li><b>Call / WhatsApp එකෙන් කතා කරනවා</b><span>Final price සහ කාලය</span></li>
+            </ol>
+            <div class="sum-actions">
+              <button class="btn btn-primary btn-lg" type="button" id="chat-now">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Chat කරන්න
+              </button>
+              <a class="btn btn-wa btn-lg" id="wa-now" href="#" target="_blank" rel="noopener">WhatsApp කරන්න</a>
+            </div>
+            <p class="sum-acc" data-when="in"><a href="account.html">මගේ projects</a> එකෙන් project එකේ status එක හැම වෙලේම බලන්න පුළුවන්.</p>
+            <p class="sum-acc" data-when="out" hidden>Project එක කොච්චර දුරට ඉවරද කියලා බලන්න <a href="account.html">phone number එකයි PIN එකයි ගහලා account එකට යන්න</a> — request එක එතන පේනවා.</p>
           </div>
-          <div class="summary-actions">
-            <a class="btn btn-wa" id="send-wa" href="#" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4 22l4.6-2.1c1.1.3 2.2.5 3.4.5 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"/></svg>
-              WhatsApp එකෙන් යවන්න
-            </a>
-            <a class="btn btn-primary" id="send-email" href="#">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-              Email එකෙන් යවන්න
-            </a>
+
+          <!-- not saved (offline / refused): the customer sends it by hand -->
+          <div class="sum-send">
+            <div class="summary-top">
+              <div style="display:flex; gap:16px; align-items:center">
+                <div class="success-hex"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+                <div>
+                  <h2 style="font-size:1.25rem; font-weight:800" class="sum-send-t">Request එක යවනවා…</h2>
+                  <p class="muted sum-send-p" style="font-size:.92rem">තත්පරයක් ඉන්න.</p>
+                </div>
+              </div>
+              <span class="ref" id="ref-id">HX-000000-0000</span>
+            </div>
+            <div class="summary-actions">
+              <a class="btn btn-wa" id="send-wa" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4 22l4.6-2.1c1.1.3 2.2.5 3.4.5 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"/></svg>
+                WhatsApp එකෙන් යවන්න
+              </a>
+              <a class="btn btn-primary" id="send-email" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+                Email එකෙන් යවන්න
+              </a>
+            </div>
+            <div class="saved-note" id="saved-note" hidden></div>
+          <p class="contact-line">Button එක වැඩ නැත්නම්, copy කරලා <b data-phone-label>070 630 5377</b> (WhatsApp) හරි <b data-email>teamhexoramain@gmail.com</b> ට එවන්න.</p>
+          </div>
+          <details class="sum-details">
+            <summary>ඔයා එවපු විස්තර</summary>
+            <pre id="summary-text"></pre>
             <button class="btn" id="copy-btn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
               Copy කරන්න
             </button>
-          </div>
-          <div class="saved-note" id="saved-note" hidden>
-            <b>✓ Request එක Hexora වලට ලැබුණා</b>
-            <span class="sn-status">⏳ Pending · Under review</span>
-            <span>Hexora Developer කෙනෙක් ඔයා එක්ක ඉක්මනින්ම සම්බන්ධ වෙනවා. මද වේලාවක් රැඳී ඉන්න.</span>
-            <span data-when="in"><a href="account.html">මගේ projects</a> එකෙන් project එකේ status එක බලන්න, Developer ට chat කරන්න පුළුවන්.</span>
-            <span data-when="out" hidden>Project එක කොච්චර දුරට ඉවරද කියලා online බලන්න, Developer එක්ක chat කරන්න, මේ phone එකෙන්ම <a href="account.html?new=1">account එකක් හදාගන්න</a>.</span>
-          </div>
-          <p class="contact-line">Button එක වැඩ නැත්නම්, copy කරලා <b data-phone-label>070 630 5377</b> (WhatsApp) හරි <b data-email>teamhexoramain@gmail.com</b> ට එවන්න.</p>
-          <pre id="summary-text"></pre>
-          <button class="btn" id="edit-btn" type="button">← වෙනස් කරන්න</button>
+          </details>
+          <button class="btn sum-edit" id="edit-btn" type="button">← වෙනස් කරන්න</button>
         </div>
       </div>
 
@@ -397,11 +423,16 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script defer src="assets/js/firebase-config.js?v=20261119d"></script>
-<script defer src="assets/js/config.js?v=20261119d"></script>
-<script defer src="assets/js/services.js?v=20261119d"></script>
-<script defer src="assets/js/fb.js?v=20261119d"></script>
-<script defer src="assets/js/nav.js?v=20261119d"></script>
-<script defer src="assets/js/boot.js?v=20261119d" data-load="pricing.js main.js planner.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261119e"></script>
+<script defer src="assets/js/config.js?v=20261119e"></script>
+<script defer src="assets/js/services.js?v=20261119e"></script>
+<a class="wa-float" data-wa-link="Hi Hexora! මට project එකක් ගැන කතා කරන්න ඕන." href="https://wa.me/94706305377" target="_blank" rel="noopener" aria-label="WhatsApp එකෙන් message කරන්න">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4 22l4.6-2.1c1.1.3 2.2.5 3.4.5 5.5 0 10-3.9 10-8.7S17.5 3 12 3zm-4 10a1.3 1.3 0 1 1 0-2.6A1.3 1.3 0 0 1 8 13zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6z"/></svg>
+</a>
+
+<script defer src="assets/js/fb.js?v=20261119e"></script>
+<script defer src="assets/js/nav.js?v=20261119e"></script>
+<script defer src="assets/js/chat.js?v=20261119e"></script>
+<script defer src="assets/js/boot.js?v=20261119e" data-load="pricing.js main.js planner.js livechat.js sitetext.js"></script>
 </body>
 </html>

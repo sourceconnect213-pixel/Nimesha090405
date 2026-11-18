@@ -453,3 +453,43 @@ h2.display { font-size: clamp(1.6rem, 3.4vw, 2.6rem) !important; line-height: 1.
   .hx-links .nav-svc-panel { background: linear-gradient(160deg, rgba(28, 36, 84, .9), rgba(8, 10, 24, .96)) !important; }
 }
 .pkc-blurb { display: block !important; -webkit-line-clamp: unset !important; overflow: visible !important; }
+
+/* ---------------- project form: after sending ---------------- */
+.summary { border-radius: 26px !important; background: radial-gradient(90% 60% at 50% 0%, rgba(47, 107, 255, .22), transparent 70%), linear-gradient(180deg, #0D1230, #080A18) !important; border: 1px solid var(--hx-line2) !important; }
+.summary .sum-ok, .summary .sum-send { display: none; }
+.summary[data-state="ok"] .sum-ok { display: grid; }
+.summary[data-state="send"] .sum-send, .summary[data-state="saving"] .sum-send { display: block; }
+.summary[data-state="saving"] .summary-actions, .summary[data-state="saving"] .contact-line, .summary[data-state="saving"] #ref-id { display: none; }
+.summary[data-state="saving"] .success-hex { animation: hx-spin 1.2s linear infinite; }
+.summary:not([data-state="send"]) .sum-edit { display: none; }
+.sum-ok { gap: 20px; }
+.sum-ok-head { display: flex; align-items: center; gap: 16px; }
+.sum-ok-head h2 { margin: 0 0 6px; font-size: clamp(1.35rem, 3.6vw, 1.8rem); font-weight: 800; letter-spacing: -.01em; }
+.sum-ok-head p { margin: 0; color: var(--hx-mute); font-size: 1rem; line-height: 1.6; }
+.sum-check { flex: none; display: grid; place-items: center; width: 64px; height: 64px; background: linear-gradient(135deg, #18D39A, #00D8FD); clip-path: polygon(50% 0, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%); animation: hx-zoom .7s var(--hx-ease) both; }
+.sum-check svg { width: 30px; height: 30px; fill: none; stroke: #04131A; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 30; stroke-dashoffset: 30; animation: sum-tick .6s var(--hx-ease) .35s forwards; }
+@keyframes sum-tick { to { stroke-dashoffset: 0; } }
+.sum-ref { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-radius: 14px; background: rgba(255, 255, 255, .04); border: 1px solid var(--hx-line); color: var(--hx-faint); font-weight: 700; font-size: .9rem; }
+.sum-ref .ref { color: #7FDBFF; font-family: var(--f-code); font-size: .95rem; letter-spacing: .02em; }
+.sum-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.sum-steps li { position: relative; display: grid; gap: 2px; padding: 0 0 18px 40px; counter-increment: s; }
+.sum-steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: .78rem; font-weight: 800; color: var(--hx-mute); background: rgba(140, 165, 255, .12); border: 1px solid var(--hx-line2); }
+.sum-steps li::after { content: ""; position: absolute; left: 12.5px; top: 28px; bottom: 2px; width: 1px; background: var(--hx-line2); }
+.sum-steps li:last-child { padding-bottom: 0; } .sum-steps li:last-child::after { display: none; }
+.sum-steps li.done::before { content: "✓"; color: #04131A; background: #18D39A; border-color: transparent; }
+.sum-steps b { font-size: .95rem; }
+.sum-steps span { color: var(--hx-faint); font-size: .84rem; }
+.sum-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sum-actions .btn { width: 100%; }
+@media (max-width: 560px) { .sum-actions { grid-template-columns: 1fr; } .sum-ok-head { align-items: flex-start; } .sum-check { width: 54px; height: 54px; } }
+.sum-acc { margin: 0; color: var(--hx-mute); font-size: .92rem; line-height: 1.6; }
+.sum-details { margin-top: 18px; border-top: 1px solid var(--hx-line); padding-top: 14px; }
+.sum-details summary { display: flex; align-items: center; justify-content: space-between; min-height: 44px; cursor: pointer; list-style: none; font-weight: 800; color: var(--hx-ink); }
+.sum-details summary::-webkit-details-marker { display: none; }
+.sum-details summary::after { content: "+"; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--hx-line2); color: #7FDBFF; }
+.sum-details[open] summary::after { content: "–"; }
+.sum-details pre { white-space: pre-wrap; word-break: break-word; max-height: 320px; overflow: auto; }
+.sum-details .btn { margin-top: 10px; }
+.summary[data-state="send"] .sum-details { border-top: 0; padding-top: 0; }
+body.sum-open .est-bar { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .sum-check, .sum-check svg { animation: none; stroke-dashoffset: 0; } .summary[data-state="saving"] .success-hex { animation: none; } }

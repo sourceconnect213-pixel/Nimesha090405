@@ -106,9 +106,9 @@
       if (first) await A.send(guest.id, null, "c", { kind: "text", text: first });
     } catch (e) { go.disabled = false; err.textContent = FB.errText(e); }
   }
-  async function create(name, phone) {
+  async function create(name, phone, note) {
     const id = FB.newId() + FB.newId(), me = FB.user();
-    const data = { gid: id, name: name, phone: phone, page: pageName(), device: device(), lastFrom: "c", lastText: "(chat පටන් ගත්තා)" };
+    const data = { gid: id, name: name, phone: phone, page: pageName(), device: device(), lastFrom: "c", lastText: (note || "(chat පටන් ගත්තා)").slice(0, 120) };
     if (me) data.uid = me.uid;
     await FB.create("guests", id, data, ["createdAt", "lastAt"]);
     guest = { id: id, name: name, phone: phone };
@@ -150,4 +150,21 @@
     isOpen ? close() : open();
   });
   if (guest) { startPolling(); checkUnread(); }
+
+  // the project form's "chat now": the name and phone of the request are used, so there is no second form
+  async function start(who) {
+    if (isOpen && guest) return;
+    if (!panel) build();
+    if (guest) return open();
+    const phone = FB.phoneId(who && who.phone || "");
+    if (!who || (who.name || "").length < 2 || !phone) return open();
+    isOpen = true; panel.hidden = false; btn.setAttribute("aria-expanded", "true"); btn.classList.add("lc-open");
+    body().innerHTML = '<p class="lc-hint">Chat එක පටන් ගන්නවා…</p>';
+    try {
+      await create(who.name, phone, "(Request " + (who.ref || "") + " ගැන chat)");
+      showChat();
+      await A.send(guest.id, null, "c", { kind: "text", text: "Hi! මම දැන් project request එකක් එව්වා — Ref: " + (who.ref || "") });
+    } catch (e) { isOpen = false; open(); }
+  }
+  window.HXLive = { open: open, start: start };
 })();

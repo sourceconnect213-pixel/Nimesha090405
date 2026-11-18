@@ -451,13 +451,22 @@
       })
       .catch(e => {
         // offline or refused: say so, so the customer sends it by WhatsApp / Email instead of thinking it arrived
+        if (sent === job) sumState("send", e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ — පහළ button එකකින් අපිට එවන්න." : "පහළ button එකකින් අපිට එවන්න.");
         if (sent === job) toast(e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ — WhatsApp / Email එකෙන් එවන්න." : "Request එක save කරන්න බැරි උනා — WhatsApp / Email එකෙන් එවන්න.");
       });
   }
+  // the summary has three states: "saving" (a moment), "ok" (in Hexora's inbox) and "send" (not saved: send it by hand)
+  function sumState(st, why) {
+    const box = $("#summary"); box.dataset.state = st;
+    if (st === "send") {
+      $(".sum-send-t", box).textContent = why ? "Request එක save උනේ නෑ" : "Request එක ready!";
+      $(".sum-send-p", box).textContent = why || "පහළ button එකකින් අපිට එවන්න.";
+    }
+  }
   function showSaved() {
-    const note = $("#saved-note"), user = FB && FB.user();
-    $$("[data-when]", note).forEach(el => { el.hidden = el.getAttribute("data-when") !== (user ? "in" : "out"); });
-    note.hidden = false;
+    const user = FB && FB.user();
+    $$(".sum-ok [data-when]").forEach(el => { el.hidden = el.getAttribute("data-when") !== (user ? "in" : "out"); });
+    sumState("ok");
   }
 
   /* ---------- toast + copy ---------- */
@@ -549,16 +558,25 @@
     const plain = msg.replace(/\*/g, "");
     $("#send-email").href = "mailto:" + C.email + "?subject=" + encodeURIComponent("New project request – " + ref) + "&body=" + encodeURIComponent(plain);
     $("#copy-btn").onclick = () => copy(plain);
-    $("#saved-note").hidden = true;
-    if (sent.ok) showSaved(); else saveRequest(sent, plain, currentEstimate());
+    $$("[data-ref]").forEach(el => { el.textContent = ref; });
+    $("#wa-now").href = window.hxWhatsAppLink("Hi Hexora! මම project request එකක් එව්වා — Ref: " + ref);
+    const who = { name: ($("#f-name").value || "").trim(), phone: ($("#f-phone").value || "").trim(), ref: ref };
+    $("#chat-now").onclick = () => {
+      if (window.HXLive) window.HXLive.start(who);
+      else window.open(window.hxWhatsAppLink("Hi Hexora! මම project request එකක් එව්වා — Ref: " + ref), "_blank", "noopener");
+    };
+    if (sent.ok) showSaved();
+    else if (FB && FB.ready && window.fetch) { sumState("saving"); saveRequest(sent, plain, currentEstimate()); }
+    else sumState("send");
     form.hidden = true;
+    document.body.classList.add("sum-open");
     $("#summary").hidden = false;
     burst();
     $("#summary").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   });
 
   $("#edit-btn").addEventListener("click", () => {
-    $("#summary").hidden = true; form.hidden = false;
+    $("#summary").hidden = true; form.hidden = false; document.body.classList.remove("sum-open");
     form.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   });
 
