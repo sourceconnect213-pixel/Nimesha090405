@@ -533,6 +533,9 @@
     const show = i => {
       at = i; S.cardTab[S.tab] = i;
       blocks.forEach((el, j) => { el.hidden = j !== i; });
+      // a folded block shown on its own tab opens (an empty-looking page otherwise)
+      const f = blocks[i].matches("details") ? blocks[i] : null;
+      if (f && !f.open) { f.open = true; f.dispatchEvent(new Event("toggle")); }
       Array.from(bar.children).forEach((b, j) => b.setAttribute("aria-selected", String(j === i)));
       const b = bar.children[i]; if (b && b.scrollIntoView) b.scrollIntoView({ block: "nearest", inline: "center" });
     };

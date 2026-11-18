@@ -532,3 +532,5 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .ad-ctabs button:focus-visible { outline: 2px solid #7FDBFF; outline-offset: 1px; }
 .ad-main > [hidden] { display: none !important; }
 .ad-install { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding: 12px 14px 12px 18px; border-radius: 16px; background: rgba(0, 216, 253, .06); border: 1px solid rgba(0, 216, 253, .25); font-weight: 700; font-size: .92rem; }
+/* tablets and phones: every block tab is visible at once (they wrap) */
+@media (max-width: 1100px) { .ad-ctabs { flex-wrap: wrap; overflow: visible; } .ad-ctabs button { flex: 1 1 auto; } }

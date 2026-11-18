@@ -115,6 +115,27 @@
         btn.setAttribute("aria-pressed", String(on)); table.hidden = !on; grid.hidden = on;
         btn.querySelector("span").textContent = on ? "Cards වලින් බලන්න" : "Table එකෙන් compare කරන්න";
       });
+      // phones and tablets: the cards are a sideways swipe; dots under it show where you are (tap one to go there)
+      const cards = grid ? Array.from(grid.children) : [];
+      if (grid && cards.length > 1 && !st.querySelector(".pk-dots")) {
+        const dots = document.createElement("div");
+        dots.className = "pk-dots"; dots.setAttribute("aria-hidden", "true");
+        dots.innerHTML = cards.map((c, i) => '<button type="button" tabindex="-1" data-i="' + i + '"></button>').join("");
+        grid.insertAdjacentElement("afterend", dots);
+        const paint = () => {
+          const mid = grid.scrollLeft + grid.clientWidth / 2;
+          let best = 0, d = Infinity;
+          cards.forEach((c, i) => { const m = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (m < d) { d = m; best = i; } });
+          Array.from(dots.children).forEach((b, i) => b.classList.toggle("on", i === best));
+          grid.classList.toggle("at-start", grid.scrollLeft < 8);
+          grid.classList.toggle("at-end", grid.scrollLeft + grid.clientWidth > grid.scrollWidth - 8);
+        };
+        let raf = 0;
+        grid.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; paint(); }); }, { passive: true });
+        dots.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) cards[Number(b.dataset.i)].scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest", inline: "center" }); });
+        root.addEventListener("resize", paint);
+        paint();
+      }
       const nums = Array.from(st.querySelectorAll("[data-count]"));
       if (!("IntersectionObserver" in root)) return;
       const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); countUp(e.target); } }), { threshold: 0.6 });
