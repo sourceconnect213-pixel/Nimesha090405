@@ -10,7 +10,7 @@ import {
 } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
-const RED_HI = new Color("#FF5A4A"), RED = new Color("#E5252A"), RED_DEEP = new Color("#A3121E");
+const RED_HI = new Color("#00D8FD"), RED = new Color("#0065FC"), RED_DEEP = new Color("#7B2BFD");   // names kept; the brand is now cyan -> blue -> violet
 
 function hexPoints(r) {   // pointy-top hexagon
   const pts = [];
@@ -22,8 +22,8 @@ function hexShape(r, hole) {
   if (hole) { const h = new Path(); hexPoints(hole).reverse().forEach(([x, y], i) => (i ? h.lineTo(x, y) : h.moveTo(x, y))); h.closePath(); s.holes.push(h); }
   return s;
 }
-// the brand gradient, sampled from the logo file: light red (top left) -> red -> deep red (bottom right)
-const STOPS = [[0, "#FF5A4A"], [.5, "#EC3A33"], [1, "#D01C22"]].map(([t, c]) => [t, new Color(c)]);
+// the brand gradient, sampled from the logo file: cyan (top left) -> blue -> violet (bottom right)
+const STOPS = [[0, "#00D8FD"], [.5, "#0065FC"], [1, "#7B2BFD"]].map(([t, c]) => [t, new Color(c)]);
 function gradAt(t, c) { t = Math.min(1, Math.max(0, t)); let k = 1; while (k < STOPS.length - 1 && t > STOPS[k][0]) k++; const [t0, c0] = STOPS[k - 1], [t1, c1] = STOPS[k]; return c.copy(c0).lerp(c1, (t - t0) / (t1 - t0)); }
 // colours each vertex of a geometry from a function of its position (x, y in -1..1)
 function paintBy(geo, fn) {
@@ -49,7 +49,7 @@ function mark() {
   const sh = new Shape(); H_PTS.forEach(([x, y], i) => (i ? sh.lineTo(x, y) : sh.moveTo(x, y))); sh.closePath();
   const geo = new ExtrudeGeometry(sh, bevel(D, .035)); geo.translate(0, 0, -D / 2);
   const pos = geo.attributes.position, nor = geo.attributes.normal, col = new Float32Array(pos.count * 3);
-  const c = new Color(), white = new Color("#ffffff"), grey = new Color("#b9b9bd"), foot = new Color("#3a0409"), deep = new Color("#7a0d17");
+  const c = new Color(), white = new Color("#1E3BEA"), grey = new Color("#0A087F"), foot = new Color("#6632FB"), deep = new Color("#041AC0");   // logo walls: blue to navy, violet feet
   for (let i = 0; i < pos.count; i++) {
     const nx = nor.getX(i), ny = nor.getY(i), nz = Math.abs(nor.getZ(i));
     if (nz > .85) gradAt((pos.getX(i) / 2.2 - pos.getY(i) / 2.4 + 1) / 2, c);      // front and back faces: the brand gradient
@@ -69,13 +69,13 @@ function mark() {
 function tile(icon) {
   const g = new Group();
   const body = new ExtrudeGeometry(hexShape(1), bevel(.2, .05)); body.center();
-  g.add(new Mesh(body, new MeshPhysicalMaterial({ color: new Color("#17171a"), metalness: .2, roughness: .26, clearcoat: 1, clearcoatRoughness: .08, envMapIntensity: 1, sheen: .3, sheenColor: new Color("#ff5a4a") })));
+  g.add(new Mesh(body, new MeshPhysicalMaterial({ color: new Color("#17171a"), metalness: .2, roughness: .26, clearcoat: 1, clearcoatRoughness: .08, envMapIntensity: 1, sheen: .3, sheenColor: new Color("#2F7BFF") })));
   const rim = paint(new ExtrudeGeometry(hexShape(1.14, 1.06), bevel(.24, .025))); rim.center();
   g.add(new Mesh(rim, glossy({ metalness: .6, roughness: .2 })));
   const cv = document.createElement("canvas"); cv.width = cv.height = 512;
   const tex = new CanvasTexture(cv); tex.colorSpace = SRGBColorSpace; tex.anisotropy = 4;
   const img = new Image();
-  img.onload = () => { const x = cv.getContext("2d"); x.clearRect(0, 0, 512, 512); x.shadowColor = "rgba(255,90,74,.85)"; x.shadowBlur = 30; x.drawImage(img, 56, 56, 400, 400); x.shadowBlur = 0; x.drawImage(img, 56, 56, 400, 400); tex.needsUpdate = true; };
+  img.onload = () => { const x = cv.getContext("2d"); x.clearRect(0, 0, 512, 512); x.shadowColor = "rgba(0,170,255,.85)"; x.shadowBlur = 30; x.drawImage(img, 56, 56, 400, 400); x.shadowBlur = 0; x.drawImage(img, 56, 56, 400, 400); tex.needsUpdate = true; };
   img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="512" height="512" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + (icon || "") + "</svg>");
   const face = new Mesh(new PlaneGeometry(1.3, 1.3), new MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
   face.position.z = .2; g.add(face);
@@ -98,8 +98,8 @@ export function mount(el, opts) {
   const pmrem = new PMREMGenerator(renderer); scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture; pmrem.dispose();
   scene.add(new AmbientLight(0xffffff, opts.kind === "tile" ? .35 : .5));
   const key = new DirectionalLight(0xffffff, opts.kind === "tile" ? 1.6 : .65); key.position.set(2.5, 3, 4); scene.add(key);
-  const rimL = new DirectionalLight(0xff5a4a, 2.2); rimL.position.set(-3.5, 1.5, -2); scene.add(rimL);
-  const rimR = new DirectionalLight(0xb3121e, 1.6); rimR.position.set(3.5, -2, -2.5); scene.add(rimR);
+  const rimL = new DirectionalLight(0x00c8ff, 2.2); rimL.position.set(-3.5, 1.5, -2); scene.add(rimL);
+  const rimR = new DirectionalLight(0x7b2bfd, 1.6); rimR.position.set(3.5, -2, -2.5); scene.add(rimR);
 
   const obj = opts.kind === "tile" ? tile(opts.icon) : mark();
   scene.add(obj);
