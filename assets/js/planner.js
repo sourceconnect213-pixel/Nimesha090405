@@ -182,8 +182,42 @@
   }
 
   /* ---------- render estimate ---------- */
+  // the examples in the "project idea" fields follow what the customer picked (an app, a website, a logo, a video …)
+  const EXAMPLES = {
+    app: ["Ex: QuickFix, Perera Hardware App", "Ex: Customers, delivery riders, shop staff",
+      "Ex: Customersලා phone එකෙන් order දාලා status එක බලන්න app එකක් ඕන. Screens: Home, Products, Cart, Orders, Profile. Login email එකෙන්.", "Ex: PickMe / Daraz වගේ app එකක්, Play Store link එකක්"],
+    web: ["Ex: Perera Hardware website", "Ex: Customers, Google එකෙන් හොයන අය",
+      "Ex: Pages 5ක business site එකක් ඕන — Home, About, Services, Gallery, Contact. Products 20ක් විතර, WhatsApp button එකක් එක්ක.", "Ex: කැමති website එකක link එක, logo / photos Google Drive link එක"],
+    backend: ["Ex: Shop app admin panel", "Ex: Admin, shop staff, delivery team",
+      "Ex: දැනට තියෙන Flutter app එකට Firebase login, products database සහ orders බලන්න web admin panel එකක් ඕන. Staff 3ක් use කරනවා.", "Ex: App එකේ Play Store link එක, දැනට තියෙන admin panel එකක screenshot"],
+    ai: ["Ex: Website AI chatbot", "Ex: Website visitors, customers, office staff",
+      "Ex: Website එකට Sinhala / English FAQ chatbot එකක් ඕන. ප්‍රශ්න 40ක් විතර, price list PDF එකෙන් උත්තර දෙන්න ඕන, බැරි නම් WhatsApp එකට යවන්න.", "Ex: Website link එක, FAQ / price list documents Google Drive link එක"],
+    maint: ["Ex: Perera Hardware website care", "Ex: Customers, online shop buyers",
+      "Ex: WordPress + WooCommerce site එකක් තියෙනවා. Plugins update, weekly backups, speed එක සහ security බලාගන්න මාසික plan එකක් ඕන.", "Ex: Site එකේ link එක, hosting එක (Ex: Hostinger), දැනට තියෙන ප්‍රශ්න"],
+    logo: ["Ex: Perera Bakers logo", "Ex: Customers, shop එකට එන අය",
+      "Ex: මගේ cake shop එකට logo එකක් ඕන. Blue සහ white colours, simple සහ modern. Signboard සහ Facebook page එකට use කරනවා.", "Ex: කැමති logos වල links / Pinterest board එක"],
+    design: ["Ex: New Year offer posts", "Ex: Facebook / Instagram followers, customers",
+      "Ex: Facebook / Instagram posts 8ක් ඕන මාසෙට — offers, new products. Brand colours සහ logo එක තියෙනවා. Sinhala text එක්ක.", "Ex: කැමති page එකක link එක, logo / photos Google Drive link එක"],
+    photo: ["Ex: Product photos edit", "Ex: Online shop customers",
+      "Ex: Product photos 30ක background එක සුදු කරලා, colour සහ light හදලා දෙන්න ඕන. Daraz / website එකට.", "Ex: Photos Google Drive link එක, කැමති example එකක්"],
+    video: ["Ex: YouTube channel videos", "Ex: YouTube viewers, TikTok / Reels followers",
+      "Ex: YouTube video 4ක් edit කරන්න ඕන, විනාඩි 10 ගානේ — subtitles, music, thumbnails එක්ක. Reels 8කුත් ඕන.", "Ex: Footage Google Drive link එක, කැමති channel එකක link එක"]
+  };
+  const CR_KIND = { logo: "logo", brand: "logo", social: "design", poster: "design", thumb: "design", photo: "photo", reel: "video", youtube: "video", motion: "video", promo: "video" };
+  function setExamples() {
+    const t = track();
+    let kind = { pkg: "app", web: "web", backend: "backend", ai: "ai", maint: "maint", dev: "web" }[t] || "";
+    if (t === "creative") {
+      const picked = Object.keys(C.creative || {}).find(k => { const i = form.querySelector('[name="' + qName(k) + '"]'); return i && Number(i.value) > 0; });
+      kind = CR_KIND[picked] || "design";
+    }
+    const ex = EXAMPLES[kind] || EXAMPLES.app;
+    ["f-appname", "f-users", "f-desc", "f-refs"].forEach((id, i) => { const el = $("#" + id); if (el && el.placeholder !== ex[i]) el.placeholder = ex[i]; });
+  }
+
   function render() {
     applyRules();
+    setExamples();
     const e = currentEstimate();
     const total = $("#est-total"), bar = $("#bar-total");
     if (!e) {
