@@ -254,6 +254,7 @@
     if (!c.banner || typeof c.banner !== "object") c.banner = { show: false, image: "", imageM: "", link: "", alt: "" };
     ["show", "image", "imageM", "link", "alt"].forEach(k => { if (c.banner[k] === undefined) c.banner[k] = k === "show" ? false : ""; });
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
+    if (d.contactVersion && c.contactVersion !== d.contactVersion) ["whatsapp", "phoneDisplay", "contactVersion"].forEach(k => { c[k] = d[k]; });
     if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote", "freeSupportMonths", "advancePercent"].forEach(k => { c[k] = clone(d[k]); });
     ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
@@ -763,8 +764,8 @@
   };
 
   VIEWS.contact = () => card("Contact details", grid(
-      field("config.whatsapp", "WhatsApp number", { ph: "94766792617", hint: "රටේ code එකත් එක්ක, digits විතරයි (Ex: 94766792617)." }) +
-      field("config.phoneDisplay", "Phone (site එකේ පෙන්නන විදිය)", { ph: "076 679 2617" }) +
+      field("config.whatsapp", "WhatsApp number", { ph: "94706305377", hint: "රටේ code එකත් එක්ක, digits විතරයි (Ex: 94706305377)." }) +
+      field("config.phoneDisplay", "Phone (site එකේ පෙන්නන විදිය)", { ph: "070 630 5377" }) +
       field("config.email", "Email", { ph: "teamhexoramain@gmail.com" }) +
       field("config.facebook", "Facebook page link", { ph: "https://facebook.com/…", hint: "හිස්ව තිබ්බොත් site එකේ පෙන්නන්නේ නෑ." }) +
       field("config.youtube", "YouTube channel link", { ph: "https://youtube.com/@…", hint: "හිස්ව තිබ්බොත් site එකේ පෙන්නන්නේ නෑ." })),
@@ -1211,7 +1212,7 @@
     const out = [], c = S.data.config, sv = S.data.services, tx = S.data.texts || {};
     if (Object.keys(tx).length > 800) out.push("Pages: text වෙනස්කම් ගොඩක් වැඩියි (800 ට වඩා).");
     Object.keys(tx).forEach(k => { if (typeof tx[k] !== "string" || tx[k].length > 2000) out.push("Pages: text එකක් දිග වැඩියි (අකුරු 2000 ට වැඩි)."); });
-    if (!/^\d{10,15}$/.test(c.whatsapp || "")) out.push("Contact: WhatsApp number එක digits 10–15ක් වෙන්න ඕන (Ex: 94766792617).");
+    if (!/^\d{10,15}$/.test(c.whatsapp || "")) out.push("Contact: WhatsApp number එක digits 10–15ක් වෙන්න ඕන (Ex: 94706305377).");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email || "")) out.push("Contact: Email එක හරියට දාන්න.");
     ["facebook", "youtube"].forEach(k => { if (c[k] && !/^https:\/\//.test(c[k])) out.push("Contact: " + k + " link එක https:// වලින් පටන් ගන්න ඕන."); });
     if (c.notice.link && !/^(https:\/\/|[\w-]+\.html)/.test(c.notice.link)) out.push("Notice: link එක https://… හරි page.html විදියට දාන්න.");

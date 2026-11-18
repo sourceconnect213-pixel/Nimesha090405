@@ -34,6 +34,8 @@
         if (built.packagesVersion && conf.packagesVersion !== built.packagesVersion) {
           ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote", "freeSupportMonths", "advancePercent"].forEach(k => { conf[k] = built[k]; });
         }
+        // a new phone number in config.js (contactVersion) replaces the older one saved from the admin panel
+        if (built.contactVersion && conf.contactVersion !== built.contactVersion) ["whatsapp", "phoneDisplay", "contactVersion"].forEach(k => { conf[k] = built[k]; });
         fillMissing(conf.packages, built.packages); fillMissing(conf.addons, built.addons);
         window.HEXORA = Object.assign({}, built, conf);
       }

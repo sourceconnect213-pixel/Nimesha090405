@@ -66,7 +66,7 @@ tools/hx3d/               source of assets/js/hx3d.js: `cd tools/hx3d && npm ci 
 - **Design & video prices**: the `creative` list (logo, branding kit, posts, photo editing, video editing, motion…). Each has `usd` per item, a `unit` name, and `days` / `extraDays` for the delivery time.
 - **Exchange rate**: loaded live from `open.er-api.com` and saved for 12 hours. If it fails, `fallbackRate` (369) is used.
 - **Rounding**: LKR prices round to the nearest `roundTo` (500).
-- **Contact**: `whatsapp` (94766792617), `phoneDisplay`, `email`.
+- **Contact**: `whatsapp` (94706305377), `phoneDisplay`, `email`.
 - **Facebook / YouTube**: paste your page links into `facebook` and `youtube`. Empty = hidden.
 - **Terms**: `advancePercent` (50) and `freeSupportMonths` (1).
 - Add a new feature: copy one line inside `features` and give it a new key.

@@ -9,8 +9,9 @@
 
 window.HEXORA = {
   /* ---------- Contact ---------- */
-  whatsapp: "94766792617",               // international format, digits only
-  phoneDisplay: "076 679 2617",
+  whatsapp: "94706305377",               // international format, digits only
+  phoneDisplay: "070 630 5377",
+  contactVersion: 2,                     // raise when the number above changes: replaces an older number saved from the admin panel
   email: "teamhexoramain@gmail.com",
   facebook: "",                          // add your Facebook page link (https://...)
   youtube: "",                           // add your YouTube channel link (https://...)
