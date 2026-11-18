@@ -444,3 +444,61 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .ad-req.s-new { border-color: rgba(63, 208, 255, .45); }
 .acc-note { border-left: 1px solid rgba(140, 165, 255, .2); border: 1px solid rgba(140, 165, 255, .2); }
 .ad-tabgroup-l, .ad-svc-cat { font-family: var(--f-body) !important; text-transform: none !important; letter-spacing: 0 !important; font-weight: 700; font-size: .78rem !important; color: var(--faint); }
+
+/* =====================================================================================================
+   v7 — four sections. Wide screens: the side menu has four items. Phones: a bottom bar with the same four.
+   A section with several pages shows them as a row of tabs at the top of the page.
+   ===================================================================================================== */
+.ad-menu, .ad-scrim { display: none !important; }
+.ad-sub { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 0 18px; padding: 5px; border-radius: 14px; background: #080A15; border: 1px solid rgba(140, 165, 255, .14); }
+.ad-sub::-webkit-scrollbar { display: none; }
+.ad-sub button { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: 700 .9rem/1 var(--f-body); cursor: pointer; white-space: nowrap; transition: color .2s ease, background-color .2s ease; }
+.ad-sub button:hover { color: var(--fg); }
+.ad-sub button[aria-selected="true"] { background: linear-gradient(120deg, #0B6BFF, #7B2BFD); color: #fff; }
+.ad-sub button:focus-visible { outline: 2px solid #7FDBFF; outline-offset: 2px; }
+.ad-sub .ad-badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; display: inline-grid; place-items: center; font-size: .72rem; background: #FF6B8A; color: #fff; }
+.ad-sub button[aria-selected="true"] .ad-badge { background: rgba(255, 255, 255, .25); }
+.ad-main.swap > .ad-sub { animation: none; }
+@media (min-width: 960px) {
+  .ad-tabs button { min-height: 50px; font-size: .96rem; }
+}
+@media (max-width: 959px) {
+  .ad-tabs { position: fixed; z-index: 35; top: auto; bottom: 0; left: 0; right: 0; width: auto; height: auto; flex-direction: row; align-items: stretch; justify-content: space-around; gap: 0;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)); transform: none; visibility: visible; overflow: visible; background: rgba(7, 9, 20, .97);
+    border: 0; border-top: 1px solid rgba(140, 165, 255, .18); box-shadow: 0 -18px 40px -24px rgba(0, 0, 0, .9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: none; }
+  .ad-tabs .ad-pill-ind { display: none; }
+  .ad-tabs button { flex: 1 1 0; position: relative; flex-direction: column; justify-content: center; gap: 4px; min-height: 58px; padding: 4px 2px; font-size: .74rem; border-radius: 12px; animation: none !important; }
+  .ad-tabs button .ad-ico { width: 22px; height: 22px; }
+  .ad-tabs button[aria-selected="true"] { color: #fff; background: rgba(47, 107, 255, .16); }
+  .ad-tabs button .ad-badge { position: absolute; top: 4px; left: calc(50% + 6px); margin: 0; min-width: 18px; height: 18px; font-size: .66rem; }
+  .ad-main { padding-bottom: 170px; }
+  .ad-savebar { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+  .toast, #ad-toast { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+  .ad-sub { position: sticky; top: calc(var(--ad-top, 64px) + 6px); z-index: 20; }
+}
+
+/* images: field with preview, picker, library */
+.ad-img-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.ad-img-prev { flex: none; width: 132px; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; display: grid; place-items: center; background: #080A15; border: 1px dashed rgba(140, 165, 255, .3); }
+.ad-img-prev img { width: 100%; height: 100%; object-fit: cover; }
+.ad-img-none { font-size: .8rem; color: var(--faint); }
+.ad-img-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.ad-up { cursor: pointer; }
+.ad-up.busy { opacity: .6; pointer-events: none; }
+.ad-up:focus-within { outline: 2px solid #7FDBFF; outline-offset: 2px; }
+.ad-img-lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin-top: 10px; padding: 10px; border-radius: 12px; background: #080A15; border: 1px solid rgba(140, 165, 255, .16); max-height: 300px; overflow-y: auto; }
+.ad-img-lib button { padding: 0; aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 2px solid transparent; background: #0D1022; cursor: pointer; }
+.ad-img-lib button:hover, .ad-img-lib button:focus-visible { border-color: #3FD0FF; outline: none; }
+.ad-img-lib img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ad-media { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.ad-media-i { position: relative; margin: 0; border-radius: 14px; overflow: hidden; background: #080A15; border: 1px solid rgba(140, 165, 255, .16); }
+.ad-media-i img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #0D1022; }
+.ad-media-i figcaption { display: grid; gap: 3px; padding: 10px 12px 12px; font-size: .82rem; min-width: 0; }
+.ad-media-i b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ad-media-i small { color: var(--faint); }
+.ad-media-i .ad-used { color: #4BE3A6; }
+.ad-media-i .ad-mini { position: absolute; top: 8px; right: 8px; background: rgba(7, 9, 20, .85); }
+@media (max-width: 959px) {
+  .ad-sub { flex-wrap: wrap; overflow: visible; position: static; }   /* every page of the section visible at once on a phone */
+  .ad-sub button { flex: 1 1 auto; justify-content: center; min-height: 44px; padding: 0 12px; }
+}

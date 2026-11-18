@@ -125,6 +125,7 @@
 
   /* ---------- the picture next to the service name ---------- */
   function stageHtml(s) {
+    if (window.HXMedia && window.HXMedia.ok(s.image)) return '<div class="an an-img" data-media-box><img data-media="' + esc(s.image) + '" alt="' + esc(s.name) + '" decoding="async"></div>';
     if (s.video) {
       return '<div class="an an-video"><video autoplay muted loop playsinline preload="metadata" aria-label="' + esc(s.name) + ' example">' +
         '<source src="' + esc(s.video) + '" type="video/mp4"></video></div>';
@@ -134,18 +135,6 @@
   }
 
   /* ---------- building blocks ---------- */
-  function browseHtml(cur) {
-    const cats = Object.keys(S.categories);
-    return '<nav class="svc-browse" aria-label="Service categories"><div class="wrap">' +
-      '<div class="cat-tabs" role="tablist">' + cats.map(k =>
-        '<button type="button" role="tab" class="cat-tab ' + k + '" id="tab-' + k + '" aria-controls="chips-' + k + '" aria-selected="' + (k === cur.cat) + '">' +
-        esc(S.categories[k].label) + " <span>" + inCat(k).length + "</span></button>").join("") + "</div>" +
-      cats.map(k => '<div class="svc-chips ' + k + '" id="chips-' + k + '" role="tabpanel" aria-labelledby="tab-' + k + '"' + (k === cur.cat ? "" : " hidden") + ">" +
-        inCat(k).map(s => '<a class="svc-chip" href="' + link(s) + '"' + (s === cur ? ' aria-current="page"' : "") + ">" + icon(s.icon) + esc(s.name) + "</a>").join("") +
-        "</div>").join("") +
-      "</div></nav>";
-  }
-
   // the service index (shared with the home page): the one-line text may use {price} placeholders here
   const indexHtml = (cats, items) => window.HXSvcUI.indexHtml(S, cats, items, s => fill(s.short || s.summary));
 
@@ -164,8 +153,7 @@
     const cat = S.categories[s.cat];
     const others = inCat(s.cat).filter(x => x !== s);
     const faq = (s.faq || []).concat(S.commonFaq || []);
-    return browseHtml(s) +
-      '<section class="svc-hero"><div class="wrap svc-hero-grid">' +
+    return '<section class="svc-hero"><div class="wrap svc-hero-grid">' +
         '<div class="svc-hero-copy">' +
           '<ol class="crumbs fade-up" style="--d:80ms"><li><a href="index.html">Home</a></li><li><a href="service.html">Services</a></li><li>' + esc(cat.label) + "</li></ol>" +
           '<h1 class="display" data-split style="--d:180ms">' + esc(s.name) + "</h1>" +
@@ -228,6 +216,7 @@
   const slug = fromQuery || (bySlug(fromHash) ? fromHash : "");
   const cur = slug ? bySlug(slug) : null;
   root.innerHTML = cur ? detailHtml(cur) : hubHtml(!!slug);
+  if (window.HXMedia) window.HXMedia.apply(root);
 
   document.title = (cur ? cur.name : "Services") + " | Hexora";
   const meta = $('meta[name="description"]');
@@ -247,20 +236,6 @@
       const tag = document.createElement("script"); tag.type = "application/ld+json"; tag.textContent = JSON.stringify(ld); document.head.appendChild(tag);
     } catch (e) { /* structured data is optional */ }
   }
-  const navServices = $('.nav-links a[href="service.html"]');
-  if (navServices && !cur) navServices.setAttribute("aria-current", "page");
-
-  // category tabs: switch which services are listed
-  $$(".cat-tab", root).forEach(tab => tab.addEventListener("click", () => {
-    $$(".cat-tab", root).forEach(t => {
-      const on = t === tab;
-      t.setAttribute("aria-selected", String(on));
-      $("#" + t.getAttribute("aria-controls")).hidden = !on;
-    });
-  }));
-  // keep the current service visible in its scrolling row
-  const curChip = $('.svc-chip[aria-current="page"]', root);
-  if (curChip) { const row = curChip.parentElement; row.scrollLeft = curChip.offsetLeft - row.offsetLeft - (row.clientWidth - curChip.offsetWidth) / 2; }
 
   const vid = $(".an-video video", root);
   if (vid && reduce) { vid.removeAttribute("autoplay"); vid.pause(); vid.controls = true; }

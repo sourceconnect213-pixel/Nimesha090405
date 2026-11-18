@@ -23,19 +23,35 @@
     else gone("process");
   }
 
+  // pictures uploaded from the admin panel ("media:<id>") or a plain address
+  const M = window.HXMedia, pic = (ref, alt, cls) => (M && M.ok(ref) ? '<img class="' + cls + '" data-media="' + esc(ref) + '" alt="' + esc(alt || "") + '" loading="lazy" decoding="async">' : "");
+  const safeLink = u => (/^(https:\/\/|[a-z0-9-]+\.html|#)/i.test(u || "") ? u : "");
+
+  // banner under the top section
+  const bn = C.banner, pr = $("home-promo");
+  if (pr && bn && bn.show && M && M.ok(bn.image)) {
+    const imgs = '<span class="promo-pic" data-media-box>' + pic(bn.image, bn.alt, "promo-d" + (M.ok(bn.imageM) ? " has-m" : "")) + (M.ok(bn.imageM) ? pic(bn.imageM, bn.alt, "promo-m") : "") + "</span>";
+    const href = safeLink(bn.link);
+    pr.innerHTML = href ? '<a class="promo-card" href="' + esc(href) + '"' + (/^https:/.test(href) ? ' target="_blank" rel="noopener"' : "") + ">" + imgs + "</a>" : '<div class="promo-card">' + imgs + "</div>";
+    $("promo").hidden = false;
+    M.apply(pr);
+  }
+
   // our work: only when the admin has added projects
   const work = S.home && S.home.work, wk = $("home-work");
   if (wk && Array.isArray(work) && work.length) {
     wk.innerHTML = work.map(w => {
-      const inner = (w.tag ? '<span class="work-tag">' + esc(w.tag) + "</span>" : "") + "<h3>" + esc(w.t) + "</h3>" + (w.d ? "<p>" + esc(w.d) + "</p>" : "") + (w.link ? '<span class="work-go">බලන්න →</span>' : "");
+      const inner = (M && M.ok(w.img) ? '<span class="work-pic" data-media-box>' + pic(w.img, w.t, "") + "</span>" : "") + (w.tag ? '<span class="work-tag">' + esc(w.tag) + "</span>" : "") + "<h3>" + esc(w.t) + "</h3>" + (w.d ? "<p>" + esc(w.d) + "</p>" : "") + (w.link ? '<span class="work-go">බලන්න →</span>' : "");
       return w.link ? '<a class="work-card" href="' + esc(w.link) + '" target="_blank" rel="noopener">' + inner + "</a>" : '<div class="work-card">' + inner + "</div>";
     }).join("");
+    if (M) M.apply(wk);
     const sec = $("work"); if (sec) sec.hidden = false;
   }
   // what customers say: only real, approved reviews the admin added
   const reviews = S.home && S.home.reviews, rv = $("home-reviews");
   if (rv && Array.isArray(reviews) && reviews.length) {
-    rv.innerHTML = reviews.map(r => '<figure class="review"><blockquote>' + esc(r.text) + "</blockquote><figcaption><b>" + esc(r.name) + "</b>" + (r.biz ? "<span>" + esc(r.biz) + "</span>" : "") + "</figcaption></figure>").join("");
+    rv.innerHTML = reviews.map(r => '<figure class="review"><blockquote>' + esc(r.text) + "</blockquote><figcaption>" + (M && M.ok(r.photo) ? '<span class="rv-photo" data-media-box>' + pic(r.photo, r.name, "") + "</span>" : "") + "<span class=\"rv-who\"><b>" + esc(r.name) + "</b>" + (r.biz ? "<span>" + esc(r.biz) + "</span>" : "") + "</span></figcaption></figure>").join("");
+    if (M) M.apply(rv);
     const sec = $("reviews"); if (sec) sec.hidden = false;
   }
 

@@ -65,6 +65,42 @@
     });
   })();
 
+  /* ---------- Services menu: every service, grouped by category (built from the same list the admin panel edits) ---------- */
+  const svcBtn = $(".nav-svc-btn"), svcBox = $("[data-nav-services]");
+  const escH = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const SHAPES = /^(?:\s*<(?:path|circle|rect|line|polyline|polygon|ellipse)(?:\s+(?!on|href|xlink)[a-z-]+="[^"<>]*")*\s*\/?>)*\s*$/i;
+  function fillServices() {
+    const S = window.HX_SERVICES;
+    if (!svcBox || !S || !Array.isArray(S.list) || !S.categories) return;
+    const cur = new URLSearchParams(location.search).get("s");
+    svcBox.innerHTML = Object.keys(S.categories).map(k => {
+      const items = S.list.filter(x => x.cat === k);
+      if (!items.length) return "";
+      return '<div class="nsp-col"><span class="nsp-h">' + escH(S.categories[k].label) + "</span><ul>" + items.map(x =>
+        '<li><a href="service.html?s=' + encodeURIComponent(x.slug) + '"' + (x.slug === cur ? ' aria-current="page"' : "") + '><svg viewBox="0 0 24 24" aria-hidden="true">' + (SHAPES.test(x.icon || "") ? x.icon : "") + "</svg><span>" + escH(x.name) + "</span></a></li>").join("") + "</ul></div>";
+    }).join("");
+    $$("a", svcBox).forEach(a => a.addEventListener("click", () => { setSvc(false); setMenu(false); }));
+  }
+  function setSvc(open) {
+    if (!svcBtn) return;
+    svcBtn.setAttribute("aria-expanded", String(!!open));
+    svcBtn.parentElement.classList.toggle("open", !!open);
+  }
+  if (svcBtn) {
+    fillServices();
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fillServices);
+    window.addEventListener("hx:ready", fillServices);   // the copy saved from the admin panel
+    svcBtn.addEventListener("click", () => setSvc(svcBtn.getAttribute("aria-expanded") !== "true"));
+    const li = svcBtn.parentElement;
+    const hoverable = window.matchMedia("(hover: hover) and (min-width: 901px)");
+    let t = 0;
+    li.addEventListener("mouseenter", () => { if (hoverable.matches) { clearTimeout(t); setSvc(true); } });
+    li.addEventListener("mouseleave", () => { if (hoverable.matches) t = setTimeout(() => setSvc(false), 160); });
+    document.addEventListener("pointerdown", e => { if (!phone.matches && !li.contains(e.target)) setSvc(false); });
+    li.addEventListener("focusout", () => setTimeout(() => { if (!phone.matches && !li.contains(document.activeElement)) setSvc(false); }, 0));
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && svcBtn.getAttribute("aria-expanded") === "true" && !phone.matches) { setSvc(false); svcBtn.focus(); } });
+  }
+
   /* ---------- phone menu ---------- */
   let backdrop = null;
   const isOpen = () => !!header && header.classList.contains("menu-open");
@@ -76,6 +112,7 @@
     btn.setAttribute("aria-expanded", String(open));
     btn.setAttribute("aria-label", open ? "Menu එක වහන්න" : "Menu එක අරින්න");
     if (backdrop) backdrop.hidden = !open;
+    if (svcBtn) setSvc(false);   // the phone menu opens with the services folded: one tap shows them
     if (!open && giveFocusBack) btn.focus({ preventScroll: true });
   }
   if (header && btn) {

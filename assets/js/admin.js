@@ -251,6 +251,8 @@
   function normalize() {
     const c = S.data.config, d = window.HEXORA || {};
     if (!c.notice) c.notice = { show: false, text: "", linkText: "", link: "" };
+    if (!c.banner || typeof c.banner !== "object") c.banner = { show: false, image: "", imageM: "", link: "", alt: "" };
+    ["show", "image", "imageM", "link", "alt"].forEach(k => { if (c.banner[k] === undefined) c.banner[k] = k === "show" ? false : ""; });
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
     if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote", "freeSupportMonths", "advancePercent"].forEach(k => { c[k] = clone(d[k]); });
     ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
@@ -425,12 +427,19 @@
   }
 
   // grouped so the ten tabs are easy to find: the inbox (people writing to you), the site (what visitors read), the system
-  const TAB_GROUPS = [["", [["home", "Dashboard"]]], ["Inbox", [["requests", "Requests"], ["live", "Live chats"], ["customers", "Customers"]]],
-    ["Site", [["pages", "Pages"], ["content", "Home page"], ["notice", "Notice"], ["contact", "Contact"], ["prices", "Prices"], ["services", "Services"]]], ["System", [["history", "History"], ["security", "Security"]]]];
+  // four sections: the menu shows only these; a section with more than one page shows its pages as a row of tabs on top
+  const SECTIONS = [
+    ["dash", "Dashboard", '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>', [["home", "Dashboard"]]],
+    ["orders", "Orders", '<path d="M4 13l2-8h12l2 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>', [["requests", "Requests"], ["live", "Live chat"], ["customers", "Customers"]]],
+    ["site", "Website", '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>', [["pages", "Texts"], ["content", "Home page"], ["services", "Services"], ["prices", "Prices"], ["images", "Images"], ["notice", "Notice bar"], ["contact", "Contact"]]],
+    ["settings", "Settings", '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>', [["security", "PIN"], ["history", "History"]]]];
+  const TAB_GROUPS = SECTIONS.map(x => [x[1], x[3]]);
   const TABS = TAB_GROUPS.reduce((a, g) => a.concat(g[1]), []);
+  const sectionOf = k => SECTIONS.find(x => x[3].some(t => t[0] === k)) || SECTIONS[0];
+  const lastIn = {};   // the page last opened in each section: the menu goes back to it
   const newCount = () => (S.reqs || []).filter(r => r.status === "new").length;
   // phone: the menu is a drawer that slides in from the left (same curved-tab highlight as the wide-screen side menu)
-  const isDrawer = () => matchMedia("(max-width: 959px)").matches;
+  const isDrawer = () => false;   // the phone uses a bottom bar now (no drawer)
   function setMenu(open) {
     open = !!open && isDrawer();
     document.documentElement.classList.toggle("ad-nav-open", open);
@@ -468,12 +477,15 @@
   function paintTabs() {
     const nav = $("#ad-tabs"); if (!nav) return;
     const n = newCount();
-    nav.innerHTML = '<span class="ad-pill-ind" aria-hidden="true"></span>' + TAB_GROUPS.map(([label, tabs]) => '<div class="ad-tabgroup"' + (label ? ' role="group" aria-label="' + label + '"' : "") + ">" + (label ? '<span class="ad-tabgroup-l" aria-hidden="true">' + label + "</span>" : "") +
-      tabs.map(([k, t]) => '<button type="button" role="tab" data-act="tab" data-tab="' + k + '" style="--i:' + TABS.findIndex(x => x[0] === k) + '" aria-selected="' + (k === S.tab) + '">' + icon(TAB_ICONS[k] || "") + '<span class="ad-tab-t">' + t + "</span>" +
-      (k === "requests" && (n + unreadCount()) ? ' <span class="ad-badge">' + (n + unreadCount()) + "</span>" : "") +
-      (k === "live" && unreadGuests() ? ' <span class="ad-badge">' + unreadGuests() + "</span>" : "") +
-      (k === "customers" && S.pinReqs.length ? ' <span class="ad-badge">' + S.pinReqs.length + "</span>" : "") + "</button>").join("") + "</div>").join("");
+    const waiting = { orders: n + unreadCount() + unreadGuests() + S.pinReqs.length };
+    const curSec = sectionOf(S.tab)[0];
+    nav.innerHTML = '<span class="ad-pill-ind" aria-hidden="true"></span>' + SECTIONS.map(([id, label, ico, pages], i) => {
+      const go = lastIn[id] || pages[0][0];
+      return '<button type="button" role="tab" data-act="tab" data-tab="' + go + '" data-sec="' + id + '" style="--i:' + i + '" aria-selected="' + (id === curSec) + '">' + icon(ico) + '<span class="ad-tab-t">' + label + "</span>" +
+        (waiting[id] ? ' <span class="ad-badge">' + waiting[id] + "</span>" : "") + "</button>";
+    }).join("");
     movePill(false);
+    const sub = $("#ad-main .ad-sub"); if (sub && !sub.contains(document.activeElement)) sub.outerHTML = subTabs();   // fresh counts on the page tabs
     const total = n + unreadCount() + unreadGuests() + S.pinReqs.length;   // the browser tab says how much is waiting
     document.title = (total ? "(" + total + ") " : "") + "Admin | Hexora";
   }
@@ -497,10 +509,18 @@
     S.tab = t;
     if (location.hash !== "#" + t) { try { history.pushState(null, "", "#" + t); } catch (e) { /* file:// */ } }
   }
+  function subTabs() {
+    const sec = sectionOf(S.tab), pages = sec[3];
+    if (pages.length < 2) return "";
+    const count = { requests: newCount() + unreadCount(), live: unreadGuests(), customers: S.pinReqs.length };
+    return '<nav class="ad-sub" role="tablist" aria-label="' + esc(sec[1]) + '">' + pages.map(([k, t]) =>
+      '<button type="button" role="tab" data-act="tab" data-tab="' + k + '" aria-selected="' + (k === S.tab) + '">' + t + (count[k] ? ' <span class="ad-badge">' + count[k] + "</span>" : "") + "</button>").join("") + "</nav>";
+  }
   function renderTab() {
     const main = $("#ad-main"); if (!main) return;
     const y = window.scrollY;
-    main.innerHTML = VIEWS[S.tab]();
+    lastIn[sectionOf(S.tab)[0]] = S.tab;
+    main.innerHTML = subTabs() + VIEWS[S.tab]();
     // a new section slides in from below when it is further down the menu, from above when it is higher up (a re-draw of the same section does not animate)
     if (S.shownTab && S.shownTab !== S.tab) {
       const at = k => TABS.findIndex(t => t[0] === k);
@@ -509,7 +529,7 @@
     }
     S.shownTab = S.tab;
     const cur = $("#ad-cur"); if (cur) cur.textContent = (TABS.find(t => t[0] === S.tab) || [, ""])[1];
-    $$("#ad-tabs [data-tab]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === S.tab)));
+    paintTabs();   // the menu button of this section now opens this page
     movePill(true);
     if (S.tab === "pages") { S.pg = null; pgFit(); }
     if (S.tab === "history") loadHistory();
@@ -526,6 +546,17 @@
     const v = get(path), id = "f-" + path.replace(/[^\w]/g, "-"), t = o.type || "text";
     const attrs = ' id="' + id + '" data-path="' + path + '"';
     let control;
+    if (t === "image") {
+      const ref = typeof v === "string" ? v : "";
+      return '<div class="ad-field wide ad-imgf" data-imgf="' + path + '"><label for="' + id + '">' + esc(label) + "</label>" +
+        '<input type="hidden"' + attrs + ' data-type="text" value="' + esc(ref) + '">' +
+        '<div class="ad-img-row"><div class="ad-img-prev">' + thumbHtml(ref) + "</div>" +
+        '<div class="ad-img-acts"><label class="btn ad-small ad-up">' + icon(I.plus) + ' Upload<input type="file" accept="image/jpeg,image/png,image/webp" data-up="' + path + '" data-fit="' + esc(o.fit || "1600x1200") + '" hidden></label>' +
+        '<button type="button" class="btn ad-small" data-act="img-pick" data-path="' + path + '">Upload කරපු ඒවායින්</button>' +
+        (ref ? '<button type="button" class="btn ad-small ad-danger" data-act="img-clear" data-path="' + path + '">අයින් කරන්න</button>' : "") + "</div></div>" +
+        '<div class="ad-img-lib" data-lib-for="' + path + '" hidden></div>' +
+        (o.hint ? '<small class="ad-hint">' + esc(o.hint) + "</small>" : "") + "</div>";
+    }
     if (t === "bool") {
       return '<div class="ad-field' + (o.wide ? " wide" : "") + '"><label class="ad-check"><input type="checkbox"' + attrs + ' data-type="bool"' + (v ? " checked" : "") + "><span>" + esc(label) + "</span></label>" + (o.hint ? '<small class="ad-hint">' + esc(o.hint) + "</small>" : "") + "</div>";
     } else if (t === "area" || t === "lines") {
@@ -858,6 +889,7 @@
             field(base + ".slug", "Link (slug)", { hint: "service.html?s=" + s.slug + " — මාරු කළොත් home page එකේ card link එකත් මාරු කරන්න ඕන." }) +
             field(base + ".cat", "Category", { type: "select", options: cats.map(k => [k, sv.categories[k].label]) }) +
             field(base + ".anim", "Animation", { type: "select", options: [["", "— (video එක use කරනවා)"]].concat(ANIMS.map(a => [a, a])) }) +
+            field(base + ".image", "Service image (optional)", { type: "image", fit: "1200x900", hint: "1200 × 900 (4:3). දැම්මොත් page එකේ උඩ 3D animation එක වෙනුවට මේ image එක පේනවා." }) +
             field(base + ".video", "Video (optional)", { ph: "assets/video/file.mp4", hint: "දැම්මොත් animation එක වෙනුවට video එක පේනවා." }) +
             field(base + ".tags", "Tags (comma වලින්)", { type: "list" }) +
             field(base + ".packages", "Packages පෙන්නන්න", { type: "bool", hint: "ටික් කළොත් මේ service page එකේ packages ටික (Pricing කොටසේ) පේනවා. Mobile Apps, Websites, Business Systems pages වලට on." }) +
@@ -886,15 +918,114 @@
     return card("වැඩ කරන විදිය (home page steps)",
         arrayEditor("services.home.steps", p => grid(field(p + ".time", "කාලය (Ex: විනාඩි 2)") + field(p + ".t", "Step එකේ නම") + field(p + ".d", "විස්තරය", { type: "area", rows: 2, wide: true })), "Step එකක් add කරන්න", { time: "", t: "", d: "" }),
         "Home page එකේ \"වැඩ කරන විදිය\" කොටස. උඩ ඉඳන් පහළට අංක 01, 02… ලැබෙනවා. විස්තරයේ <code>{support}</code> (free support කාලය) සහ <code>{advance}</code> (advance %) ලියන්න පුළුවන්.") +
-      card("අපේ වැඩ (home page)", arrayEditor("services.home.work", p => grid(field(p + ".t", "Project එකේ නම") + field(p + ".tag", "Type (Ex: App, Website, Logo)") + field(p + ".d", "එක පේළියක විස්තරය", { wide: true }) + field(p + ".link", "Link (optional: site එක, Play Store)", { wide: true, ph: "https://…" })), "Project එකක් add කරන්න", { t: "", tag: "", d: "", link: "" }),
+      card("අපේ වැඩ (home page)", arrayEditor("services.home.work", p => grid(field(p + ".img", "Project image", { type: "image", fit: "1200x900", hint: "1200 × 900 (4:3). App / site එකේ screenshot එකක් හරි design එකක්." }) + field(p + ".t", "Project එකේ නම") + field(p + ".tag", "Type (Ex: App, Website, Logo)") + field(p + ".d", "එක පේළියක විස්තරය", { wide: true }) + field(p + ".link", "Link (optional: site එක, Play Store)", { wide: true, ph: "https://…" })), "Project එකක් add කරන්න", { t: "", tag: "", d: "", link: "" }),
         "ඔයා හදපු real projects. හිස් නම් home page එකේ මේ කොටස පේන්නේ නෑ. Customer ගේ නමින් දාන්න කලින් ඔවුන්ගේ අවසර ගන්න.") +
-      card("Customers කියන දේ (home page)", arrayEditor("services.home.reviews", p => grid(field(p + ".name", "Customer ගේ නම") + field(p + ".biz", "Business / තැන (Ex: Cake shop, Kandy)") + field(p + ".text", "කියපු දේ", { type: "area", rows: 3, wide: true })), "Review එකක් add කරන්න", { name: "", biz: "", text: "" }),
+      card("Customers කියන දේ (home page)", arrayEditor("services.home.reviews", p => grid(field(p + ".photo", "Customer ගේ photo (optional)", { type: "image", fit: "400x400", hint: "400 × 400 (කොටුවක්). Customer ගේ අවසරය තියෙනවා නම් විතරයි." }) + field(p + ".name", "Customer ගේ නම") + field(p + ".biz", "Business / තැන (Ex: Cake shop, Kandy)") + field(p + ".text", "කියපු දේ", { type: "area", rows: 3, wide: true })), "Review එකක් add කරන්න", { name: "", biz: "", text: "" }),
         "Real customers ලාගේ, ඔවුන්ගේ අවසරය ඇති reviews විතරයි. හිස් නම් පේන්නේ නෑ.") +
       card("FAQ (home page)", arrayEditor("services.home.faq", faqItem, "ප්‍රශ්නයක් add කරන්න", { q: "", a: "" }),
         "Home page එකේ \"ගොඩක් අය අහන ප්‍රශ්න\". පළවෙනි එක open වෙලා පේනවා. උත්තරයේ <code>{support}</code> සහ <code>{advance}</code> use කරන්න පුළුවන්. හැම service page එකකම FAQ එක වෙනම (Services tab).") +
       card("Services list", '<p class="ad-note">Home page එකේ services list එක (ඒකේ icon, නම, කෙටි විස්තරය) ගන්නේ <b>Services</b> tab එකෙන්. ඒකේ service එකක් add / edit / මකපුවම ඒක home page එකේත් පේනවා.</p><div class="ad-add"><button type="button" class="btn ad-small" data-act="tab" data-tab="services">Services tab එකට</button></div>');
   };
 
+
+  /* ---------- Images: uploaded pictures (Firestore media/<id>: a WebP data: URL + a small thumbnail) ---------- */
+  const mediaId = ref => (typeof ref === "string" && /^media:[A-Za-z0-9_-]{6,64}$/.test(ref) ? ref.slice(6) : "");
+  function thumbHtml(ref) {
+    if (!ref) return '<span class="ad-img-none">Image නෑ</span>';
+    const id = mediaId(ref);
+    if (!id) return /^(https:\/\/|assets\/)/.test(ref) ? '<img src="' + esc(ref) + '" alt="">' : '<span class="ad-img-none">?</span>';
+    const m = (S.media || []).find(x => x.id === id);
+    if (m && m.thumb) return '<img src="' + esc(m.thumb) + '" alt="">';
+    if (!S.media && !S.mediaLoading) loadMedia();
+    return '<span class="ad-img-none">' + (S.media ? "හම්බුනේ නෑ" : "…") + "</span>";
+  }
+  async function loadMedia() {
+    S.mediaLoading = true;
+    try {
+      const rows = await fs("POST", ":runQuery", { structuredQuery: { from: [{ collectionId: "media" }], select: { fields: ["thumb", "name", "w", "h", "size", "createdAt"].map(f => ({ fieldPath: f })) },
+        orderBy: [{ field: { fieldPath: "createdAt" }, direction: "DESCENDING" }], limit: 300 } });
+      S.media = (rows || []).filter(r => r.document).map(r => fromDoc(r.document)); S.mediaErr = "";
+    } catch (e) { S.media = S.media || []; S.mediaErr = errText(e); }
+    S.mediaLoading = false;
+    if (["images", "content", "services"].indexOf(S.tab) >= 0) renderTab();
+  }
+  // where a picture is used (so it is not deleted while a page still shows it)
+  function mediaUses(id) {
+    const ref = "media:" + id, out = [], c = S.data.config, sv = S.data.services;
+    if (c.banner && (c.banner.image === ref || c.banner.imageM === ref)) out.push("Home banner");
+    ((sv.home && sv.home.work) || []).forEach(w => { if (w.img === ref) out.push("අපේ වැඩ: " + (w.t || "?")); });
+    ((sv.home && sv.home.reviews) || []).forEach(r => { if (r.photo === ref) out.push("Review: " + (r.name || "?")); });
+    (sv.list || []).forEach(x => { if (x.image === ref) out.push("Service: " + x.name); });
+    return out;
+  }
+  const loadImg = file => new Promise((ok, bad) => {
+    const u = URL.createObjectURL(file), im = new Image();
+    im.onload = () => { URL.revokeObjectURL(u); ok(im); };
+    im.onerror = () => { URL.revokeObjectURL(u); bad(new Error("bad image")); };
+    im.src = u;
+  });
+  const blobUrl = b => new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(b); });
+  const toBlob = (cv, q) => new Promise(ok => cv.toBlob(b => ok(b), "image/webp", q));
+  async function encode(im, maxW, maxH, limit) {
+    let scale = Math.min(1, maxW / im.naturalWidth, maxH / im.naturalHeight);
+    for (let round = 0; round < 6; round++) {
+      const w = Math.max(1, Math.round(im.naturalWidth * scale)), h = Math.max(1, Math.round(im.naturalHeight * scale));
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      cv.getContext("2d").drawImage(im, 0, 0, w, h);
+      for (const q of [0.84, 0.74, 0.62]) {
+        const b = await toBlob(cv, q);
+        if (!b) throw new Error("encode");
+        if (b.size <= limit) return { data: await blobUrl(b), w: w, h: h, size: b.size, webp: b.type === "image/webp" };
+      }
+      scale *= 0.8;
+    }
+    throw new Error("too big");
+  }
+  async function uploadImage(file, fit) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("type");
+    if (file.size > 25 * 1024 * 1024) throw new Error("file");
+    const im = await loadImg(file);
+    const [fw, fh] = String(fit || "1600x1200").split("x").map(Number);
+    const big = await encode(im, fw || 1600, fh || 1200, 600 * 1024);   // a Firestore document holds up to 1 MB
+    if (!big.webp) throw new Error("webp");
+    const small = await encode(im, 360, 360, 40 * 1024);
+    const id = Array.from(crypto.getRandomValues(new Uint8Array(15)), x => "abcdefghijklmnopqrstuvwxyz0123456789"[x % 36]).join("");
+    const name = file.name.replace(/[^\w .-]/g, "").slice(0, 80) || "image";
+    await fs("PATCH", "/media/" + id, { fields: toFields({ data: big.data, thumb: small.data, name: name, w: big.w, h: big.h, size: big.size, createdAt: new Date() }) });
+    S.media = S.media || [];
+    S.media.unshift({ id: id, thumb: small.data, name: name, w: big.w, h: big.h, size: big.size, createdAt: new Date().toISOString() });
+    return "media:" + id;
+  }
+  const upErr = e => e && e.message === "type" ? "JPG, PNG හරි WebP image එකක් තෝරන්න." : e && e.message === "file" ? "File එක ලොකු වැඩියි (25 MB ට අඩු එකක් තෝරන්න)." :
+    e && e.message === "webp" ? "මේ browser එක WebP හදන්නේ නෑ. Chrome / Edge / Firefox එකෙන් upload කරන්න." : e && e.message === "bad image" ? "මේ file එක open කරන්න බෑ." : errText(e);
+  function setField(path, ref) {
+    const box = $('[data-imgf="' + path + '"]'), inp = box && box.querySelector("input[type=hidden]");
+    if (inp) { inp.value = ref; inp.dispatchEvent(new Event("input", { bubbles: true })); }
+    else { set(path, ref); updateSaveBar(); }
+    if (box) box.outerHTML = field(path, box.querySelector("label").textContent, { type: "image", fit: (box.querySelector("[data-fit]") || {}).dataset ? box.querySelector("[data-fit]").dataset.fit : "", hint: (box.querySelector(".ad-hint") || {}).textContent || "" });
+  }
+  const kb = n => (n / 1024).toFixed(0) + " KB";
+  VIEWS.images = () => {
+    if (!S.media && !S.mediaLoading) loadMedia();
+    const c = S.data.config;
+    const lib = !S.media ? '<p class="muted">Images ගන්නවා…</p>' : !S.media.length ? '<p class="muted">තාම upload කරපු image නෑ.</p>' :
+      '<div class="ad-media">' + S.media.map(m => { const uses = mediaUses(m.id);
+        return '<figure class="ad-media-i"><img src="' + esc(m.thumb || "") + '" alt="" loading="lazy"><figcaption><b>' + esc(m.name || m.id) + "</b><small>" + m.w + "×" + m.h + " · " + kb(m.size || 0) + "</small>" +
+          '<small class="' + (uses.length ? "ad-used" : "ad-unused") + '">' + (uses.length ? esc(uses.join(", ")) : "කොහෙවත් use වෙන්නේ නෑ") + "</small></figcaption>" +
+          (uses.length ? "" : '<button type="button" class="ad-mini" data-act="media-del" data-id="' + esc(m.id) + '" aria-label="මකන්න">' + icon(I.del) + "</button>") + "</figure>"; }).join("") + "</div>";
+    return (S.mediaErr ? card("Images", '<p class="ad-gate-msg">' + esc(S.mediaErr) + '</p><p class="ad-note">Firebase console → Firestore → Rules එකට අලුත් rules (firestore.rules එකේ <b>media</b> කොටස) දාලා Publish කරන්න.</p>') : "") +
+      card("Home page banner", grid(
+        field("config.banner.show", "Banner එක පෙන්නන්න", { type: "bool", hint: "ටික් කරලා image එකක් දැම්මම home page එකේ උඩ කොටසට පහළින් පේනවා." }) +
+        field("config.banner.link", "Click කළාම යන තැන (optional)", { ph: "start-project.html හරි https://…", hint: "හිස් නම් click කරන්න බෑ." }) +
+        field("config.banner.image", "Banner image (computer)", { type: "image", fit: "1920x720", hint: "1920 × 720 (16:6). Text එක මැදට දාන්න — දෙපැත්තෙන් ටිකක් කැපෙන්න පුළුවන්." }) +
+        field("config.banner.imageM", "Banner image (phone, optional)", { type: "image", fit: "1080x1080", hint: "1080 × 1080 (1:1). හිස් නම් phone එකෙත් computer image එක පේනවා." }) +
+        field("config.banner.alt", "Image එකේ තියෙන දේ (alt text)", { wide: true, ph: "Ex: අලුත් අවුරුදු offer — website 20% off", hint: "ඇස් පේන්නැති අයට සහ Google එකට. Image එකේ ලියලා තියෙන text එක මෙතන ලියන්න." })),
+        "Save කරන්න එබුවම site එකට යනවා.") +
+      card("Upload කරපු images", '<div class="ad-add"><label class="btn btn-primary ad-small ad-up">' + icon(I.plus) + ' Images upload කරන්න<input type="file" accept="image/jpeg,image/png,image/webp" multiple data-up-lib hidden></label>' +
+        '<button type="button" class="btn ad-small" data-act="media-reload">' + icon(I.reload) + " Refresh</button></div>" + lib,
+        "Upload කරද්දිම image එක හරි size එකට හදලා WebP කරනවා (600 KB ට අඩුවෙන්). Use වෙන image මකන්න බෑ — කලින් ඒක use කරන තැනින් අයින් කරන්න. " +
+        "Work, reviews සහ service images දාන්නේ ඒ ඒ tab එකෙන් (Home page, Services).");
+  };
 
   /* ---------- Pages tab: a live preview of the real page, and every text on it ---------- */
   const PAGES = [["index.html", "Home"], ["service.html", "Services"], ["start-project.html", "Start a project"], ["account.html", "Login / account"], ["terms.html", "Terms"], ["privacy.html", "Privacy"], ["404.html", "404 page"]];
@@ -1004,6 +1135,22 @@
     const t = e.target; if (!t.dataset || t.dataset.pgi === undefined) return;
     const r = (S.pgRows || [])[Number(t.dataset.pgi)], fr = pgFrame();
     if (r && fr && fr.contentWindow && r.key.charAt(0) !== "@") { try { fr.contentWindow.postMessage({ hx: 1, type: "hl", key: r.key }, location.origin); } catch (x) { /* frame gone */ } }
+  });
+  root.addEventListener("change", async e => {
+    const t = e.target;
+    if (!t.files || !(t.dataset.up || t.dataset.upLib !== undefined)) return;
+    const files = Array.from(t.files); t.value = "";
+    if (!files.length) return;
+    const btn = t.closest("label"); if (btn) btn.classList.add("busy");
+    let done = 0, last = "";
+    for (const f of (t.dataset.up ? files.slice(0, 1) : files.slice(0, 20))) {
+      toast("Upload කරනවා… " + (done + 1) + "/" + files.length);
+      try { last = await uploadImage(f, t.dataset.fit || "1920x1440"); done++; }
+      catch (err) { toast(f.name + ": " + upErr(err), true); }
+    }
+    if (btn) btn.classList.remove("busy");
+    if (t.dataset.up && last) { setField(t.dataset.up, last); if (S.tab === "images") renderTab(); toast("Upload උනා ✓ පහළ Save කරන්න එබුවම site එකට යනවා."); }
+    else if (done) { renderTab(); toast(done + " ක් upload උනා ✓"); }
   });
   root.addEventListener("change", e => {
     if (e.target.id !== "pg-page") return;
@@ -1233,6 +1380,26 @@
       case "pg-resetall": { if (!armed(b, "ඇත්තටම? ආයෙත් ඔබන්න")) return; (S.pgRows || []).forEach(r => { delete S.data.texts[r.key]; }); S.pg && paintPgList(); const l = $("#pg-list"); if (l) { l.innerHTML = ""; paintPgList(); } updateSaveBar(); pgSend(); break; }
       case "menu": setMenu(!document.documentElement.classList.contains("ad-nav-open")); break;
       case "menu-close": setMenu(false); break;
+      case "img-clear": setField(d.path, ""); break;
+      case "img-pick": {
+        const lib = $('[data-lib-for="' + d.path + '"]'); if (!lib) return;
+        if (!lib.hidden) { lib.hidden = true; return; }
+        if (!S.media) { lib.hidden = false; lib.innerHTML = '<p class="muted">ගන්නවා…</p>'; await loadMedia(); }
+        const box = $('[data-lib-for="' + d.path + '"]'); if (!box) return;
+        box.hidden = false;
+        box.innerHTML = S.media.length ? S.media.map(m => '<button type="button" data-act="img-use" data-path="' + d.path + '" data-id="' + esc(m.id) + '" title="' + esc(m.name || "") + '"><img src="' + esc(m.thumb || "") + '" alt="' + esc(m.name || "") + '"></button>').join("") : '<p class="muted">තාම upload කරපු image නෑ. Upload බටන් එක ඔබන්න.</p>';
+        break;
+      }
+      case "img-use": setField(d.path, "media:" + d.id); break;
+      case "media-reload": S.media = null; renderTab(); break;
+      case "media-del": {
+        if (mediaUses(d.id).length) return toast("මේ image එක use වෙනවා. මුලින් ඒ තැනින් අයින් කරන්න.", true);
+        if (!armed(b, "මකන්නද?")) return;
+        b.disabled = true;
+        try { await fs("DELETE", "/media/" + encodeURIComponent(d.id)).catch(e => { if (!gone(e)) throw e; }); S.media = S.media.filter(m => m.id !== d.id); renderTab(); toast("Image එක මැකුවා."); }
+        catch (err) { b.disabled = false; toast(errText(err), true); }
+        break;
+      }
       case "tab": setMenu(false); setTab(d.tab); renderTab(); window.scrollTo(0, 0); break;
       case "lock": if (anyDirty() && !armed(b, "Save නොකරපු වෙනස් නැති වෙනවා. ආයෙත් ඔබන්න")) return; lockScreen(); break;
       case "save": saveAll(b); break;

@@ -40,6 +40,8 @@ window.HEXORA = {
      final price by quotation (Custom). "packagesVersion" guards an older copy saved from the admin panel:
      when it differs, the packages below replace the saved ones. */
   packagesFixedLkr: true,
+  // home page banner under the top section (Website → Images in the admin panel). image: wide picture, imageM: phone picture (optional)
+  banner: { show: false, image: "", imageM: "", link: "", alt: "" },
   packagesVersion: 6,   // 6: the approved terms (30-day support = 1 month, 50% advance) come with the list too
   packageBaseRate: 369,                  // only used to show "≈ USD" next to LKR prices
   packageNote: "මේවා development charges විතරයි. Hosting, domain, database / cloud usage, email, payment gateway fees, Google / Apple developer accounts, premium plugins ඕන වුණොත් වෙනම (ඔයාගේ accounts වලින්).",
