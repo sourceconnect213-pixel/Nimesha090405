@@ -77,4 +77,7 @@
       if (t) t.addEventListener("click", () => { const open = t.getAttribute("aria-expanded") !== "true"; fq.querySelectorAll(".faq-more").forEach(d => { d.hidden = !open; }); t.setAttribute("aria-expanded", String(open)); t.textContent = open ? "ඉතිරි ප්‍රශ්න හංගන්න" : "තව ප්‍රශ්න " + (faq.length - SHOW) + " ක් බලන්න"; });
     } else gone("faq");
   }
+
+  // the sections under the top one become tabs (a short page instead of a long scroll)
+  if (window.HXSecTabs) window.HXSecTabs.init(document.getElementById("main"));
 })();

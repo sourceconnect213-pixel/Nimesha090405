@@ -522,3 +522,13 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .ad-stat b, .ad-todo-i b { background: linear-gradient(120deg, #00D8FD, #7B2BFD); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .ad-todo-i b { background: linear-gradient(120deg, #00D8FD, #2F6BFF 52%, #7B2BFD); -webkit-background-clip: border-box; background-clip: border-box; color: #fff; }
 .ad-gate-card { border-radius: 26px !important; background: radial-gradient(closest-side at 50% 0%, rgba(47, 107, 255, .3), transparent), linear-gradient(180deg, #0D1230, #080A18) !important; border: 1px solid rgba(140, 165, 255, .3) !important; }
+
+/* v9 — a long page shows one block at a time, with tabs; the install hint is one line */
+.ad-ctabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: -6px 0 16px; padding: 4px; border-radius: 14px; background: rgba(255, 255, 255, .03); border: 1px dashed rgba(140, 165, 255, .22); }
+.ad-ctabs::-webkit-scrollbar { display: none; }
+.ad-ctabs button { flex: none; min-height: 40px; padding: 0 14px; border: 1px solid transparent; border-radius: 10px; background: none; color: var(--muted); font: 700 .86rem/1 var(--f-body); cursor: pointer; white-space: nowrap; }
+.ad-ctabs button:hover { color: var(--fg); }
+.ad-ctabs button[aria-selected="true"] { color: #fff; background: rgba(47, 107, 255, .18); border-color: rgba(127, 219, 255, .45); }
+.ad-ctabs button:focus-visible { outline: 2px solid #7FDBFF; outline-offset: 1px; }
+.ad-main > [hidden] { display: none !important; }
+.ad-install { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding: 12px 14px 12px 18px; border-radius: 16px; background: rgba(0, 216, 253, .06); border: 1px solid rgba(0, 216, 253, .25); font-weight: 700; font-size: .92rem; }

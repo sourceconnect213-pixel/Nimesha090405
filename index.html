@@ -21,8 +21,8 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261119e">
-  <link rel="stylesheet" href="assets/css/hx.css?v=20261119e">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261119g">
+  <link rel="stylesheet" href="assets/css/hx.css?v=20261119g">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body>
@@ -104,7 +104,7 @@
   <section id="promo" class="promo" hidden><div class="wrap" id="home-promo"></div></section>
 
   <!-- WHAT WE BUILD: six live mini screens, one per kind of work -->
-  <section id="services" class="hx-sec">
+  <section id="services" class="hx-sec" data-tab="Services">
     <div class="wrap">
       <div class="hx-head2">
         <h2 class="display">Hexora එකෙන් හදන දේවල්</h2>
@@ -152,7 +152,7 @@
   </section>
 
   <!-- POPULAR PACKAGES -->
-  <section id="popular" class="hx-sec band">
+  <section id="popular" class="hx-sec band" data-tab="Packages">
     <div class="wrap">
       <div class="hx-head2">
         <h2 class="display">ගොඩක් අය තෝරන packages</h2>
@@ -163,7 +163,7 @@
   </section>
 
   <!-- WHY HEXORA: the promises every package makes (the same ones the terms page states) -->
-  <section id="why" class="hx-sec">
+  <section id="why" class="hx-sec" data-tab="ඇයි Hexora">
     <div class="wrap">
       <div class="hx-head2"><h2 class="display">Price එක fixed. Code එක ඔයාගේ.</h2></div>
       <div class="terms why-grid">
@@ -178,13 +178,13 @@
   </section>
 
   <!-- Our work and what customers say: filled from the admin panel (Home page tab); hidden while empty -->
-  <section id="work" class="hx-sec" hidden>
+  <section id="work" class="hx-sec" data-tab="අපේ වැඩ" hidden>
     <div class="wrap">
       <div class="hx-head2"><h2 class="display">අපි හදපු දේවල්</h2></div>
       <div class="work-grid" id="home-work"></div>
     </div>
   </section>
-  <section id="reviews" class="hx-sec band" hidden>
+  <section id="reviews" class="hx-sec band" data-tab="Reviews" hidden>
     <div class="wrap">
       <div class="hx-head2"><h2 class="display">අපිත් එක්ක වැඩ කරපු අය</h2></div>
       <div class="reviews-grid" id="home-reviews"></div>
@@ -192,7 +192,7 @@
   </section>
 
   <!-- HOW IT WORKS -->
-  <section id="process" class="hx-sec">
+  <section id="process" class="hx-sec" data-tab="වැඩ කරන විදිය">
     <div class="wrap">
       <div class="hx-head2">
         <h2 class="display">Idea එකේ ඉඳන් launch වෙනකන්</h2>
@@ -203,7 +203,7 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" class="hx-sec band">
+  <section id="faq" class="hx-sec band" data-tab="FAQ">
     <div class="wrap faq-wrap">
       <div class="faq-left">
         <div class="hx-head2 col">
@@ -317,12 +317,12 @@
 </a>
 </aside>
 
-<script defer src="assets/js/firebase-config.js?v=20261119e"></script>
-<script defer src="assets/js/config.js?v=20261119e"></script>
-<script defer src="assets/js/services.js?v=20261119e"></script>
-<script defer src="assets/js/fb.js?v=20261119e"></script>
-<script defer src="assets/js/chat.js?v=20261119e"></script>
-<script defer src="assets/js/nav.js?v=20261119e"></script>
-<script defer src="assets/js/boot.js?v=20261119e" data-load="media.js pricing.js packages.js svcui.js home.js main.js livechat.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261119g"></script>
+<script defer src="assets/js/config.js?v=20261119g"></script>
+<script defer src="assets/js/services.js?v=20261119g"></script>
+<script defer src="assets/js/fb.js?v=20261119g"></script>
+<script defer src="assets/js/chat.js?v=20261119g"></script>
+<script defer src="assets/js/nav.js?v=20261119g"></script>
+<script defer src="assets/js/boot.js?v=20261119g" data-load="media.js pricing.js packages.js svcui.js sectabs.js home.js main.js livechat.js sitetext.js"></script>
 </body>
 </html>

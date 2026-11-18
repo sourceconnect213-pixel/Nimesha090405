@@ -165,14 +165,14 @@
         '<div class="svc-stage fade-up" style="--d:300ms"><div class="video-frame">' + stageHtml(s) + "</div></div>" +
       "</div></section>" +
 
-      '<section id="svc-details" class="svc-section"><div class="wrap"><div class="svc-detail">' +
+      '<section id="svc-details" class="svc-section" data-tab="ලැබෙන දේවල්"><div class="wrap"><div class="svc-detail">' +
         '<div class="svc-box rv"><span class="eyebrow">මොකද ලැබෙන්නේ</span><h2 class="display">' + esc(s.name) + " එකේ තියෙන දේවල්</h2>" +
           '<ul class="inc-list">' + (s.includes || []).map(x => "<li>" + fill(x) + "</li>").join("") + "</ul></div>" +
         '<div class="svc-box rv" style="--rd:1"><span class="eyebrow">වැඩ කරන විදිය</span>' +
           '<ol class="mini-steps">' + (cat.steps || []).map((st, i) => '<li><span class="n">0' + (i + 1) + "</span><div><b>" + esc(st.t) + "</b><p>" + fill(st.d) + "</p></div></li>").join("") + "</ol></div>" +
       "</div></div></section>" +
 
-      '<section id="svc-pricing" class="band"><div class="wrap">' +
+      '<section id="svc-pricing" class="band" data-tab="Prices"><div class="wrap">' +
         '<div class="section-head rv"><span class="eyebrow">Pricing</span><h2 class="display">' + esc(s.name) + " ගණන්</h2>" +
           (showPk(s) && C.packagesFixedLkr
             ? '<p class="lead">Package prices fixed LKR — dollar rate එකට වෙනස් වෙන්නේ නෑ. Package එකේ ලියලා තියෙන දේට වඩා දෙයක් ඕන නම් ඒක වෙනම quote එකක්.</p></div>'
@@ -182,14 +182,14 @@
         (showPk(s) && window.HXPkg ? '<div class="rv">' + window.HXPkg.html(C, P, pkCat(s), s.pkgKeys) + "</div>" : "") +
       "</div></section>" +
 
-      '<section id="svc-faq"><div class="wrap faq-wrap">' +
+      '<section id="svc-faq" data-tab="FAQ"><div class="wrap faq-wrap">' +
         '<div class="faq-left"><div class="section-head rv"><span class="eyebrow">FAQ</span><h2 class="display">' + esc(s.name) + " ගැන ප්‍රශ්න</h2>" +
           '<p class="lead">උත්තරයක් හම්බුනේ නැත්නම් කෙලින්ම අහන්න, Developer කෙනෙක් ඉක්මනට reply කරනවා.</p></div>' +
           '<div class="faq-side"><button class="btn btn-primary" type="button" data-open-chat>Chat කරන්න</button><a class="btn" href="' + esc(ctaHref(s)) + '">Estimate ගන්න</a></div></div>' +
         '<div class="faq rv">' + faq.map((f, i) => "<details" + (i ? "" : " open") + "><summary>" + esc(f.q) + '</summary><div class="ans"><div><p>' + fill(f.a) + "</p></div></div></details>").join("") + "</div>" +
       "</div></section>" +
 
-      (others.length ? '<section class="band"><div class="wrap">' +
+      (others.length ? '<section id="svc-more" class="band" data-tab="අනිත් services"><div class="wrap">' +
         '<div class="section-head rv"><span class="eyebrow">' + esc(cat.label) + '</span><h2 class="display">මේ category එකේ අනිත් services</h2></div>' +
         indexHtml([s.cat], others) +
       "</div></section>" : "") +
@@ -218,6 +218,7 @@
   root.innerHTML = cur ? detailHtml(cur) : hubHtml(!!slug);
   if (window.HXMedia) window.HXMedia.apply(root);
   if (window.HXPkg && window.HXPkg.wire) window.HXPkg.wire(root);
+  if (cur && window.HXSecTabs) window.HXSecTabs.init(root);
 
   document.title = (cur ? cur.name : "Services") + " | Hexora";
   const meta = $('meta[name="description"]');

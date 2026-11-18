@@ -517,11 +517,40 @@
     return '<nav class="ad-sub" role="tablist" aria-label="' + esc(sec[1]) + '">' + pages.map(([k, t]) =>
       '<button type="button" role="tab" data-act="tab" data-tab="' + k + '" aria-selected="' + (k === S.tab) + '">' + t + (count[k] ? ' <span class="ad-badge">' + count[k] + "</span>" : "") + "</button>").join("") + "</nav>";
   }
+  // a page with three or more blocks shows one at a time, with a tab for each block (its heading); the choice is kept per page
+  const CARD_TAB_PAGES = ["content", "services", "prices", "images", "contact", "notice"];
+  S.cardTab = S.cardTab || {};
+  function cardTabs(main) {
+    if (CARD_TAB_PAGES.indexOf(S.tab) < 0) return;
+    const blocks = Array.from(main.children).filter(el => !el.classList.contains("ad-sub"));
+    if (blocks.length < 3) return;
+    const title = el => { const h = el.querySelector(".ad-card-head h2, h2"); return el.classList.contains("ad-svc-layout") ? "Service එක" : ((h && h.textContent) || "—").trim().slice(0, 40); };
+    let at = Math.min(S.cardTab[S.tab] || 0, blocks.length - 1);
+    const bar = document.createElement("div");
+    bar.className = "ad-ctabs"; bar.setAttribute("role", "tablist"); bar.setAttribute("aria-label", "මේ පිටුවේ කොටස්");
+    bar.innerHTML = blocks.map((el, i) => '<button type="button" role="tab" data-ct="' + i + '" aria-selected="' + (i === at) + '">' + esc(title(el)) + "</button>").join("");
+    main.insertBefore(bar, blocks[0]);
+    const show = i => {
+      at = i; S.cardTab[S.tab] = i;
+      blocks.forEach((el, j) => { el.hidden = j !== i; });
+      Array.from(bar.children).forEach((b, j) => b.setAttribute("aria-selected", String(j === i)));
+      const b = bar.children[i]; if (b && b.scrollIntoView) b.scrollIntoView({ block: "nearest", inline: "center" });
+    };
+    bar.addEventListener("click", e => {
+      const b = e.target.closest("[data-ct]"); if (!b) return;
+      show(Number(b.dataset.ct));
+      const top = bar.getBoundingClientRect().top + window.scrollY - (($(".ad-top") || {}).offsetHeight || 64) - 8;
+      if (window.scrollY > top) window.scrollTo(0, Math.max(0, top));
+    });
+    show(at);
+  }
+
   function renderTab() {
     const main = $("#ad-main"); if (!main) return;
     const y = window.scrollY;
     lastIn[sectionOf(S.tab)[0]] = S.tab;
     main.innerHTML = subTabs() + VIEWS[S.tab]();
+    cardTabs(main);
     // a new section slides in from below when it is further down the menu, from above when it is higher up (a re-draw of the same section does not animate)
     if (S.shownTab && S.shownTab !== S.tab) {
       const at = k => TABS.findIndex(t => t[0] === k);
@@ -592,13 +621,8 @@
     const latest = (S.reqs || []).slice(0, 5);
     const latestCard = card("අලුත්ම requests", latest.length ? '<div class="ad-history">' + latest.map(r => '<button type="button" class="ad-hist ad-hist-btn" data-act="goto-req" data-id="' + esc(r.id) + '"><div><b>' + esc(r.title || r.name || "—") + "</b><small>" + (r.title ? esc(r.name) + " · " : "") + esc(fmtDate(r.createdAt)) + '</small></div><span class="ad-pill">' + esc(STAGE_EN[r.status] || r.status) + " · " + pctOf(r) + "%</span></button>").join("") + "</div>"
       : '<p class="muted">' + (S.reqs ? "තාම requests නෑ." : "Requests ගන්නවා…") + "</p>");
-    const installCard = standalone() ? "" : card("Admin ව වෙනම App එකක් විදියට add කරගන්න",
-      '<p class="ad-note">Phone එකේ / PC එකේ Hexora Admin වෙනම app එකක් විදියට (තමන්ගේම icon එකත් නමත් එක්ක, browser bar නැතුව) open කරන්න පුළුවන්.</p>' +
-      (installEv ? '<button type="button" class="btn btn-primary ad-small" data-act="install">App එක add කරන්න</button>' :
-        '<ol class="ad-steps"><li><b>Android (Chrome):</b> උඩ දකුණේ ⋮ menu එක → <b>Add to Home screen</b> / <b>Install app</b>.</li>' +
-        '<li><b>iPhone (Safari):</b> Share බටන් එක → <b>Add to Home Screen</b>.</li>' +
-        '<li><b>PC (Chrome / Edge):</b> address bar එකේ දකුණේ install icon එක, නැත්නම් ⋮ → <b>Install Hexora Admin</b>.</li></ol>'),
-      "ඒක add කළාට පස්සේ site එකේ අනිත් පිටු වලට නෙවෙයි, admin එකට විතරයි open වෙන්නේ.");
+    // installing as an app: one button, only while the browser offers it (it stops offering once the app is installed)
+    const installCard = standalone() || !installEv ? "" : '<div class="ad-install"><span>Admin එක වෙනම app එකක් විදියට add කරගන්න</span><button type="button" class="btn btn-primary ad-small" data-act="install">Install</button></div>';
     return first + todoCard + latestCard + installCard + card("Hexora admin",
       '<div class="ad-stats">' + stat(S.reqs ? newCount() : "…", "අලුත් requests", "requests") + stat(S.reqs ? S.reqs.filter(r => inFilter(r, "active")).length : "…", "දැන් කරන projects", "requests") +
         stat(S.reqs ? unreadGuests() : "…", "Live chat (අලුත්)", "live") +
