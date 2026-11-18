@@ -569,3 +569,48 @@ section[data-tab] { padding-top: clamp(28px, 4vw, 48px); min-height: 60vh; }
   h1.display { font-size: clamp(2rem, 4vw, 3.2rem) !important; }
 }
 .pk-grid[hidden] + .pk-dots { display: none !important; }
+
+/* =====================================================================================================
+   v9.1 — the swipe: whole cards only (no half cards at the sides), the page scrolls freely over it,
+   arrows + dots to move; a clearer compare table
+   ===================================================================================================== */
+@media (max-width: 1024px) {
+  .pk-grid { position: relative; -webkit-mask-image: none !important; mask-image: none !important;
+    scroll-snap-type: x mandatory; overscroll-behavior-x: auto; touch-action: pan-x pan-y;
+    gap: var(--gutter); grid-auto-columns: calc((100% - var(--gutter) * 3) / 2); padding-top: 18px; }
+  .pk-grid > .pkc { scroll-snap-align: start; scroll-snap-stop: always; }
+  .pk-dots { align-items: center; gap: 12px; margin-top: 8px; }
+  .pk-dot-row { display: flex; gap: 8px; align-items: center; }
+  .pk-dots .pk-arr { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; border: 1px solid var(--hx-line2); background: rgba(255, 255, 255, .04); color: #fff; cursor: pointer; transition: opacity .2s ease, background-color .2s ease; }
+  .pk-dots .pk-arr:disabled { opacity: .3; cursor: default; }
+  .pk-dots .pk-arr:not(:disabled):active { background: rgba(47, 107, 255, .25); }
+  .pk-dots .pk-arr svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+}
+@media (max-width: 700px) {
+  /* one whole card, the next one starts just past the screen edge */
+  .pk-grid { grid-auto-columns: calc(100% - var(--gutter) * 2); }
+}
+
+/* compare table: the row names stay on the left while the packages scroll; plain zebra rows */
+.pk-table-wrap { position: relative; }
+.pk-table { min-width: 0; width: max-content; border-collapse: separate; border-spacing: 0; }
+.pk-table th, .pk-table td { width: 168px; min-width: 168px; max-width: 168px; padding: 14px 14px; font-size: .88rem; line-height: 1.5; }
+.pk-table th[scope="row"], .pk-table thead th:first-child { position: sticky; left: 0; z-index: 2; width: 116px; min-width: 116px; max-width: 116px; background: #0B0E20; box-shadow: 1px 0 0 var(--hx-line2), 10px 0 18px -12px rgba(0, 0, 0, .9); }
+.pk-table thead th:first-child { z-index: 3; }
+.pk-table thead th { vertical-align: bottom; font-size: .9rem; line-height: 1.35; }
+.pk-table thead th a { display: inline-flex; align-items: center; min-height: 34px; margin-top: 8px; padding: 0 12px; border-radius: 10px; background: rgba(47, 107, 255, .16); border: 1px solid rgba(127, 219, 255, .35); color: #fff; font-weight: 700; font-size: .8rem; }
+.pk-table thead th.hot { background: linear-gradient(180deg, rgba(47, 107, 255, .22), rgba(11, 14, 32, 1)); }
+.pk-table thead th.hot a { background: var(--hx-grad); border-color: transparent; }
+.pk-table tbody tr:nth-child(odd) td { background: rgba(255, 255, 255, .025); }
+.pk-table tbody tr:first-child td { font-size: 1rem; color: #7FDBFF; }
+.pk-table tbody th { font-size: .84rem; }
+.pk-compare-hint { display: none; margin: 0 0 8px; color: var(--hx-faint); font-size: .84rem; }
+@media (max-width: 1024px) { .pk-compare-hint { display: block; } .pk-table th, .pk-table td { width: 150px; min-width: 150px; max-width: 150px; } }
+/* the row is exactly the content width: whole cards only, the next one waits just outside */
+@media (max-width: 1024px) {
+  .pk-grid { margin-inline: 0 !important; padding-inline: 0 !important; scroll-padding-inline: 0 !important; gap: calc(var(--gutter) * 2); grid-auto-columns: calc((100% - var(--gutter) * 2) / 2); }
+}
+@media (max-width: 700px) { .pk-grid { grid-auto-columns: 100%; } }
+@media (max-width: 1024px) { .pk-grid > .pkc { scroll-margin: 0 !important; scroll-margin-block: 120px !important; } }
+.pk-table tbody th { white-space: normal !important; }
+.pk-studio { grid-template-columns: minmax(0, 1fr); } .pk-studio > *, .pk-compare, .pk-table-wrap { min-width: 0; max-width: 100%; }

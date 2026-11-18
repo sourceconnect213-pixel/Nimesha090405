@@ -66,7 +66,7 @@
     if (cat === "design" || keys.length < 2) return "";
     const ps = keys.map(k => C.packages[k]);
     const row = (t, f) => "<tr><th scope=\"row\">" + t + "</th>" + ps.map(p => "<td>" + f(p) + "</td>").join("") + "</tr>";
-    return '<div class="pk-compare" hidden><div class="pk-table-wrap" tabindex="0" role="region" aria-label="Packages compare table"><table class="pk-table"><thead><tr><th scope="col"><span class="sr-only">Package</span></th>' +
+    return '<div class="pk-compare" hidden><p class="pk-compare-hint">← Packages බලන්න table එක දෙපැත්තට swipe කරන්න →</p><div class="pk-table-wrap" tabindex="0" role="region" aria-label="Packages compare table"><table class="pk-table"><thead><tr><th scope="col"><span class="sr-only">Package</span></th>' +
       ps.map((p, i) => '<th scope="col"' + (p.badge ? ' class="hot"' : "") + ">" + esc(p.label) + '<a href="start-project.html?package=' + encodeURIComponent(keys[i]) + '">තෝරන්න →</a></th>').join("") + "</tr></thead><tbody>" +
       row("Price", p => (p.from ? "From " : "") + P.formatLKR(P.packageLKR(C, p.lkr, C.fallbackRate)) + (p.monthly ? " / මාසයට" : "")) +
       row("කාලය", p => esc(weeks(p) || "—")) +
@@ -120,19 +120,32 @@
       if (grid && cards.length > 1 && !st.querySelector(".pk-dots")) {
         const dots = document.createElement("div");
         dots.className = "pk-dots"; dots.setAttribute("aria-hidden", "true");
-        dots.innerHTML = cards.map((c, i) => '<button type="button" tabindex="-1" data-i="' + i + '"></button>').join("");
+        dots.innerHTML = '<button type="button" class="pk-arr" data-step="-1" aria-label="කලින් package එක"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><span class="pk-dot-row">' +
+          cards.map((c, i) => '<button type="button" tabindex="-1" data-i="' + i + '"></button>').join("") +
+          '</span><button type="button" class="pk-arr" data-step="1" aria-label="ඊළඟ package එක"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>';
+        dots.removeAttribute("aria-hidden");
         grid.insertAdjacentElement("afterend", dots);
+        let cur = 0;
         const paint = () => {
           const mid = grid.scrollLeft + grid.clientWidth / 2;
           let best = 0, d = Infinity;
-          cards.forEach((c, i) => { const m = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (m < d) { d = m; best = i; } });
-          Array.from(dots.children).forEach((b, i) => b.classList.toggle("on", i === best));
+          const g0 = grid.getBoundingClientRect().left;
+          cards.forEach((c, i) => { const r = c.getBoundingClientRect(), m = Math.abs(grid.scrollLeft + r.left - g0 + r.width / 2 - mid); if (m < d) { d = m; best = i; } });
+          Array.from(dots.querySelectorAll("[data-i]")).forEach((x, i) => x.classList.toggle("on", i === best));
+          cur = best;
+          const arr = dots.querySelectorAll(".pk-arr"); arr[0].disabled = grid.scrollLeft < 8; arr[1].disabled = grid.scrollLeft + grid.clientWidth > grid.scrollWidth - 8;
           grid.classList.toggle("at-start", grid.scrollLeft < 8);
           grid.classList.toggle("at-end", grid.scrollLeft + grid.clientWidth > grid.scrollWidth - 8);
         };
         let raf = 0;
         grid.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; paint(); }); }, { passive: true });
-        dots.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) cards[Number(b.dataset.i)].scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest", inline: "center" }); });
+        // one card at a time: scroll the row itself (scrollIntoView would also move the page)
+        const go = i => { const c = cards[Math.max(0, Math.min(cards.length - 1, i))]; grid.scrollTo({ left: grid.scrollLeft + c.getBoundingClientRect().left - grid.getBoundingClientRect().left - grid.clientLeft - parseFloat(getComputedStyle(grid).paddingLeft || 0), behavior: reduce ? "auto" : "smooth" }); };
+        dots.addEventListener("click", e => {
+          const b = e.target.closest("[data-i]"), a = e.target.closest("[data-step]");
+          if (b) go(Number(b.dataset.i));
+          if (a) go(cur + Number(a.dataset.step));
+        });
         root.addEventListener("resize", paint);
         paint();
       }
