@@ -423,3 +423,24 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .ad-pkg[open] > :not(summary) { margin-inline: 14px; }
 .ad-pkg[open] > .ad-item-head { margin-bottom: 10px; }
 @media (max-width: 480px) { .ad-pkg > summary { flex-wrap: wrap; } .ad-pkg-p { margin-left: 0; flex: 1 1 100%; order: 3; } }
+
+
+/* v6 — the admin on the same system as the site */
+.ad-card, .ad-fold { border-radius: 20px; background: linear-gradient(180deg, rgba(22, 30, 68, .45), rgba(11, 14, 30, .82)); border: 1px solid rgba(140, 165, 255, .16); }
+.ad-item, .ad-list-item, .ad-stat, .ad-req, .ad-pkg { border-radius: 14px; background: #080A15; border-color: rgba(140, 165, 255, .16); }
+.ad-field .input { min-height: 46px; border-radius: 12px; }
+.ad-label, .ad-field > label { font-size: .86rem; color: var(--fg); }
+.ad-pill { border-radius: 999px; font-weight: 700; font-size: .78rem; }
+.ad-tabs button { min-height: 44px; border-radius: 12px; font-weight: 700; }
+.ad-top { background: rgba(5, 6, 12, .9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.ad-badge { background: var(--grad-ink); color: #fff; }
+.ad-stat b, .ad-todo-i b { font-family: var(--f-body); font-weight: 800; }
+.ad-todo-i b { background: var(--grad-ink); color: #fff; }
+.ad-mini { border-radius: 10px; }
+.ad-savebar, #ad-savebar { background: rgba(7, 9, 20, .96); border-top: 1px solid rgba(140, 165, 255, .2); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.pin-pad button { border-radius: 16px; }
+/* status is shown by the pill; no thick coloured edge */
+.ad-req, .ad-req.s-new, .ad-req.s-contacted, .ad-req.s-done, .ad-req.s-design, .ad-req.s-building, .ad-req.s-testing { border-left: 1px solid rgba(140, 165, 255, .16); }
+.ad-req.s-new { border-color: rgba(63, 208, 255, .45); }
+.acc-note { border-left: 1px solid rgba(140, 165, 255, .2); border: 1px solid rgba(140, 165, 255, .2); }
+.ad-tabgroup-l, .ad-svc-cat { font-family: var(--f-body) !important; text-transform: none !important; letter-spacing: 0 !important; font-weight: 700; font-size: .78rem !important; color: var(--faint); }

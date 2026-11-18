@@ -1942,3 +1942,132 @@ a { text-underline-offset: 3px; }
 .hero-tag { position: absolute; left: 50%; top: 100%; margin: 0; transform: translateX(-50%); translate: 0 52px; }
 @media (max-width: 900px) { .hero { padding-bottom: 96px; } }
 @media (max-width: 480px) { .hero-tag { translate: 0 54px; } }
+
+
+/* =====================================================================================================
+   v6 — one system for every page and the admin. Built on the v5 brand.
+   • One typeface family for the interface (Manrope + Noto Sans Sinhala); monospace only where text is code or a PIN.
+   • Labels in sentence case, no tracked capitals, no labels above headings.
+   • One control size scale: 40 / 48 / 56 px. One radius scale: 10 / 14 / 20 / 999.
+   • Three button kinds: primary (brand light), secondary (glass hairline), WhatsApp. Ghost links underline on hover.
+   • Fields: 50 px, navy fill, hairline that turns cyan with a soft ring on focus; errors in rose with the message under the field.
+   ===================================================================================================== */
+:root {
+  --f-mono: var(--f-body);
+  --f-code: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, Consolas, monospace;
+  --rad-s: 10px; --rad-m: 14px; --rad-l: 20px;
+  --ctl-s: 40px; --ctl-m: 48px; --ctl-l: 56px;
+  --field: #080A15; --field-line: rgba(140, 165, 255, .24); --ring: 0 0 0 4px rgba(63, 208, 255, .16);
+  --danger: #FF6B8A;
+}
+/* code and secrets keep a monospace face */
+code, pre, kbd, .ad-key, .ad-pin, .summary pre, .pin-pad button, .ref-code, .sum-ref { font-family: var(--f-code); }
+
+/* ---- labels: sentence case, no tracking ---- */
+.eyebrow { display: none !important; }
+.price-from, .pk-tags span, .foot-grid .foot-h, .est-label, .cat-tab, .svc-label, .tl-time, .badge, .pk-ex b, .price-pre, .rung-from, .acc-note b, .picker-cap, .video-tag, .chip, .stepper li, .crumbs, .ad-pill, .ad-label, .rate-pill {
+  text-transform: none !important; letter-spacing: 0 !important; font-family: var(--f-body);
+}
+.price-from, .est-label { font-size: .82rem; font-weight: 600; color: var(--faint); }
+.pk-tags span { font-size: .78rem; font-weight: 600; padding: 5px 11px; border-radius: 999px; border-color: rgba(140, 165, 255, .24); background: rgba(47, 107, 255, .07); color: #CFE0FF; }
+.pk-ex b { font-size: .86rem; font-weight: 700; color: var(--muted); }
+.foot-grid .foot-h { font-size: .88rem; font-weight: 700; color: var(--fg); margin-bottom: 12px; }
+.tl-time { font-size: .8rem; font-weight: 700; color: #7FDBFF; }
+.crumbs { font-size: .84rem; color: var(--faint); }
+.crumbs a { color: var(--muted); }
+.crumbs a:hover { color: #7FDBFF; }
+.price-pre, .rung-from { font-size: .55em; font-weight: 700; opacity: .8; }
+
+/* ---- numbers: the interface face with tabular figures ---- */
+.price-amt, .rung-price, .est-total, .est-meta b, .est-lines li b, .est-bar .v, .opt-box .p, .pick-t small, .ad-stat b, .ad-todo-i b, .pk-price .price-amt { font-family: var(--f-body); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.price-amt, .pk-price .price-amt { font-weight: 800; }
+.rung-price { font-weight: 800; font-size: 1rem; }
+.est-total { font-weight: 800; font-size: clamp(1.6rem, 2.4vw, 2rem); letter-spacing: -0.02em; }
+.price-usd, .est-usd, .est-rate { font-family: var(--f-body); font-size: .84rem; color: var(--faint); letter-spacing: 0; }
+
+/* ---- buttons ---- */
+.btn { min-height: var(--ctl-m); padding: 0 22px; border-radius: var(--rad-m); font-family: var(--f-body); font-size: .96rem; font-weight: 800; gap: 10px; letter-spacing: 0; clip-path: none; }
+.btn::before { display: none !important; }
+.btn:not(.btn-primary):not(.btn-wa) { background: rgba(255, 255, 255, .04); border: 1px solid rgba(140, 165, 255, .28); color: var(--fg); }
+.btn:not(.btn-primary):not(.btn-wa):hover { background: rgba(47, 107, 255, .1); border-color: rgba(127, 219, 255, .7); }
+.btn-wa { background: #13A452; color: #fff; border: 0; box-shadow: 0 14px 30px -18px rgba(19, 164, 82, .9); }
+.btn-wa:hover { background: #10944A; }
+.btn-sm, .btn.ad-small, .nav-cta, .nav-cta-mini { min-height: var(--ctl-s); padding: 0 16px; font-size: .88rem; border-radius: var(--rad-s); }
+.btn-block { width: 100%; }
+.btn[disabled], .btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+.btn .arrow { width: 22px; height: 22px; padding: 4px; border-radius: 999px; background: rgba(255, 255, 255, .16); }
+.btn:focus-visible { outline: 2px solid #7FDBFF; outline-offset: 3px; }
+@media (hover: none) { .btn { min-height: var(--ctl-m); } .btn-sm, .nav-cta-mini { min-height: 44px; } }
+
+/* ---- fields ---- */
+.input, select.input, textarea.input, .lc input, .lc textarea, .acc-card input:not([type=checkbox]):not([type=radio]) {
+  min-height: 50px; border-radius: var(--rad-m); background: var(--field); border: 1px solid var(--field-line); color: var(--fg); font-family: var(--f-body); transition: border-color .2s ease, box-shadow .2s ease;
+}
+textarea.input { min-height: 120px; line-height: 1.55; padding-block: 14px; }
+.input::placeholder { color: #6E789A; }
+.input:hover { border-color: rgba(140, 165, 255, .4); }
+.input:focus, .input:focus-visible { outline: none; border-color: #3FD0FF; box-shadow: var(--ring); }
+select.input { appearance: none; -webkit-appearance: none; padding-right: 42px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237FDBFF' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 18px; }
+label, .group-label, .field > label { font-weight: 700; }
+.hint, .group-hint, .ad-hint { color: var(--faint); }
+.invalid .input, .input[aria-invalid="true"] { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(255, 107, 138, .12); }
+.err, .ad-gate-msg, .acc-msg:not(.ok) { color: var(--danger); }
+.acc-msg.ok { color: #4BE3A6; }
+
+/* ---- choice tiles (project form) ---- */
+.opt-box { border-radius: var(--rad-m); background: var(--field); border-color: var(--field-line); }
+.opt:hover .opt-box { border-color: rgba(140, 165, 255, .45); }
+.opt input:checked + .opt-box { border-color: #3FD0FF; background: linear-gradient(140deg, rgba(0, 216, 253, .1), rgba(123, 43, 253, .12)); box-shadow: var(--ring); }
+.opt-box .tick { border-color: rgba(140, 165, 255, .45); }
+.opt input:checked + .opt-box .tick { background: var(--grad-ink); border-color: transparent; }
+.opt.pkg .opt-box .p, .opt input:checked + .opt-box .p { color: #7FDBFF; }
+.opt.pkg .pkg-badge { border-radius: 999px; }
+.qty button { border-radius: var(--rad-s); }
+
+/* ---- cards and sections ---- */
+.service, .price-card, .term, .tl-body, .svc-box, .acc-card, .acc-proj, .form-step, .legal-sec, .cut, .work-card, .review, .pk-panel, .estimate, .cta-band, .summary, .pk-fees, .rung, .faq details { border-radius: var(--rad-l); }
+.rung { border-radius: var(--rad-m); }
+.faq details { border-radius: var(--rad-m); }
+.faq summary { min-height: 60px; }
+.faq summary::after { border-color: rgba(140, 165, 255, .35); color: #7FDBFF; }
+.faq details[open] summary::after { background: var(--grad-ink); border-color: transparent; color: #fff; }
+.legal-sec, .form-step, .acc-card, .svc-box { background: linear-gradient(180deg, rgba(22, 30, 68, .5), rgba(11, 14, 30, .8)); border: 1px solid rgba(140, 165, 255, .16); }
+
+/* ---- small chips / tabs / badges ---- */
+.cat-tab { min-height: 40px; padding: 0 16px; border-radius: 999px; font-size: .88rem; font-weight: 700; border-color: rgba(140, 165, 255, .24); color: var(--muted); }
+.cat-tab[aria-selected="true"] { background: var(--grad-ink); border-color: transparent; color: #fff; }
+.cat-tab span, .cat-tab small { opacity: .8; }
+.svc-chip { border-radius: 999px; border-color: rgba(140, 165, 255, .2); background: rgba(255, 255, 255, .03); }
+.svc-chip[aria-current="page"], .svc-chip.on { background: rgba(47, 107, 255, .16); border-color: rgba(127, 219, 255, .6); color: #fff; }
+.stepper li { border-radius: 999px; padding: 7px 14px; font-size: .82rem; font-weight: 700; }
+.stepper li.done { border-color: rgba(75, 227, 166, .55); color: #CFFFEA; background: rgba(75, 227, 166, .08); }
+.badge, .rung-badge, .pk-badge, .pkg-badge { border-radius: 999px; font-weight: 800; }
+.chip { border-radius: 999px; }
+
+/* ---- header and the phone menu ---- */
+@media (max-width: 900px) {
+  .nav-links { background: rgba(7, 9, 20, .97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(140, 165, 255, .16); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .8); }
+  .nav-links a:not(.btn) { min-height: 54px; display: flex; align-items: center; font-size: 1.02rem; }
+  .nav-links li + li { border-top-color: rgba(140, 165, 255, .1); }
+}
+.menu-btn { border-radius: var(--rad-m); background: rgba(255, 255, 255, .04); border-color: rgba(140, 165, 255, .24); }
+.nav-backdrop { background: rgba(3, 4, 10, .6); }
+
+/* ---- footer ---- */
+.foot-grid a { color: var(--muted); }
+.foot-grid a:hover { color: #7FDBFF; }
+.foot-bottom { color: var(--faint); }
+
+/* ---- live chat, toasts, floating buttons ---- */
+.lc { border-radius: var(--rad-l); border: 1px solid rgba(140, 165, 255, .2); background: #0A0D1C; box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .9), var(--glow); }
+.lc-head, .lc header { background: linear-gradient(120deg, rgba(0, 216, 253, .12), rgba(123, 43, 253, .16)); }
+.toast { border-radius: var(--rad-m); background: #11162D; border: 1px solid rgba(140, 165, 255, .24); color: var(--fg); }
+.to-top { border-radius: var(--rad-m); }
+.wa-float { background: #13A452; }
+
+/* ---- the brand's wide wordmark rhythm for the one place text acts as brand: footer note ---- */
+.foot-brand .muted { max-width: 34ch; }
+.nav-cta-mini { padding: 0 12px; }
+@media (max-width: 360px) { .nav-cta-mini { padding: 0 10px; font-size: .84rem; } }
+.acc-note { border: 1px solid rgba(140, 165, 255, .2); }
+.acc-note b { color: #C9B6FF; }

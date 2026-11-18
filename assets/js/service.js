@@ -186,8 +186,10 @@
 
       '<section id="svc-pricing" class="band"><div class="wrap">' +
         '<div class="section-head rv"><span class="eyebrow">Pricing</span><h2 class="display">' + esc(s.name) + " ගණන්</h2>" +
-          '<p class="lead">මේක පටන් ගන්න ගණන්. අද dollar rate එකෙන් LKR වලට auto මාරු වෙනවා. Final price එක ඔයාට ඕන features, items ගණන අනුව වෙනස් වෙනවා.</p>' +
-          '<span class="rate-pill" data-rate-pill><span class="live"></span><span data-rate-text>1 USD = LKR ' + Number(C.fallbackRate).toFixed(2) + " · approx.</span></span></div>" +
+          (showPk(s) && C.packagesFixedLkr
+            ? '<p class="lead">Package prices fixed LKR — dollar rate එකට වෙනස් වෙන්නේ නෑ. Package එකේ ලියලා තියෙන දේට වඩා දෙයක් ඕන නම් ඒක වෙනම quote එකක්.</p></div>'
+            : '<p class="lead">මේක පටන් ගන්න ගණන්. අද dollar rate එකෙන් LKR වලට auto මාරු වෙනවා. Final price එක ඔයාට ඕන features, items ගණන අනුව වෙනස් වෙනවා.</p>' +
+              '<span class="rate-pill" data-rate-pill><span class="live"></span><span data-rate-text>1 USD = LKR ' + Number(C.fallbackRate).toFixed(2) + " · approx.</span></span></div>") +
         (pricesOf(s).length ? '<div class="prices svc-prices">' + pricesOf(s).map(priceCard).join("") + "</div>" : "") +
         (showPk(s) && window.HXPkg ? '<div class="rv">' + window.HXPkg.html(C, P, pkCat(s), s.pkgKeys) + "</div>" : "") +
       "</div></section>" +
