@@ -107,7 +107,7 @@
         '<p class="acc-help">' + (up
           ? "Account එක තියෙනවා නම් PIN එක වැරදියි — <button type=\"button\" class=\"acc-link\" data-mode=\"login\">ආයෙත් ගහන්න</button> · <button type=\"button\" class=\"acc-link\" data-mode=\"forgot\">PIN එක අමතකද?</button><br>" +
             "⚠ PIN එක බැංකු / phone PIN එකක් නෙවෙයි — මේ site එකට විතරක් අලුතෙන් හදපු එකක් වෙන්න ඕන."
-          : lock + ' <button type="button" class="acc-link" data-mode="forgot">PIN එක අමතක උනාද?</button> · <button type="button" class="acc-link" data-mode="admin">Admin login</button>') + "</p>" +
+          : lock + ' <button type="button" class="acc-link" data-mode="forgot">PIN එක අමතක උනාද?</button>') + "</p>" +
       "</section>";
     const first = up ? $("#a-name") : $("#a-phone");
     if (first) first.focus({ preventScroll: true });

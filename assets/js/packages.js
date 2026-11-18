@@ -14,7 +14,7 @@
     maint: { t: "Maintenance", short: "Maintenance", track: "maint", fees: "packageFeesMaint", feeSub: "Hosting, VPS, backups, domain, plugins, gateway" },
     design: { t: "Design & Video", short: "Design", track: "creative" }
   };
-  const SHOW = 5;   // features shown on a card before "see all"
+  const SHOW = 3;   // features shown on a card before "see all" (short cards: less to scroll)
   const ICON = {
     app: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
     web: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',
