@@ -59,27 +59,72 @@
   /* ---------- the menu link of the page you are on ---------- */
   (function () {
     const here = location.pathname.split("/").pop() || "index.html";
-    $$(".nav-links a[href]").forEach(a => {
+    $$(".nav-links a[href], .hx-links a[href]").forEach(a => {
       const h = a.getAttribute("href");
       if (h.indexOf("#") === -1 && h.split("?")[0] === here && !a.classList.contains("nav-cta") && !a.classList.contains("nav-reg")) a.setAttribute("aria-current", "page");
     });
   })();
 
   /* ---------- Services menu: every service, grouped by category (built from the same list the admin panel edits) ---------- */
-  const svcBtn = $(".nav-svc-btn"), svcBox = $("[data-nav-services]");
+  const svcBtn = $(".nav-svc-btn"), svcBoxes = $$("[data-nav-services]"), svcBox = svcBoxes[0];
   const escH = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const SHAPES = /^(?:\s*<(?:path|circle|rect|line|polyline|polygon|ellipse)(?:\s+(?!on|href|xlink)[a-z-]+="[^"<>]*")*\s*\/?>)*\s*$/i;
   function fillServices() {
     const S = window.HX_SERVICES;
     if (!svcBox || !S || !Array.isArray(S.list) || !S.categories) return;
     const cur = new URLSearchParams(location.search).get("s");
-    svcBox.innerHTML = Object.keys(S.categories).map(k => {
+    const html = Object.keys(S.categories).map(k => {
       const items = S.list.filter(x => x.cat === k);
       if (!items.length) return "";
       return '<div class="nsp-col"><span class="nsp-h">' + escH(S.categories[k].label) + "</span><ul>" + items.map(x =>
         '<li><a href="service.html?s=' + encodeURIComponent(x.slug) + '"' + (x.slug === cur ? ' aria-current="page"' : "") + '><svg viewBox="0 0 24 24" aria-hidden="true">' + (SHAPES.test(x.icon || "") ? x.icon : "") + "</svg><span>" + escH(x.name) + "</span></a></li>").join("") + "</ul></div>";
     }).join("");
-    $$("a", svcBox).forEach(a => a.addEventListener("click", () => { setSvc(false); setMenu(false); }));
+    svcBoxes.forEach(box => {
+      box.innerHTML = html;
+      $$("a", box).forEach(a => a.addEventListener("click", () => { setSvc(false); setMenu(false); setSheet(false); }));
+    });
+  }
+
+  /* ---------- phone: the dock at the bottom and the Services sheet that slides up from it ---------- */
+  const sheet = $("#hx-sheet"), dockSvc = $(".hx-dock-svc");
+  let sheetBack = null;
+  function setSheet(open) {
+    if (!sheet || !dockSvc) return;
+    if (open === !sheet.hidden && !sheet.classList.contains("closing")) return;
+    dockSvc.setAttribute("aria-expanded", String(!!open));
+    root.classList.toggle("menu-lock", !!open);
+    if (open) {
+      sheetBack = document.activeElement;
+      sheet.hidden = false; sheet.classList.remove("closing");
+      requestAnimationFrame(() => sheet.classList.add("open"));
+      const first = $(".hx-sheet-x", sheet); if (first) first.focus({ preventScroll: true });
+    } else {
+      sheet.classList.remove("open"); sheet.classList.add("closing");
+      setTimeout(() => { if (sheet.classList.contains("closing")) { sheet.hidden = true; sheet.classList.remove("closing"); } }, reduce ? 0 : 320);
+      if (sheetBack && sheetBack.focus) sheetBack.focus({ preventScroll: true });
+    }
+  }
+  if (sheet && dockSvc) {
+    dockSvc.addEventListener("click", () => setSheet(sheet.hidden));
+    $$("[data-sheet-close]", sheet).forEach(b => b.addEventListener("click", () => setSheet(false)));
+    document.addEventListener("keydown", e => {
+      if (sheet.hidden) return;
+      if (e.key === "Escape") { e.preventDefault(); setSheet(false); }
+      if (e.key === "Tab") {   // keep the keyboard inside the open sheet
+        const f = $$("a[href], button:not([disabled])", $(".hx-sheet-card", sheet)).filter(x => x.offsetParent !== null);
+        if (!f.length) return;
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      }
+    });
+    // a drag down on the sheet closes it
+    let y0 = null;
+    const card = $(".hx-sheet-card", sheet);
+    card.addEventListener("touchstart", e => { y0 = card.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+    card.addEventListener("touchend", e => { if (y0 != null && e.changedTouches[0].clientY - y0 > 70) setSheet(false); y0 = null; }, { passive: true });
+    window.addEventListener("pageshow", e => { if (e.persisted) setSheet(false); });
+    const wide = () => { if (!phone.matches) setSheet(false); };
+    if (phone.addEventListener) phone.addEventListener("change", wide);
   }
   function setSvc(open) {
     if (!svcBtn) return;

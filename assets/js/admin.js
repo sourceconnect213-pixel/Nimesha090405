@@ -1028,7 +1028,7 @@
   };
 
   /* ---------- Pages tab: a live preview of the real page, and every text on it ---------- */
-  const PAGES = [["index.html", "Home"], ["service.html", "Services"], ["start-project.html", "Start a project"], ["account.html", "Login / account"], ["terms.html", "Terms"], ["privacy.html", "Privacy"], ["404.html", "404 page"]];
+  const PAGES = [["index.html", "Home"], ["packages.html", "Packages"], ["service.html", "Services"], ["start-project.html", "Start a project"], ["account.html", "Login / account"], ["terms.html", "Terms"], ["privacy.html", "Privacy"], ["404.html", "404 page"]];
   const DYN_TAB = { steps: ["content", "Home page"], faq: ["content", "Home page"], work: ["content", "Home page"], reviews: ["content", "Home page"], packages: ["prices", "Prices"], services: ["services", "Services"], estimate: ["prices", "Prices"] };
   const DYN_WORD = { steps: "process steps", faq: "FAQ", packages: "app packages", services: "service list", estimate: "estimate / options" };
   VIEWS.pages = () => {

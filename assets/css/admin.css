@@ -502,3 +502,23 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
   .ad-sub { flex-wrap: wrap; overflow: visible; position: static; }   /* every page of the section visible at once on a phone */
   .ad-sub button { flex: 1 1 auto; justify-content: center; min-height: 44px; padding: 0 12px; }
 }
+
+/* =====================================================================================================
+   v8 — the admin in the site's new look: the logo light (cyan → blue → violet), navy panels, 22px corners
+   ===================================================================================================== */
+.ad-shell { background: radial-gradient(1000px 600px at 90% -10%, rgba(47, 107, 255, .12), transparent 60%), #05060C; }
+.btn-primary { background: linear-gradient(120deg, #00D8FD 0%, #2F6BFF 52%, #7B2BFD 100%) !important; background-size: 140% 100% !important; color: #fff !important; border: 0 !important; box-shadow: 0 14px 34px -16px rgba(47, 107, 255, .9); transition: background-position .4s cubic-bezier(.16, 1, .3, 1), transform .2s ease; }
+@media (hover: hover) { .btn-primary:hover { background-position: 100% 0 !important; transform: translateY(-1px); } }
+.ad-card, .ad-fold { border-radius: 22px !important; background: linear-gradient(180deg, rgba(24, 32, 72, .5), rgba(10, 13, 28, .9)) !important; border: 1px solid rgba(140, 165, 255, .16) !important; box-shadow: 0 30px 60px -40px rgba(0, 0, 0, .9) !important; }
+.ad-card-head h2 { font-size: 1.12rem; letter-spacing: -.01em; }
+.ad-sub button[aria-selected="true"], .ad-tabs button[aria-selected="true"] { background: linear-gradient(120deg, #00D8FD, #2F6BFF 52%, #7B2BFD) !important; color: #fff !important; }
+.ad-tabs button[aria-selected="true"] .ad-ico { stroke: #fff !important; }
+@media (min-width: 960px) {
+  .ad-tabs .ad-pill-ind { display: none; }
+  .ad-tabs { background: rgba(8, 10, 22, .7) !important; }
+  .ad-tabs button { border-radius: 14px !important; margin-right: 0; }
+}
+.ad-stat, .ad-todo-i { border-radius: 18px !important; }
+.ad-stat b, .ad-todo-i b { background: linear-gradient(120deg, #00D8FD, #7B2BFD); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ad-todo-i b { background: linear-gradient(120deg, #00D8FD, #2F6BFF 52%, #7B2BFD); -webkit-background-clip: border-box; background-clip: border-box; color: #fff; }
+.ad-gate-card { border-radius: 26px !important; background: radial-gradient(closest-side at 50% 0%, rgba(47, 107, 255, .3), transparent), linear-gradient(180deg, #0D1230, #080A18) !important; border: 1px solid rgba(140, 165, 255, .3) !important; }

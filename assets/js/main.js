@@ -427,6 +427,11 @@
     });
   }
 
+  // prices drawn later (the Packages page switches category): today's rate once it is known
+  if (P) document.addEventListener("hx:prices", () => {
+    P.getRate(C).then(res => $$("[data-price-usd]").forEach(el => { const v = usdOf(el); if (v != null) el.textContent = P.formatLKR(P.smartRound(v * res.rate, C)); }));
+  });
+
   /* ---------- floating WhatsApp button steps aside at the footer ---------- */
   const waFloat = $(".wa-float"), footEnd = $(".foot-bottom");
   if (waFloat && footEnd && "IntersectionObserver" in window) {

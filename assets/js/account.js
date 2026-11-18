@@ -36,7 +36,7 @@
   const STAGES = FB.stages, stageOf = k => STAGES.find(s => s.key === k) || STAGES[0];
   const wa = text => (window.hxWhatsAppLink ? window.hxWhatsAppLink(text) : "https://wa.me/" + (C.whatsapp || "") + "?text=" + encodeURIComponent(text));
   const fmtDay = d => { if (!d) return ""; const x = new Date(/^\d{4}-\d{2}-\d{2}$/.test(d) ? d + "T00:00:00" : d); return isNaN(x) ? "" : x.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }); };
-  let mode = "login", projects = null, profile = null, poll = null;
+  let mode = "login", projects = null, profile = null, poll = null, draft = {};
 
   // the message under the form; with a field id the error is tied to that box (red outline, read out with it, focused)
   function msg(text, ok, field) {
@@ -82,27 +82,36 @@
     if (chatCtl) { chatCtl.destroy(); chatCtl = null; }
     if (mode === "forgot") return forgotScreen();
     if (mode === "admin") return adminScreen();
+    // one door: phone + PIN. An account that exists logs in; a number with no account goes on to the short "new account" step.
+    if (mode === "signup" && !draft.phone) mode = "login";
     const up = mode === "signup";
+    const lock = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     root.innerHTML =
-      '<section class="acc-card acc-gate">' +
-        '<span class="eyebrow">Customer account</span><h1 class="display">මගේ <span class="grad-text">projects</span></h1>' +
-        '<p class="muted">ඔයාගේ project එක කොච්චර දුරට ඉවරද, අපේ අලුත්ම updates මොනවද කියලා මෙතනින් බලන්න.</p>' +
-        '<div class="acc-tabs" role="tablist" data-i="' + (up ? 1 : 0) + '"><span class="acc-tab-ind" aria-hidden="true"></span>' +
-          '<button type="button" role="tab" data-mode="login" aria-selected="' + !up + '">Login</button>' +
-          '<button type="button" role="tab" data-mode="signup" aria-selected="' + up + '">Account එකක් හදන්න</button></div>' +
+      '<section class="acc-card acc-gate acc-one">' +
+        '<div class="acc-mark" aria-hidden="true"><span class="logo-part lp-mark"></span></div>' +
+        (up ? '<h1 class="display">අලුත් <span class="grad-text">account</span> එකක්</h1>' +
+              '<p class="muted">' + esc(draft.phoneLabel || "") + ' number එකට account එකක් හම්බුනේ නෑ. නම දාලා account එක හදන්න — තත්පර 10යි.</p>'
+            : '<h1 class="display">Hexora <span class="grad-text">account</span></h1>' +
+              '<p class="muted">Phone number එකයි PIN එකයි ගහන්න. Account එක තියෙනවා නම් login වෙනවා, නැත්නම් අලුතෙන් හදනවා.</p>') +
         '<form id="acc-form" class="acc-form" novalidate>' +
-          (up ? '<div class="field"><label for="a-name">ඔයාගේ නම</label><input class="input" id="a-name" type="text" autocomplete="name" maxlength="100" placeholder="Ex: Kasun Perera"></div>' : "") +
-          '<div class="field"><label for="a-phone">Phone number <span class="hint">(WhatsApp)</span></label><input class="input" id="a-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX"></div>' +
-          '<div class="field"><label for="a-pin">PIN <span class="hint">(digits 6' + (up ? ", ඔයාම තෝරගන්න" : "") + ')</span></label><input class="input acc-pin" id="a-pin" type="password" inputmode="numeric" maxlength="6" autocomplete="' + (up ? "new-password" : "current-password") + '"></div>' +
-          (up ? '<div class="field"><label for="a-pin2">PIN එක ආයෙත් ගහන්න</label><input class="input acc-pin" id="a-pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>' : "") +
-          (up ? '<label class="acc-agree"><input type="checkbox" id="a-agree"> <span>මම <a href="terms.html" target="_blank" rel="noopener">Terms</a> සහ <a href="privacy.html" target="_blank" rel="noopener">Privacy</a> කියවලා එකඟයි.</span></label>' : "") +
+          (up
+            ? '<div class="acc-who"><span>' + esc(draft.phoneLabel || "") + '</span><button type="button" class="acc-link" data-mode="login">වෙනස් කරන්න</button></div>' +
+              '<div class="field"><label for="a-name">ඔයාගේ නම</label><input class="input" id="a-name" type="text" autocomplete="name" maxlength="100" placeholder="Ex: Kasun Perera"></div>' +
+              '<div class="field"><label for="a-pin2">PIN එක ආයෙත් ගහන්න <span class="hint">(confirm)</span></label><input class="input acc-pin" id="a-pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>' +
+              '<label class="acc-agree"><input type="checkbox" id="a-agree"> <span>මම <a href="terms.html" target="_blank" rel="noopener">Terms</a> සහ <a href="privacy.html" target="_blank" rel="noopener">Privacy</a> කියවලා එකඟයි.</span></label>'
+            : '<div class="field"><label for="a-phone">Phone number <span class="hint">(WhatsApp)</span></label><input class="input" id="a-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX" value="' + esc(draft.raw || "") + '"></div>' +
+              '<div class="field"><label for="a-pin">PIN <span class="hint">(digits 6)</span></label><input class="input acc-pin" id="a-pin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password"></div>') +
           '<p class="acc-msg" id="acc-msg" role="alert"></p>' +
-          '<button class="btn btn-primary btn-block" type="submit">' + (up ? "Account එක හදන්න" : "Login") + "</button>" +
+          '<button class="btn btn-primary btn-block btn-lg" type="submit">' + (up ? "Account එක හදන්න" : "ඉදිරියට") + "</button>" +
         "</form>" +
-        '<p class="acc-help">' + (up ? "Project request එක එව්වේ මේ phone එකෙන් නම්, account එක හැදුවම ඒක එකපාරම මෙතන පේනවා.<br>⚠ මේ PIN එක බැංකු / phone PIN එකක් නෙවෙයි, මේ site එකට විතරක් අලුතෙන් හදපු එකක් වෙන්න ඕන."
-          : '<button type="button" class="acc-link" data-mode="forgot">PIN එක අමතක උනාද?</button> · <button type="button" class="acc-link" data-mode="admin">Admin login</button>') + "</p>" +
+        '<p class="acc-help">' + (up
+          ? "Account එක තියෙනවා නම් PIN එක වැරදියි — <button type=\"button\" class=\"acc-link\" data-mode=\"login\">ආයෙත් ගහන්න</button> · <button type=\"button\" class=\"acc-link\" data-mode=\"forgot\">PIN එක අමතකද?</button><br>" +
+            "⚠ PIN එක බැංකු / phone PIN එකක් නෙවෙයි — මේ site එකට විතරක් අලුතෙන් හදපු එකක් වෙන්න ඕන."
+          : lock + ' <button type="button" class="acc-link" data-mode="forgot">PIN එක අමතක උනාද?</button> · <button type="button" class="acc-link" data-mode="admin">Admin login</button>') + "</p>" +
       "</section>";
-    $("#a-phone").focus({ preventScroll: true });
+    const first = up ? $("#a-name") : $("#a-phone");
+    if (first) first.focus({ preventScroll: true });
+    if (!up && draft.msg) { msg(draft.msg, false, "a-pin"); draft.msg = ""; }
   }
 
   /* ---------- admin login: the same login page; the admin's PIN goes to Firebase, and the admin panel opens signed in ---------- */
@@ -178,28 +187,44 @@
       '<p class="acc-help">ඉක්මනට ඕන නම් <a href="' + esc(wa("Hi Hexora! මගේ account එකේ PIN එක අමතක උනා.")) + '" target="_blank" rel="noopener">WhatsApp එකෙන් කියන්න</a>.<br><button type="button" class="acc-link" data-mode="login">← Login එකට</button></p></section>';
     clearInterval(poll);
   }
+  const credErr = e => /INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test((e && (e.msg || e.message)) || "");
   async function submit(form) {
-    const up = mode === "signup", btn = form.querySelector("button[type=submit]");
-    const name = up ? $("#a-name").value.trim() : "", phone = FB.phoneId($("#a-phone").value), pin = $("#a-pin").value;
-    if (up && name.length < 2) return msg("ඔයාගේ නම ගහන්න.", false, "a-name");
-    if (!phone) return msg("Phone number එක හරියට ගහන්න (Ex: 077 123 4567).", false, "a-phone");
-    if (!/^\d{6}$/.test(pin)) return msg("PIN එක digits 6ක් වෙන්න ඕන.", false, "a-pin");
-    if (up && weakPin(pin)) return msg("මේ PIN එක ඉතා පහසුවෙන් අනුමාන කරන්න පුළුවන් (111111, 123456 වගේ). වෙන එකක් තෝරන්න.", false, "a-pin");
-    if (up && pin !== $("#a-pin2").value) return msg("PIN දෙක සමාන නෑ.", false, "a-pin2");
-    if (up && !$("#a-agree").checked) return msg("Terms සහ Privacy වලට එකඟ වෙන්න (tick එක දාන්න).", false, "a-agree");
-    btn.disabled = true; msg(up ? "Account එක හදනවා…" : "Login වෙනවා…", true);
-    try {
-      if (up) {
-        await FB.signUp(phone, pin, name);
-        // the account works even if the profile is not saved now; the name can be saved again in settings
-        try { await FB.create("customers", FB.user().uid, { name: name, phone: phone, pin: pin }, ["createdAt"]); profile = { name: name, phone: phone }; }
-        catch (e) { profile = null; }
-      } else {
-        await FB.signIn(phone, pin);
+    const btn = form.querySelector("button[type=submit]");
+    if (mode !== "signup") {
+      const raw = $("#a-phone").value, phone = FB.phoneId(raw), pin = $("#a-pin").value;
+      draft.raw = raw;
+      if (!phone) return msg("Phone number එක හරියට ගහන්න (Ex: 077 123 4567).", false, "a-phone");
+      if (!/^\d{6}$/.test(pin)) return msg("PIN එක digits 6ක් වෙන්න ඕන.", false, "a-pin");
+      btn.disabled = true; msg("බලනවා…", true);
+      try { await FB.signIn(phone, pin); portal(); }
+      catch (e) {
+        btn.disabled = false;
+        if (!credErr(e)) return msg(FB.errText(e));
+        // no account with this number + PIN: the next step makes one (an existing account with a wrong PIN is caught there)
+        draft.phone = phone; draft.pin = pin; draft.phoneLabel = raw.trim();
+        mode = "signup"; gate();
       }
+      return;
+    }
+    const name = $("#a-name").value.trim(), pin = draft.pin || "";
+    if (name.length < 2) return msg("ඔයාගේ නම ගහන්න.", false, "a-name");
+    if (weakPin(pin)) { draft.msg = "ඒ PIN එක ඉතා පහසුවෙන් අනුමාන කරන්න පුළුවන් (111111, 123456 වගේ). අලුත් account එකට වෙන PIN එකක් තෝරන්න."; mode = "login"; return gate(); }
+    if (pin !== $("#a-pin2").value) return msg("PIN එක කලින් ගැහුව එකට සමාන නෑ.", false, "a-pin2");
+    if (!$("#a-agree").checked) return msg("Terms සහ Privacy වලට එකඟ වෙන්න (tick එක දාන්න).", false, "a-agree");
+    btn.disabled = true; msg("Account එක හදනවා…", true);
+    try {
+      await FB.signUp(draft.phone, pin, name);
+      // the account works even if the profile is not saved now; the name can be saved again in settings
+      try { await FB.create("customers", FB.user().uid, { name: name, phone: draft.phone, pin: pin }, ["createdAt"]); profile = { name: name, phone: draft.phone }; }
+      catch (e) { profile = null; }
+      draft = {};
       portal();
     } catch (e) {
       btn.disabled = false;
+      if (/EMAIL_EXISTS/.test((e && (e.msg || e.message)) || "")) {
+        draft.msg = "මේ number එකට account එකක් තියෙනවා — PIN එක වැරදියි. ආයෙත් ගහන්න, නැත්නම් “PIN එක අමතක උනාද?” ඔබන්න.";
+        mode = "login"; return gate();
+      }
       msg(FB.errText(e));
     }
   }
@@ -409,5 +434,5 @@
   root.addEventListener("input", e => { if (e.target.id === "ad-pin") e.target.value = e.target.value.replace(/\D/g, "").slice(0, 12); });
 
   window.addEventListener("hashchange", () => { const t = tabOfHash(); if (t !== tab && root.querySelector(".acc-tabs2")) { tab = t; paint(); } });   // Back / Forward
-  if (FB.user()) portal(); else { mode = new URLSearchParams(location.search).get("new") ? "signup" : "login"; gate(); }
+  if (FB.user()) portal(); else { mode = "login"; gate(); }   // ?new=1 (old Register links) opens the same single door
 })();

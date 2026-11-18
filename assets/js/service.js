@@ -217,6 +217,7 @@
   const cur = slug ? bySlug(slug) : null;
   root.innerHTML = cur ? detailHtml(cur) : hubHtml(!!slug);
   if (window.HXMedia) window.HXMedia.apply(root);
+  if (window.HXPkg && window.HXPkg.wire) window.HXPkg.wire(root);
 
   document.title = (cur ? cur.name : "Services") + " | Hexora";
   const meta = $('meta[name="description"]');

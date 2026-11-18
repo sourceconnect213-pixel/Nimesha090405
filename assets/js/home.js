@@ -10,6 +10,18 @@
   const tok = t => esc(t).replace(/\{support\}/g, months + (months === 1 ? " month" : " months")).replace(/\{advance\}/g, (C.advancePercent || 50) + "%");
   const $ = id => document.getElementById(id);
 
+  // the old price tabs moved to the Packages page: old links (#pricing-web, #pkg-firebase) still land on the right place
+  const old = (location.hash || "").match(/^#(?:pricing-(app|web|backend|ai|maint|design)|(pkg-[\w-]+)|pricing)$/);
+  if (old) { location.replace("packages.html" + (old[1] ? "#" + old[1] : old[2] ? "#" + old[2] : "")); return; }
+
+  // popular packages: the most chosen package of apps, websites and AI
+  const pop = $("home-popular"), K = window.HXPkg, P = window.HXPrice;
+  if (pop && K && P && C.packages) {
+    const pick = ["app", "web", "ai"].map(cat => { const ks = Object.keys(P.packagesOf(C, cat)); return ks.find(k => /ගොඩක් අය/.test(C.packages[k].badge || "")) || ks.find(k => C.packages[k].badge) || ks[0]; }).filter(Boolean);
+    pop.innerHTML = pick.map((k, i) => K.card(C, P, k, i)).join("");
+    K.wire(pop.parentElement.parentElement);
+  }
+
   const sv = $("home-services");
   if (sv) sv.innerHTML = U.indexHtml(S, Object.keys(S.categories));
 
