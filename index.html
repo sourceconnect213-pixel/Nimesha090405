@@ -21,8 +21,9 @@
   <link rel="preload" as="image" href="assets/brand/hexora-logo.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/noto-sans-sinhala.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261119k">
-  <link rel="stylesheet" href="assets/css/hx.css?v=20261119k">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261120a">
+  <link rel="stylesheet" href="assets/css/hx.css?v=20261120a">
+  <link rel="stylesheet" href="assets/css/pro.css?v=20261120a">
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
 </head>
 <body>
@@ -61,7 +62,6 @@
 <main id="main" tabindex="-1">
   <!-- HERO: what Hexora makes, one hard fact, and the two ways forward -->
   <section class="hx-hero" data-enter>
-    <div class="hx-hero-bg" aria-hidden="true"><span class="hx-orb o1"></span><span class="hx-orb o2"></span><span class="hx-grid"></span></div>
     <div class="wrap hx-hero-grid">
       <div class="hx-hero-copy">
         <h1 class="display">Apps, websites සහ designs — <span class="grad-text">fixed price</span> එකට.</h1>
@@ -87,13 +87,22 @@
         </ul>
         <p class="hero-auth" data-auth-in hidden><svg class="ic-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> <b data-user-name></b> · <a href="account.html">මගේ projects</a> <span>· status සහ chat</span></p>
       </div>
-      <div class="stage hx-stage">
-        <span class="hx-ring r1" aria-hidden="true"></span><span class="hx-ring r2" aria-hidden="true"></span>
-        <div class="video-frame" data-3d="mark">
-          <img id="hero-poster" src="assets/video/hexora-intro-poster.webp" alt="" width="1280" height="720" decoding="async" fetchpriority="high">
-          <div class="video-glare"></div>
+      <div class="hx-quote" aria-hidden="true">
+        <div class="q-card">
+          <div class="q-top"><span class="q-live"></span><span>Estimate</span><span class="q-ref">HX-261119-0421</span></div>
+          <div class="q-body" data-q>
+            <small class="q-cat">Mobile App package</small>
+            <b class="q-name">Firebase Android App</b>
+            <div class="q-price"><b>LKR 49,000</b><span>fixed price</span></div>
+            <dl class="q-rows">
+              <div><dt>කාලය</dt><dd class="q-time">සති 3 – 5</dd></div>
+              <div><dt>Advance (50%)</dt><dd class="q-adv">LKR 24,500</dd></div>
+              <div><dt>Revisions</dt><dd class="q-rev">2</dd></div>
+            </dl>
+            <ul class="q-inc"><li>Screens 8 ට වෙනකන්</li><li>Firebase login</li><li>Firestore database</li></ul>
+          </div>
+          <div class="q-foot"><span class="q-step done">Request</span><span class="q-step on">Review</span><span class="q-step">Build</span><span class="q-step">Launch</span></div>
         </div>
-        <span class="logo-part lp-tag hero-tag" role="img" aria-label="Build · Code · Innovate"></span>
       </div>
     </div>
   </section>
@@ -111,37 +120,46 @@
       <div class="hx-bento">
         <a class="hx-tile t-app" href="service.html?s=mobile-apps">
           <div class="hx-vis" aria-hidden="true">
-            <div class="mk-phone"><div class="mk-bar"></div><div class="mk-hello"><i></i><i></i></div><div class="mk-cards"><i></i><i></i><i></i></div><div class="mk-btn"></div></div>
+            <div class="mk-phone"><div class="mk-ph-top"><b>ඔයාගේ Shop</b><span>Orders</span></div>
+              <div class="mk-row"><span>#1042 · Cement 50kg × 4</span><em class="ok">Delivered</em></div>
+              <div class="mk-row"><span>#1043 · PVC pipe 1"</span><em>On the way</em></div>
+              <div class="mk-row"><span>#1044 · Paint 4L</span><em>New</em></div>
+              <div class="mk-total"><span>අද orders</span><b>LKR 18,450</b></div>
+              <div class="mk-tabs"><i class="on"></i><i></i><i></i><i></i></div></div>
           </div>
           <div class="hx-tile-t"><h3>Mobile Apps</h3><p><span data-from-pkg>LKR 14,000</span> ඉඳන් · Android, iOS</p></div><span class="hx-go" aria-hidden="true">→</span>
         </a>
         <a class="hx-tile t-web" href="service.html?s=websites">
           <div class="hx-vis" aria-hidden="true">
-            <div class="mk-browser"><div class="mk-dots"><i></i><i></i><i></i></div><div class="mk-hero"><i></i><i></i><b></b></div><div class="mk-row"><i></i><i></i><i></i></div></div>
+            <div class="mk-browser"><div class="mk-url"><i></i><i></i><i></i><span>yourshop.lk</span></div>
+              <div class="mk-site"><b>Quality tools, delivered.</b><span>Online order කරන්න · Island-wide delivery</span><em>Shop now</em></div>
+              <div class="mk-prods"><span>Tools</span><span>Paint</span><span>Plumbing</span></div></div>
           </div>
           <div class="hx-tile-t"><h3>Websites</h3><p><span data-from-webpkg>LKR 10,000</span> ඉඳන් · Shop, WordPress</p></div><span class="hx-go" aria-hidden="true">→</span>
         </a>
         <a class="hx-tile t-be" href="service.html?s=backend-admin">
           <div class="hx-vis" aria-hidden="true">
-            <div class="mk-dash"><div class="mk-bars"><i style="--h:40%"></i><i style="--h:72%"></i><i style="--h:55%"></i><i style="--h:90%"></i><i style="--h:64%"></i></div><div class="mk-kpi"><i></i><i></i></div></div>
+            <div class="mk-dash"><div class="mk-kpis"><div><small>Orders</small><b>38</b></div><div><small>Revenue</small><b>182.4k</b></div><div><small>Users</small><b>1,204</b></div></div>
+              <div class="mk-bars"><i style="--h:42%"></i><i style="--h:64%"></i><i style="--h:51%"></i><i style="--h:88%"></i><i style="--h:70%"></i><i style="--h:94%"></i></div></div>
           </div>
           <div class="hx-tile-t"><h3>Backend &amp; Admin</h3><p><span data-from-bepkg>LKR 29,000</span> ඉඳන් · Firebase, dashboards</p></div><span class="hx-go" aria-hidden="true">→</span>
         </a>
         <a class="hx-tile t-ai" href="service.html?s=ai-features">
           <div class="hx-vis" aria-hidden="true">
-            <div class="mk-chat"><span class="q">Delivery කීයද?</span><span class="a"><i></i><i></i><i></i></span></div>
+            <div class="mk-chat"><span class="q">Colombo වලට delivery කීයද?</span><span class="a">Colombo ඇතුළත LKR 350 යි, දවස් 1–2 කින් ගෙනත් දෙනවා.</span></div>
           </div>
           <div class="hx-tile-t"><h3>AI &amp; Automation</h3><p><span data-from-aipkg>LKR 40,000</span> ඉඳන් · Chatbots</p></div><span class="hx-go" aria-hidden="true">→</span>
         </a>
         <a class="hx-tile t-design" href="service.html?s=logo-branding">
           <div class="hx-vis" aria-hidden="true">
-            <div class="mk-swatch"><i></i><i></i><i></i><b></b></div>
+            <div class="mk-brand"><div class="mk-logo l1">PB</div><div class="mk-logo l2">PB</div><div class="mk-logo l3">PB</div>
+              <div class="mk-hex"><span>#0B1F3A</span><span>#F2B705</span><span>#FFFFFF</span></div></div>
           </div>
           <div class="hx-tile-t"><h3>Logo, Design &amp; Video</h3><p><span data-price-usd="2">LKR 700</span> ඉඳන් · Reels, posters</p></div><span class="hx-go" aria-hidden="true">→</span>
         </a>
         <a class="hx-tile t-maint" href="service.html?s=maintenance-hosting">
           <div class="hx-vis" aria-hidden="true">
-            <div class="mk-up"><svg viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M0 30 L15 26 L30 28 L45 18 L60 22 L75 12 L90 16 L105 8 L120 10"/></svg><span>Backups ✓</span></div>
+            <div class="mk-status"><div><span>Uptime · 30 දවස්</span><b>99.98%</b></div><div><span>Backup · 02:00</span><b class="ok">OK</b></div><div><span>Plugins updated</span><b>12</b></div></div>
           </div>
           <div class="hx-tile-t"><h3>Maintenance</h3><p><span data-from-maintpkg>LKR 5,500</span> / මාසෙ · Updates, backups</p></div><span class="hx-go" aria-hidden="true">→</span>
         </a>
@@ -315,12 +333,12 @@
 </a>
 </aside>
 
-<script defer src="assets/js/firebase-config.js?v=20261119k"></script>
-<script defer src="assets/js/config.js?v=20261119k"></script>
-<script defer src="assets/js/services.js?v=20261119k"></script>
-<script defer src="assets/js/fb.js?v=20261119k"></script>
-<script defer src="assets/js/chat.js?v=20261119k"></script>
-<script defer src="assets/js/nav.js?v=20261119k"></script>
-<script defer src="assets/js/boot.js?v=20261119k" data-load="media.js pricing.js packages.js svcui.js sectabs.js home.js main.js livechat.js sitetext.js"></script>
+<script defer src="assets/js/firebase-config.js?v=20261120a"></script>
+<script defer src="assets/js/config.js?v=20261120a"></script>
+<script defer src="assets/js/services.js?v=20261120a"></script>
+<script defer src="assets/js/fb.js?v=20261120a"></script>
+<script defer src="assets/js/chat.js?v=20261120a"></script>
+<script defer src="assets/js/nav.js?v=20261120a"></script>
+<script defer src="assets/js/boot.js?v=20261120a" data-load="media.js pricing.js packages.js svcui.js sectabs.js home.js main.js livechat.js sitetext.js"></script>
 </body>
 </html>

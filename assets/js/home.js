@@ -22,6 +22,30 @@
     K.wire(pop.parentElement.parentElement);
   }
 
+  // the estimate card in the top section: the real price list, a few packages in turn (4 s each; still under reduced motion)
+  const qb = document.querySelector("[data-q]");
+  if (qb && P && C.packages) {
+    const CAT = { app: "Mobile App package", web: "Website package", ai: "AI package", backend: "Backend package", maint: "Maintenance plan" };
+    const keys = ["app", "web", "backend", "ai"].map(cat => { const ks = Object.keys(P.packagesOf(C, cat)); return ks.find(k => /ගොඩක් අය/.test(C.packages[k].badge || "")) || ks[1] || ks[0]; }).filter(Boolean);
+    const put = k => {
+      const p = C.packages[k], lkr = P.packageLKR(C, p.lkr, C.fallbackRate), adv = C.advancePercent || 50;
+      qb.querySelector(".q-cat").textContent = CAT[p.cat || "app"] || "Package";
+      qb.querySelector(".q-name").textContent = p.label;
+      qb.querySelector(".q-price b").textContent = (p.from ? "From " : "") + P.formatLKR(lkr);
+      qb.querySelector(".q-time").textContent = p.time || "—";
+      qb.querySelector(".q-rows div:nth-child(2) dt").textContent = "Advance (" + adv + "%)";
+      qb.querySelector(".q-adv").textContent = P.formatLKR(Math.round(lkr * adv / 100));
+      qb.querySelector(".q-rev").textContent = p.revisions || "—";
+      qb.querySelector(".q-inc").innerHTML = (p.includes || []).slice(0, 3).map(x => "<li>" + esc(x.split(/[,(]/)[0].trim()) + "</li>").join("");
+    };
+    let qi = 0; put(keys[0]);
+    if (keys.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(() => {
+      if (document.hidden) return;
+      qb.classList.add("swap");
+      setTimeout(() => { qi = (qi + 1) % keys.length; put(keys[qi]); qb.classList.remove("swap"); }, 260);
+    }, 4000);
+  }
+
   const sv = $("home-services");
   if (sv) sv.innerHTML = U.indexHtml(S, Object.keys(S.categories));
 

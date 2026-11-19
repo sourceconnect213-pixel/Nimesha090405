@@ -130,8 +130,13 @@
       return '<div class="an an-video"><video autoplay muted loop playsinline preload="metadata" aria-label="' + esc(s.name) + ' example">' +
         '<source src="' + esc(s.video) + '" type="video/mp4"></video></div>';
     }
-    // a 3D glass tile with the service's icon (main.js loads the 3D only where it can be drawn; until then the logo mark shows)
-    return '<div class="an an-3d" data-3d="tile" data-icon="' + esc(SHAPES.test(s.icon || "") ? s.icon || "" : "") + '" aria-hidden="true"></div>';
+    // no picture: a plain spec sheet of the service (what is included, the starting price) — the real offer, not a decoration
+    let from = "";
+    if (showPk(s)) { const v = Object.values(P.packagesOf(C, pkCat(s), s.pkgKeys)).map(p => P.packageLKR(C, p.lkr, C.fallbackRate)); if (v.length) from = P.formatLKR(Math.min.apply(null, v)) + (pkCat(s) === "maint" ? " / මාසයට" : ""); }
+    return '<div class="an an-spec" aria-hidden="true"><div class="sp-head"><span class="sp-ic">' + icon(s.icon) + "</span><div><b>" + esc(s.name) + "</b><small>" + esc(((S.categories[s.cat] || {}).label) || "") + "</small></div></div>" +
+      (from ? '<div class="sp-price"><small>පටන් ගන්නේ</small><b>' + from + "</b></div>" : "") +
+      '<ul class="sp-list">' + (s.includes || []).slice(0, 4).map(x => "<li>" + fill(x) + "</li>").join("") + "</ul>" +
+      ((s.tags || []).length ? '<div class="sp-tags">' + s.tags.slice(0, 4).map(t => "<span>" + esc(t) + "</span>").join("") + "</div>" : "") + "</div>";
   }
 
   /* ---------- building blocks ---------- */
