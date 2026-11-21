@@ -27,11 +27,16 @@ The `CNAME` file tells GitHub Pages to serve the site at `hexoraworks.com`. In *
 | CNAME | `www` | `sourceconnect213-pixel.github.io` |
 Delete any other A / AAAA / CNAME record on `@` or `www` (Cloudflare's parking records). Then **GitHub → repo Settings → Pages → Custom domain** = `hexoraworks.com`, Save, and tick **Enforce HTTPS** when the certificate is ready (minutes to a few hours). The old `…github.io/Nimesha090405/` address then redirects to the domain.
 
-## Launch countdown (`assets/js/launch.js`)
-Until **2026-11-22 12:00 (Sri Lanka time)** every public page shows only a countdown; at that moment open pages reload and the site appears. The admin panel is never hidden.
-- See the real site before launch: add `?preview=hexora` to any address (remembered in that browser); `?preview=off` shows the countdown again.
-- The time is checked against the server clock, so a phone with a wrong clock still opens on time.
-- Change `LAUNCH` at the top of the file to move the launch. After launch the file does nothing; remove the `<script src="assets/js/launch.js">` line from the pages whenever convenient.
+## Launch screen (`assets/js/launch.js`, `assets/css/launch.css`)
+**Admin panel → Website → Launch** controls it (saved in Firestore `site/launch`, readable by everyone, writable by the admin like the rest of `site/`):
+- **Countdown page on / off.** On: until the launch time every public page shows only the countdown. Off: the site is shown to everyone.
+- **Launch day and time** (Sri Lanka time), with quick +15 min / +1 hour / +1 day / −1 hour / "launch now" buttons. Then **Save**.
+- **Intro animation** on / off: when the countdown reaches zero the Hexora intro plays (hexagon draws, the mark lands, the name is revealed) and "WE ARE LIVE! Welcome to HEXORA." offers **Explore HEXORA**, which opens the site. Visitors who arrive in the first week after launch see the intro once, over the page.
+Until the admin saves for the first time, the built-in launch time is **2026-11-22 12:00 (Sri Lanka time)**.
+- Open pages pick up a saved change within 5 minutes (every minute in the last 15 minutes, and once more at zero, so a last-minute extension is honoured).
+- The countdown runs on the server clock, so a phone with a wrong clock still opens on time.
+- See the real site before launch: add `?preview=hexora` to any address (remembered in that browser); `?preview=off` shows the countdown again. `?intro=1` plays the intro.
+- After launch the files do nothing for returning visitors; the countdown page can simply stay switched off.
 
 ## Folder structure
 ```
@@ -49,9 +54,10 @@ hexora-website/
 └─ assets/
    ├─ css/style.css        all design + animations (the "v3 — quiet premium" block near the end sets the current look: rounded shapes, calm colours, the 3D frames)
    ├─ css/admin.css        admin panel design
+   ├─ css/launch.css       launch screen design
    ├─ js/config.js         prices, WhatsApp, email, links (starting data; the admin panel edits the live copy)
    ├─ js/pricing.js        USD → LKR rate + price maths
-   ├─ js/launch.js         launch countdown screen (until 2026-11-22 12:00 SL time; ?preview=hexora to see the site)
+   ├─ js/launch.js         launch screen: countdown, intro motion, "we are live" (admin panel → Launch)
    ├─ js/nav.js            navigation: phone menu, anchor links, current page / section, back to top, login state in the header (loaded straight from the page, not through boot.js)
    ├─ js/main.js           animations, video, live prices, tabs, and loading the 3D (only when it is about to be seen)
    ├─ js/hx3d.js           the 3D scenes (Three.js, built from tools/hx3d — do not edit by hand)

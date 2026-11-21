@@ -558,3 +558,10 @@ details.ad-req > summary.ad-req-head > div { flex: 1; }
 .input:focus { border-color: var(--pro-acc) !important; box-shadow: 0 0 0 3px rgba(47, 107, 255, .2) !important; }
 .ad-badge { background: #E5484D !important; }
 .ad-install { background: var(--pro-s1) !important; border-color: var(--pro-line2) !important; border-radius: 12px !important; }
+
+/* Launch tab: the live status line */
+.ad-ln-status { margin: 0 0 16px; padding: 12px 14px; border-radius: 10px; font-weight: 700; line-height: 1.5; border: 1px solid var(--line, #2B3142); background: rgba(255, 255, 255, .03); }
+.ad-ln-status::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 9px; border-radius: 50%; vertical-align: 1px; background: #7D8497; }
+.ad-ln-status[data-state="on"]::before { background: #00D4FF; box-shadow: 0 0 10px #00D4FF; }
+.ad-ln-status[data-state="live"]::before { background: #3BC98B; box-shadow: 0 0 10px #3BC98B; }
+.ad-ln-acts { margin-top: 18px; }
