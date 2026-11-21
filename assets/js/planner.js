@@ -43,7 +43,7 @@
     // one radio group for every package; a label is shown only on its category's track (data-track, see applyTrack)
     $("#opt-pkg").innerHTML = Object.entries(C.packages || {}).map(([k, p]) =>
       '<label class="opt pkg" data-track="' + trackOfCat(p.cat) + '"><input type="radio" name="pkg" value="' + k + '"><span class="opt-box"><span class="tick"></span><span class="t">' + esc(p.label) + '</span>' +
-      '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + esc([p.platform, p.screens, p.time].filter(Boolean).join(" · ") || ((p.includes || []).length + " features")) + ' · select කළාම බලන්න</span><ul class="pkg-inc">' +
+      '<span class="p" data-p="pkg:' + k + '"></span><span class="s">' + esc([p.platform, p.screens, p.time].filter(Boolean).join(" · ") || ((p.includes || []).length + " features")) + ' · ඔබලා විස්තර බලන්න</span><ul class="pkg-inc">' +
       [p.platform, p.screens].filter(Boolean).map(x => '<li class="meta">' + esc(x) + "</li>").join("") + (p.includes || []).map(x => "<li>" + esc(x) + "</li>").join("") +
       (p.excludes || []).map(x => '<li class="no">' + esc(x) + "</li>").join("") + "</ul></span>" + (p.badge ? '<span class="pkg-badge">' + esc(p.badge) + "</span>" : "") + "</label>").join("");   // the badge comes after .opt-box so "input:checked + .opt-box" still matches
     const adds = Object.entries(C.addons || {});
@@ -116,12 +116,12 @@
     const mb = $("#est-maint-box"); if (mb) mb.hidden = t !== "dev";
     const note = $(".estimate .est-note");
     if (note) note.textContent = t === "dev"
-      ? "මේක estimate එකක්. Final price එක free call එකෙන් පස්සේ fixed quote එකක් විදියට දෙනවා. Google / Apple / domain fees වෙනම."
+      ? "මේක estimate එකක් විතරයි. Free call එකෙන් පස්සේ අවසාන මිල fixed quote එකක් විදියට එවනවා. Google, Apple, domain ගාස්තු වෙනම."
       : isPkg(t)
         ? (C.packagesFixedLkr
-          ? "Package එකේ fixed development price එක. Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න, ඒකට වෙනම quote එකක්. Urgent ඕන නම් call එකෙන් confirm කරනවා. " + (C.packageNote || "")
-          : "Package එකයි තෝරපු වෙනස්කම් ටිකයි එකතු කරපු price එක. අද dollar rate එකට අනුව වෙනස් වෙනවා. Final price එක call එකෙන් පස්සේ confirm කරනවා. Google / Apple fees වෙනම.")
-        : "මේක estimate එකක්. Revisions include. Final price එක chat එකෙන් confirm කරලා වැඩ පටන් ගන්නවා.";
+          ? "මේ package එකේ මිල. Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න, ඒකට වෙනම මිලක් කියනවා. ඉක්මනට ඕන නම් call එකෙන් කතා කරගමු. " + (C.packageNote || "")
+          : "Package එකයි ඔයා තෝරපු දේවලුයි එකතු කරපු මිල. අද dollar rate එක අනුව පොඩ්ඩක් වෙනස් වෙන්න පුළුවන්. අවසාන මිල call එකෙන් පස්සේ කියනවා. Google, Apple ගාස්තු වෙනම.")
+        : "මේක estimate එකක්. Revisions ඇතුළත්. අවසාන මිල chat එකෙන් කතා කරලා, ඊට පස්සේ වැඩ පටන් ගන්නවා.";
   }
 
   /* ---------- enable / disable dev options that don't fit the type ---------- */
@@ -134,7 +134,7 @@
       if (inc) adminBox.checked = false;
       const s = adminBox.parentElement.querySelector(".s");
       const box = adminBox.parentElement.querySelector(".opt-box");
-      if (inc && !s) box.insertAdjacentHTML("beforeend", '<span class="s">මේ type එකට දැනටම include</span>');
+      if (inc && !s) box.insertAdjacentHTML("beforeend", '<span class="s">මේකේ දැනටමත් තියෙනවා</span>');
       if (!inc && s) s.remove();
     }
     $$('input[name="extras"]', form).forEach(i => {
@@ -262,7 +262,7 @@
     const box = $("#est-rate");
     box.classList.toggle("offline", !rate.live);
     const d = rate.date ? new Date(rate.date) : null;
-    $("#est-rate-text").textContent = "1 USD = LKR " + rate.rate.toFixed(2) + (rate.live && d ? " · updated " + fmtDate(d) : " · approx. rate");
+    $("#est-rate-text").textContent = "1 USD = LKR " + rate.rate.toFixed(2) + (rate.live && d ? " · update කළේ " + fmtDate(d) : " · ආසන්න rate එක");
   }
 
   /* ---------- stepper / completed sections ---------- */

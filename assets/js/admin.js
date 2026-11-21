@@ -256,6 +256,11 @@
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
     if (d.contactVersion && c.contactVersion !== d.contactVersion) ["whatsapp", "phoneDisplay", "contactVersion"].forEach(k => { c[k] = d[k]; });
     if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote", "freeSupportMonths", "advancePercent"].forEach(k => { c[k] = clone(d[k]); });
+    // new wording for the option lists (textVersion): labels / notes from config.js, the prices saved here stay
+    if (d.textVersion && c.textVersion !== d.textVersion) {
+      ["types", "sizes", "features", "design", "extras", "creative", "urgency"].forEach(k => { const b = d[k], o = c[k]; if (b && o) Object.keys(b).forEach(id => { if (o[id]) ["label", "note"].forEach(f => { if (b[id][f] !== undefined) o[id][f] = b[id][f]; }); }); });
+      c.textVersion = d.textVersion;
+    }
     ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
     if (S.data.services && S.data.services.list) {
@@ -263,6 +268,13 @@
       // a service whose built-in text is versioned (pkgv, the Mobile Apps page) replaces an older saved copy of itself
       S.data.services.list = S.data.services.list.map(x => { const b = bl.find(y => y.slug === x.slug); return b && b.pkgv && x.pkgv !== b.pkgv ? clone(b) : x; });
       S.data.services.list.forEach(x => { if (x.packages === undefined && x.slug === "mobile-apps") x.packages = true; });
+    }
+    // new wording for the work steps / shared FAQ (textv) replaces an older saved copy; "අපේ වැඩ" and reviews stay
+    const HS = window.HX_SERVICES || {};
+    if (S.data.services && HS.textv && S.data.services.textv !== HS.textv) {
+      S.data.services.categories = clone(HS.categories); S.data.services.commonFaq = clone(HS.commonFaq);
+      if (S.data.services.home && HS.home) { S.data.services.home.steps = clone(HS.home.steps); S.data.services.home.faq = clone(HS.home.faq); }
+      S.data.services.textv = HS.textv;
     }
     if (S.data.services && !S.data.services.home && window.HX_SERVICES && window.HX_SERVICES.home) S.data.services.home = clone(window.HX_SERVICES.home);
     if (S.data.services && S.data.services.home) { const h = S.data.services.home; if (!Array.isArray(h.work)) h.work = []; if (!Array.isArray(h.reviews)) h.reviews = []; }

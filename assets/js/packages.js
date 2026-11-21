@@ -84,8 +84,8 @@
     const monthly = cat === "maint";
     const cards = keys.map((k, i) => (cat === "design" ? creativeCard(C, P, k, i) : card(C, P, k, i))).join("");
     const terms = cat === "design" ? [] : monthly ? (C.packageTermsMonthly || []) : (C.packageTerms || []);
-    const note = cat === "design" ? "Design සහ video prices USD වලින් ගණන් බලලා අද dollar rate එකෙන් LKR වලට හරවනවා." :
-      monthly ? "මේවා Hexora ගේ මාසික maintenance service fees විතරයි, hosting, VPS, cloud usage, backups, domain, plugins, gateway fees ඔයාගේ accounts වලින් වෙනම. Business-hours support; 24/7 staffed support, uptime guarantee එකක් නෑ." : (C.packageNote || "");
+    const note = cat === "design" ? "Design, video මිල USD වලින් හදලා, අද dollar rate එකට රුපියල් වලට හරවලා පෙන්නන්නේ." :
+      monthly ? "මේ මිල Hexora site එක බලාගන්න වැඩේට විතරයි. Hosting, server, cloud, backups, domain, plugins, payment ගාස්තු ඔයාගේ accounts වලින්. අපි වැඩ කරන්නේ සතියේ දවස් වල office වෙලාවට. 24 පැයම support එකක්, site එක කවදාවත් down නොවෙනවා කියන පොරොන්දුවක් නෑ." : (C.packageNote || "");
     const info = CATS[cat] || {}, feeList = (info.fees && C[info.fees]) || [];
     const fees = feeList.length || (C.packageQuote && !monthly && cat !== "design")
       ? '<details class="pk-fees"><summary><span>මොනවද වෙනම ගෙවන්නේ? <small>' + esc(info.feeSub || "") + '</small></span></summary><div class="pk-fees-body">' +

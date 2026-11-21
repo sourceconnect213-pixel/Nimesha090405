@@ -96,7 +96,7 @@
         '<form id="acc-form" class="acc-form" novalidate>' +
           (up
             ? '<div class="acc-who"><span>' + esc(draft.phoneLabel || "") + '</span><button type="button" class="acc-link" data-mode="login">වෙනස් කරන්න</button></div>' +
-              '<div class="field"><label for="a-name">ඔයාගේ නම</label><input class="input" id="a-name" type="text" autocomplete="name" maxlength="100" placeholder="Ex: Kasun Perera"></div>' +
+              '<div class="field"><label for="a-name">ඔයාගේ නම</label><input class="input" id="a-name" type="text" autocomplete="name" maxlength="100" placeholder="උදා: Kasun Perera"></div>' +
               '<div class="field"><label for="a-pin2">PIN එක ආයෙත් ගහන්න <span class="hint">(confirm)</span></label><input class="input acc-pin" id="a-pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>' +
               '<label class="acc-agree"><input type="checkbox" id="a-agree"> <span>මම <a href="terms.html" target="_blank" rel="noopener">Terms</a> සහ <a href="privacy.html" target="_blank" rel="noopener">Privacy</a> කියවලා එකඟයි.</span></label>'
             : '<div class="field"><label for="a-phone">Phone number <span class="hint">(WhatsApp)</span></label><input class="input" id="a-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX" value="' + esc(draft.raw || "") + '"></div>' +
@@ -171,7 +171,7 @@
   async function forgot(form) {
     const name = $("#f-fname").value.trim(), phone = FB.phoneId($("#f-fphone").value), btn = form.querySelector("button[type=submit]");
     if (name.length < 2) return msg("ඔයාගේ නම ගහන්න.", false, "f-fname");
-    if (!phone) return msg("Phone number එක හරියට ගහන්න (Ex: 077 123 4567).", false, "f-fphone");
+    if (!phone) return msg("Phone number එක හරියට ගහන්න (උදා: 077 123 4567).", false, "f-fphone");
     btn.disabled = true; msg("");
     const id = FB.newId() + FB.newId();
     try {
@@ -193,7 +193,7 @@
     if (mode !== "signup") {
       const raw = $("#a-phone").value, phone = FB.phoneId(raw), pin = $("#a-pin").value;
       draft.raw = raw;
-      if (!phone) return msg("Phone number එක හරියට ගහන්න (Ex: 077 123 4567).", false, "a-phone");
+      if (!phone) return msg("Phone number එක හරියට ගහන්න (උදා: 077 123 4567).", false, "a-phone");
       if (!/^\d{6}$/.test(pin)) return msg("PIN එක digits 6ක් වෙන්න ඕන.", false, "a-pin");
       btn.disabled = true; msg("බලනවා…", true);
       try { await FB.signIn(phone, pin); portal(); }
@@ -314,7 +314,7 @@
       '<div class="acc-bar" role="progressbar" aria-label="ඉවර වෙලා තියෙන ප්‍රමාණය" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
       '<p class="acc-pct"><b>' + pct + "%</b> ඉවරයි</p>" +
       '<ol class="acc-steps">' + STAGES.map((s, i) => '<li class="' + (i < idx || st.key === "done" ? "done" : i === idx ? "now" : "") + '"' + (i === idx ? ' aria-current="step"' : "") + "><i></i><span>" + esc(s.short) + "</span></li>").join("") + "</ol>" +
-      (st.key === "new" ? '<div class="acc-wait"><b>⏳ Pending · Under review</b><p>Hexora Developer කෙනෙක් ඔයා එක්ක ඉක්මනින්ම සම්බන්ධ වෙනවා. මද වේලාවක් රැඳී ඉන්න.</p></div>' : "") +
+      (st.key === "new" ? '<div class="acc-wait"><b>⏳ අපි බලනවා</b><p>Request එක අපිට ලැබුණා. Hexora team එකෙන් කෙනෙක් ඉක්මනටම ඔයාට call කරනවා, නැත්නම් message කරනවා.</p></div>' : "") +
       (r.note ? '<div class="acc-note"><b>Hexora update</b><p>' + esc(r.note) + "</p>" + (r.updatedAt ? "<small>" + esc(fmtDay(r.updatedAt)) + "</small>" : "") + "</div>" : "") +
       '<dl class="acc-facts">' +
         (r.due ? "<div><dt>" + (st.key === "done" ? "ඉවර කළ දවස" : "ඉවර වෙන්න බලාපොරොත්තු වෙන දවස") + "</dt><dd>" + esc(fmtDay(r.due)) + "</dd></div>" : "") +

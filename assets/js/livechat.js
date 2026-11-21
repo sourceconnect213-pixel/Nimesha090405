@@ -74,9 +74,9 @@
     return '<form id="lc-form" class="lc-form" novalidate>' +
       '<p class="lc-status" id="lc-pres"><i></i><em>…</em></p>' +
       '<p class="lc-hint">ඔයා කවුද කියලා Developer ට දැනගන්න පුළුවන් වෙන්න නමයි phone number එකයි ඕන. Login වෙන්න ඕන නෑ.</p>' +
-      '<div class="field"><label for="lc-name">ඔයාගේ නම</label><input class="input" id="lc-name" type="text" autocomplete="name" maxlength="100" placeholder="Ex: Kasun Perera"></div>' +
+      '<div class="field"><label for="lc-name">ඔයාගේ නම</label><input class="input" id="lc-name" type="text" autocomplete="name" maxlength="100" placeholder="උදා: Kasun Perera"></div>' +
       '<div class="field"><label for="lc-phone">Phone number <span class="hint">(WhatsApp)</span></label><input class="input" id="lc-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX"></div>' +
-      '<div class="field"><label for="lc-msg">මොකක්ද දැනගන්න ඕන? <span class="hint">(optional)</span></label><textarea class="input" id="lc-msg" rows="2" maxlength="1000" placeholder="Ex: Mobile app එකක් හදන්න කොච්චර යයිද?"></textarea></div>' +
+      '<div class="field"><label for="lc-msg">මොකක්ද දැනගන්න ඕන? <span class="hint">(optional)</span></label><textarea class="input" id="lc-msg" rows="2" maxlength="1000" placeholder="උදා: Mobile app එකක් හදන්න කොච්චර යයිද?"></textarea></div>' +
       '<p class="lc-err" id="lc-err" role="alert"></p>' +
       '<button class="btn btn-primary btn-block" type="submit">Chat පටන් ගන්න</button>' +
       '<p class="lc-fine">Account එකක් තියෙනවද? <a href="account.html">Login</a> · <a href="account.html?new=1">Register</a></p></form>';
@@ -98,7 +98,7 @@
     const name = form.querySelector("#lc-name").value.trim(), phone = FB.phoneId(form.querySelector("#lc-phone").value), first = form.querySelector("#lc-msg").value.trim();
     err.textContent = "";
     if (name.length < 2) return void (err.textContent = "ඔයාගේ නම ගහන්න.");
-    if (!phone) return void (err.textContent = "Phone number එක හරියට ගහන්න (Ex: 077 123 4567).");
+    if (!phone) return void (err.textContent = "Phone number එක හරියට ගහන්න (උදා: 077 123 4567).");
     go.disabled = true;
     try {
       await create(name, phone);
