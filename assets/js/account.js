@@ -90,7 +90,7 @@
       '<section class="acc-card acc-gate acc-one">' +
         '<div class="acc-mark" aria-hidden="true"><span class="logo-part lp-mark"></span></div>' +
         (up ? '<h1 class="display">අලුත් <span class="grad-text">account</span> එකක්</h1>' +
-              '<p class="muted">' + esc(draft.phoneLabel || "") + ' number එකට account එකක් හම්බුනේ නෑ. නම දාලා account එක හදන්න — තත්පර 10යි.</p>'
+              '<p class="muted">' + esc(draft.phoneLabel || "") + ' number එකට account එකක් හම්බුනේ නෑ. නම දාලා account එක හදන්න. තත්පර 10යි.</p>'
             : '<h1 class="display">Hexora <span class="grad-text">account</span></h1>' +
               '<p class="muted">Phone number එකයි PIN එකයි ගහන්න. Account එක තියෙනවා නම් login වෙනවා, නැත්නම් අලුතෙන් හදනවා.</p>') +
         '<form id="acc-form" class="acc-form" novalidate>' +
@@ -105,8 +105,8 @@
           '<button class="btn btn-primary btn-block btn-lg" type="submit">' + (up ? "Account එක හදන්න" : "ඉදිරියට") + "</button>" +
         "</form>" +
         '<p class="acc-help">' + (up
-          ? "Account එක තියෙනවා නම් PIN එක වැරදියි — <button type=\"button\" class=\"acc-link\" data-mode=\"login\">ආයෙත් ගහන්න</button> · <button type=\"button\" class=\"acc-link\" data-mode=\"forgot\">PIN එක අමතකද?</button><br>" +
-            "⚠ PIN එක බැංකු / phone PIN එකක් නෙවෙයි — මේ site එකට විතරක් අලුතෙන් හදපු එකක් වෙන්න ඕන."
+          ? "Account එක තියෙනවා නම් PIN එක වැරදියි. <button type=\"button\" class=\"acc-link\" data-mode=\"login\">ආයෙත් ගහන්න</button> · <button type=\"button\" class=\"acc-link\" data-mode=\"forgot\">PIN එක අමතකද?</button><br>" +
+            "⚠ PIN එක බැංකු / phone PIN එකක් නෙවෙයි. මේ site එකට විතරක් අලුතෙන් හදපු එකක් වෙන්න ඕන."
           : lock + ' <button type="button" class="acc-link" data-mode="forgot">PIN එක අමතක උනාද?</button>') + "</p>" +
       "</section>";
     const first = up ? $("#a-name") : $("#a-phone");
@@ -222,7 +222,7 @@
     } catch (e) {
       btn.disabled = false;
       if (/EMAIL_EXISTS/.test((e && (e.msg || e.message)) || "")) {
-        draft.msg = "මේ number එකට account එකක් තියෙනවා — PIN එක වැරදියි. ආයෙත් ගහන්න, නැත්නම් “PIN එක අමතක උනාද?” ඔබන්න.";
+        draft.msg = "මේ number එකට account එකක් තියෙනවා, ඒත් PIN එක වැරදියි. ආයෙත් ගහන්න, නැත්නම් “PIN එක අමතක උනාද?” ඔබන්න.";
         mode = "login"; return gate();
       }
       msg(FB.errText(e));
@@ -327,7 +327,7 @@
   function projectsHtml(me) {
     return projects.length ? '<div class="acc-list">' + projects.map(card).join("") + "</div>" :
       '<section class="acc-card acc-empty"><h2>තාම projects නෑ</h2><p class="muted">Project request එකක් එව්වම ඒක මෙතන පේනවා. WhatsApp එකෙන් කතා කරපු project එකක් නම්, අපි ඒක ඔයාගේ account එකට දාන්නම්.</p>' +
-        '<div class="acc-actions"><a class="btn btn-primary" href="start-project.html">Project එක පටන් ගන්න</a>' +
+        '<div class="acc-actions"><a class="btn btn-primary" href="start-project.html">Project එකක් පටන් ගන්න</a>' +
         '<a class="btn btn-wa" href="' + esc(wa("Hi Hexora! මගේ project එක මගේ account එකට (" + FB.phoneLabel(me.phone) + ") දාන්න පුළුවන්ද?")) + '" target="_blank" rel="noopener">WhatsApp</a></div></section>';
   }
   function settingsHtml(me, name) {

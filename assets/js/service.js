@@ -147,7 +147,7 @@
     const wa = s ? "Hi Hexora! මට " + s.name + " ගැන කතා කරන්න ඕන." : "Hi Hexora! මට project එකක් ගැන කතා කරන්න ඕන.";
     return '<section><div class="wrap"><div class="cta-band rv"><div>' +
       '<h2 class="display">' + (s ? esc(s.name) + " ඕන ද?" : "Project එකක් තියෙනවද?") + "</h2>" +
-      '<p class="lead">ප්‍රශ්න ටිකකට උත්තර දීලා විනාඩි 2කින් estimate price එකක් ගන්න. සල්ලි ඕන නෑ, commitment එකක් නෑ.</p></div>' +
+      '<p class="lead">ප්‍රශ්න ටිකකට උත්තර දීලා විනාඩි 2කින් estimate එකක් ගන්න. Quote එකට ගාස්තුවක් නෑ, ඊට පස්සේ තීරණය ඔයාගේ.</p></div>' +
       '<div class="cta-actions"><a class="btn btn-primary" href="' + esc(s ? ctaHref(s) : "start-project.html") + '">Estimate ගන්න</a>' +
       '<a class="btn btn-wa" data-wa-link="' + esc(wa) + '" href="https://wa.me/' + esc((C.whatsapp || "").replace(/\D/g, "")) + '" target="_blank" rel="noopener">WhatsApp කරන්න</a></div>' +
       "</div></div></section>";
@@ -180,7 +180,7 @@
       '<section id="svc-pricing" class="band" data-tab="Prices"><div class="wrap">' +
         '<div class="section-head rv"><span class="eyebrow">Pricing</span><h2 class="display">' + esc(s.name) + " ගණන්</h2>" +
           (showPk(s) && C.packagesFixedLkr
-            ? '<p class="lead">Package prices fixed LKR — dollar rate එකට වෙනස් වෙන්නේ නෑ. Package එකේ ලියලා තියෙන දේට වඩා දෙයක් ඕන නම් ඒක වෙනම quote එකක්.</p></div>'
+            ? '<p class="lead">Package prices රුපියල් වලින් fixed. Dollar rate එකට වෙනස් වෙන්නේ නෑ. Package එකේ ලියලා තියෙන දේට වඩා දෙයක් ඕන නම් ඒක වෙනම quote එකක්.</p></div>'
             : '<p class="lead">මේක පටන් ගන්න ගණන්. අද dollar rate එකෙන් LKR වලට auto මාරු වෙනවා. Final price එක ඔයාට ඕන features, items ගණන අනුව වෙනස් වෙනවා.</p>' +
               '<span class="rate-pill" data-rate-pill><span class="live"></span><span data-rate-text>1 USD = LKR ' + Number(C.fallbackRate).toFixed(2) + " · approx.</span></span></div>") +
         (pricesOf(s).length ? '<div class="prices svc-prices">' + pricesOf(s).map(priceCard).join("") + "</div>" : "") +
@@ -208,7 +208,7 @@
       '<div class="section-head">' +
         (missing ? '<div class="form-alert" role="alert">මේ service එක හම්බුනේ නෑ. පහළ list එකෙන් service එකක් තෝරගන්න.</div>' : "") +
         '<ol class="crumbs fade-up" style="--d:80ms"><li><a href="index.html">Home</a></li><li>Services</li></ol>' +
-        '<h1 class="display" data-split style="--d:150ms">ඔක්කොම services</h1>' +
+        '<h1 class="display" data-split style="--d:150ms">සියලුම services</h1>' +
         '<p class="lead fade-up" style="--d:450ms">Service එකක් තෝරගන්න. හැම එකකම animation එක, මොකද ලැබෙන්නේ, pricing සහ FAQ තියෙනවා.</p>' +
       "</div>" +
       indexHtml(Object.keys(S.categories)) +
@@ -227,7 +227,7 @@
 
   document.title = (cur ? cur.name : "Services") + " | Hexora";
   const meta = $('meta[name="description"]');
-  if (meta && cur) meta.setAttribute("content", cur.name + " — " + cur.summary);
+  if (meta && cur) meta.setAttribute("content", cur.name + ": " + cur.summary);
   if (cur) {
     // the share card and search snippet for this service
     const setMeta = (sel, v) => { const m = $(sel); if (m) m.setAttribute("content", v); };

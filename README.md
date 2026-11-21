@@ -13,7 +13,25 @@ Built with plain **HTML + CSS + JavaScript**. No installs, no build step, no ser
 | `admin.html` | PIN-locked admin panel (see below); its **Pages** tab edits the text of every page with a live preview. It is not linked from the public pages (like a normal admin panel): open `…/admin.html` or `…/admin/` directly, and add it to the phone's home screen. |
 | `privacy.html` | What data the site keeps (form, account/PIN copy, chat), where, who sees it, how to ask for deletion. Linked from every footer. |
 | `404.html` | "Page එක හම්බුනේ නෑ" page (GitHub Pages shows it for a wrong link). |
-| `robots.txt`, `sitemap.xml` | For Google: the admin page is excluded and every page / service is listed. The addresses in them are the GitHub Pages address — change them if you get your own domain (also `og:url`, `og:image` and the JSON-LD block in `index.html`). |
+| `robots.txt`, `sitemap.xml` | For Google: the admin page is excluded and every page / service is listed, at **https://hexoraworks.com** (also `og:url`, `og:image`, canonical links and the JSON-LD block in `index.html`). |
+| `CNAME` | The custom domain (`hexoraworks.com`) for GitHub Pages. |
+
+## Domain: hexoraworks.com (Cloudflare DNS → GitHub Pages)
+The `CNAME` file tells GitHub Pages to serve the site at `hexoraworks.com`. In **Cloudflare → hexoraworks.com → DNS → Records**, set (Proxy status **DNS only**, grey cloud):
+| Type | Name | Content |
+|---|---|---|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `sourceconnect213-pixel.github.io` |
+Delete any other A / AAAA / CNAME record on `@` or `www` (Cloudflare's parking records). Then **GitHub → repo Settings → Pages → Custom domain** = `hexoraworks.com`, Save, and tick **Enforce HTTPS** when the certificate is ready (minutes to a few hours). The old `…github.io/Nimesha090405/` address then redirects to the domain.
+
+## Launch countdown (`assets/js/launch.js`)
+Until **2026-11-22 12:00 (Sri Lanka time)** every public page shows only a countdown; at that moment open pages reload and the site appears. The admin panel is never hidden.
+- See the real site before launch: add `?preview=hexora` to any address (remembered in that browser); `?preview=off` shows the countdown again.
+- The time is checked against the server clock, so a phone with a wrong clock still opens on time.
+- Change `LAUNCH` at the top of the file to move the launch. After launch the file does nothing; remove the `<script src="assets/js/launch.js">` line from the pages whenever convenient.
 
 ## Folder structure
 ```
@@ -25,6 +43,7 @@ hexora-website/
 ├─ privacy.html
 ├─ 404.html
 ├─ admin.html
+├─ CNAME                 custom domain (hexoraworks.com)
 ├─ firestore.rules       Firebase security rules (paste into the Firebase console)
 ├─ README.md
 └─ assets/
@@ -32,6 +51,7 @@ hexora-website/
    ├─ css/admin.css        admin panel design
    ├─ js/config.js         prices, WhatsApp, email, links (starting data; the admin panel edits the live copy)
    ├─ js/pricing.js        USD → LKR rate + price maths
+   ├─ js/launch.js         launch countdown screen (until 2026-11-22 12:00 SL time; ?preview=hexora to see the site)
    ├─ js/nav.js            navigation: phone menu, anchor links, current page / section, back to top, login state in the header (loaded straight from the page, not through boot.js)
    ├─ js/main.js           animations, video, live prices, tabs, and loading the 3D (only when it is about to be seen)
    ├─ js/hx3d.js           the 3D scenes (Three.js, built from tools/hx3d — do not edit by hand)

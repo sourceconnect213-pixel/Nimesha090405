@@ -40,7 +40,7 @@
     cards.forEach(c => c.classList.remove("fit"));
     const fits = cards.filter(c => { const v = Number(c.dataset.lkr); return v >= lo && v < hi; });
     const out = finder.querySelector(".pk-f-out");
-    if (!fits.length) { out.textContent = "මේ budget එකට package එකක් නෑ — chat කරලා custom quote එකක් ගන්න."; return; }
+    if (!fits.length) { out.textContent = "මේ budget එකට package එකක් නෑ, chat කරලා custom quote එකක් ගන්න."; return; }
     const best = fits[fits.length - 1];
     fits.forEach(c => c.classList.add("fit"));
     out.innerHTML = "හරියන්නේ: <b>" + esc(best.querySelector(".pkc-name").textContent) + "</b>" + (fits.length > 1 ? " (තව " + (fits.length - 1) + " ක්)" : "");

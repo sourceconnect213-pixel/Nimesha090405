@@ -163,7 +163,7 @@
     try {
       await create(who.name, phone, "(Request " + (who.ref || "") + " ගැන chat)");
       showChat();
-      await A.send(guest.id, null, "c", { kind: "text", text: "Hi! මම දැන් project request එකක් එව්වා — Ref: " + (who.ref || "") });
+      await A.send(guest.id, null, "c", { kind: "text", text: "Hi! මම දැන් project request එකක් එව්වා. Ref: " + (who.ref || "") });
     } catch (e) { isOpen = false; open(); }
   }
   window.HXLive = { open: open, start: start };
