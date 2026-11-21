@@ -97,7 +97,7 @@
         '<h1 style="--i:2">Something <span class="hxl-grad">Powerful</span> Is Coming.</h1>' +
         '<p class="hxl-si" lang="si" style="--i:3">නව ඩිජිටල් අත්දැකීමකට සූදානම් වන්න.</p>' +
         '<p class="hxl-sub" style="--i:4">Building the future through technology, creativity, and innovation.</p>' +
-        '<p class="hxl-svc" style="--i:5"><span>Web Development</span><b aria-hidden="true">•</b><span>Mobile Applications</span><b aria-hidden="true">•</b><span>Branding</span><b aria-hidden="true">•</b><span>Creative Solutions</span></p>' +
+        '<p class="hxl-svc" style="--i:5"><span>Web Development</span><b aria-hidden="true"> • </b><span>Mobile Applications</span><b aria-hidden="true"> • </b><span>Branding</span><b aria-hidden="true"> • </b><span>Creative Solutions</span></p>' +
         '<div class="hxl-cd" role="timer" aria-label="Time left until launch" style="--i:6">' +
           UNITS.map(function (u) { return '<div class="hxl-u"><span class="hxl-n" data-u="' + u[0] + '"><span>00</span></span><span class="hxl-l">' + u[1] + "</span></div>"; }).join("") +
         "</div>" +
