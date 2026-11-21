@@ -432,7 +432,7 @@
   const SECTIONS = [
     ["dash", "Dashboard", '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>', [["home", "Dashboard"]]],
     ["orders", "Orders", '<path d="M4 13l2-8h12l2 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>', [["requests", "Requests"], ["live", "Live chat"], ["customers", "Customers"]]],
-    ["site", "Website", '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>', [["pages", "Texts"], ["content", "Home page"], ["services", "Services"], ["prices", "Prices"], ["images", "Images"], ["notice", "Notice bar"], ["contact", "Contact"]]],
+    ["site", "Website", '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>', [["launch", "Launch"], ["pages", "Texts"], ["content", "Home page"], ["services", "Services"], ["prices", "Prices"], ["images", "Images"], ["notice", "Notice bar"], ["contact", "Contact"]]],
     ["settings", "Settings", '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>', [["security", "PIN"], ["history", "History"]]]];
   const TAB_GROUPS = SECTIONS.map(x => [x[1], x[3]]);
   const TABS = TAB_GROUPS.reduce((a, g) => a.concat(g[1]), []);
@@ -788,6 +788,67 @@
       '<div class="ad-preview"><span class="ad-hint">Preview</span><div class="notice-bar static"><span data-live="config.notice.text">' + esc(n.text || "Notice text") + "</span>" +
       (n.link ? '<a href="#" data-live="config.notice.linkText">' + esc(n.linkText || "බලන්න →") + "</a>" : "") + "</div></div>",
       "Offers, holidays වගේ දේවල් හැම page එකකම උඩින්ම පෙන්නන්න. Visitor ට ඒක වහන්න පුළුවන්.");
+  };
+
+  /* ---------- Launch: the countdown page (site/launch, read by assets/js/launch.js on every public page) ---------- */
+  const LAUNCH_DEFAULT = { enabled: true, at: "2026-11-22T12:00:00+05:30", intro: true };   // the same default as launch.js
+  const SL = 19800000;   // Sri Lanka is UTC+5:30, no daylight saving
+  const slParts = iso => { const t = Date.parse(iso); if (isNaN(t)) return ["", ""]; const x = new Date(t + SL).toISOString(); return [x.slice(0, 10), x.slice(11, 16)]; };
+  const slIso = (date, time) => (/^\d{4}-\d{2}-\d{2}$/.test(date) && /^\d{2}:\d{2}$/.test(time) ? date + "T" + time + ":00+05:30" : "");
+  const leftText = ms => { const s = Math.max(0, Math.floor(ms / 1000)), d = Math.floor(s / 86400), h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60;
+    return (d ? d + " දවස් " : "") + (d || h ? h + " පැය " : "") + m + " මිනිත්තු " + (d ? "" : (s % 60) + " තත්පර"); };
+  async function loadLaunch() {
+    S.launch = { loading: true };
+    try {
+      const d = await fs("GET", "/site/launch").then(fromDoc).catch(e => { if (e.status === 404) return null; throw e; });
+      const v = Object.assign({}, LAUNCH_DEFAULT);
+      if (d) { if (typeof d.enabled === "boolean") v.enabled = d.enabled; if (typeof d.intro === "boolean") v.intro = d.intro; if (d.at && !isNaN(Date.parse(d.at))) v.at = d.at; }
+      S.launch = { saved: v, form: Object.assign({}, v), exists: !!d, updatedAt: d ? d.updatedAt || d.updateTime : "" };
+    } catch (e) { S.launch = { err: errText(e) }; }
+    if (S.tab === "launch") renderTab();
+  }
+  function launchForm() {   // what is in the boxes now
+    const L = S.launch, f = L.form, on = $("#ln-on"), intro = $("#ln-intro"), dt = $("#ln-date"), tm = $("#ln-time");
+    if (on) f.enabled = on.checked; if (intro) f.intro = intro.checked;
+    if (dt && tm) { const iso = slIso(dt.value, tm.value); if (iso) f.at = iso; }
+    return f;
+  }
+  function launchStatus(f) {
+    const left = Date.parse(f.at) - Date.now();
+    if (!f.enabled) return ["off", "Countdown page එක off. Site එක හැමෝටම පේනවා."];
+    if (left > 0) return ["on", "Countdown එක පේනවා. Site එක open වෙන්න තව " + leftText(left) + "."];
+    return ["live", "Launch වෙලාව පහු වුණා: site එක open." + (f.intro ? " අලුතෙන් එන අයට intro animation එක එක පාරක් පේනවා (සතියක් යනකම්)." : "")];
+  }
+  function paintLaunchStatus() {
+    const el = $("#ln-status"); if (!el || !S.launch || !S.launch.form) return;
+    const st = launchStatus(launchForm());
+    el.dataset.state = st[0]; el.textContent = st[1];
+    const dirtyNow = JSON.stringify(S.launch.form) !== JSON.stringify(S.launch.saved);
+    const b = $("#ln-save"); if (b) b.textContent = dirtyNow ? "Save කරන්න (save නොකරපු වෙනස් තියෙනවා)" : "Save කරන්න";
+  }
+  setInterval(() => { if (S.tab === "launch") paintLaunchStatus(); }, 1000);
+  VIEWS.launch = () => {
+    const L = S.launch;
+    if (!L) { setTimeout(loadLaunch, 0); return card("Launch countdown", '<p class="muted">ගන්නවා…</p>'); }
+    if (L.loading) return card("Launch countdown", '<p class="muted">ගන්නවා…</p>');
+    if (L.err) return card("Launch countdown", '<p class="ad-note">Load කරන්න බැරි උනා: ' + esc(L.err) + '</p><div class="ad-add"><button type="button" class="btn ad-small" data-act="ln-reload">' + icon(I.reload) + " ආයෙත් try කරන්න</button></div>");
+    const f = L.form, p = slParts(f.at);
+    return card("Launch countdown",
+      '<p class="ad-ln-status" id="ln-status" role="status"></p>' +
+      '<div class="ad-grid">' +
+        '<div class="ad-field wide"><label class="ad-check"><input type="checkbox" id="ln-on"' + (f.enabled ? " checked" : "") + '><span>Countdown page එක on (launch වෙලාව වෙනකන් site එක වෙනුවට countdown එක පේනවා)</span></label></div>' +
+        '<div class="ad-field"><label for="ln-date">Launch දවස</label><input class="input" type="date" id="ln-date" value="' + esc(p[0]) + '"></div>' +
+        '<div class="ad-field"><label for="ln-time">වෙලාව (ලංකාවේ වෙලාව)</label><input class="input" type="time" id="ln-time" step="60" value="' + esc(p[1]) + '"></div>' +
+        '<div class="ad-field wide"><span class="ad-hint">ඉක්මනට කල් දාන්න / ගේන්න (ඊට පස්සේ Save කරන්න)</span><div class="ad-add">' +
+          [[15, "+15 min"], [60, "+1 hour"], [1440, "+1 day"], [-60, "−1 hour"]].map(x => '<button type="button" class="btn ad-small" data-act="ln-add" data-min="' + x[0] + '">' + x[1] + "</button>").join("") +
+          '<button type="button" class="btn ad-small" data-act="ln-now">දැන්ම launch කරන්න</button></div></div>' +
+        '<div class="ad-field wide"><label class="ad-check"><input type="checkbox" id="ln-intro"' + (f.intro ? " checked" : "") + '><span>Launch වෙද්දී Hexora intro animation එක පෙන්නන්න</span></label></div>' +
+      "</div>" +
+      '<div class="ad-add ad-ln-acts"><button type="button" class="btn btn-primary" id="ln-save" data-act="ln-save">Save කරන්න</button>' +
+        '<a class="btn ad-small" href="index.html?preview=off" target="_blank" rel="noopener">Countdown එක බලන්න ' + icon(I.ext) + "</a>" +
+        '<a class="btn ad-small" href="index.html?intro=1&preview=hexora" target="_blank" rel="noopener">Intro එක බලන්න ' + icon(I.ext) + "</a></div>" +
+      (L.updatedAt ? '<p class="ad-hint">අන්තිමට save කළේ: ' + esc(fmtDate(L.updatedAt)) + "</p>" : '<p class="ad-hint">තාම save කරලා නෑ: site එක built-in වෙලාව (2026-11-22 දවල් 12:00) පාවිච්චි කරනවා.</p>'),
+      "Save කළාම site එකේ open කරලා තියෙන countdown pages විනාඩි කීපයකින් (අන්තිම විනාඩිය ළඟ තත්පර කීපයකින්) අලුත් වෙලාවට මාරු වෙනවා. ඔයාගේ browser එකේ site එක launch එකට කලින් බලන්න: index.html?preview=hexora (නවත්තන්න ?preview=off).");
   };
 
   VIEWS.contact = () => card("Contact details", grid(
@@ -1406,6 +1467,28 @@
       case "pg-reload": { const fr = pgFrame(); if (fr) { S.pg = null; fr.src = pgSrc(S.pgFile); } break; }
       case "pg-reset": { const r = (S.pgRows || [])[Number(d.i)]; if (!r) return; delete S.data.texts[r.key]; const ta = $('[data-pgi="' + d.i + '"]'); if (ta) ta.value = r.orig; const row = ta && ta.closest(".pg-row"); if (row) { row.classList.remove("changed"); const w = row.querySelector(".pg-was"); if (w) w.remove(); } pgCount(); updateSaveBar(); pgSend(); break; }
       case "pg-resetall": { if (!armed(b, "ඇත්තටම? ආයෙත් ඔබන්න")) return; (S.pgRows || []).forEach(r => { delete S.data.texts[r.key]; }); S.pg && paintPgList(); const l = $("#pg-list"); if (l) { l.innerHTML = ""; paintPgList(); } updateSaveBar(); pgSend(); break; }
+      case "ln-reload": loadLaunch(); renderTab(); break;
+      case "ln-add": case "ln-now": {
+        const f = launchForm();
+        const t = d.act === "ln-now" ? Math.ceil((Date.now() + 60000) / 60000) * 60000 : Date.parse(f.at) + Number(d.min) * 60000;
+        const x = new Date(t + SL).toISOString();
+        $("#ln-date").value = x.slice(0, 10); $("#ln-time").value = x.slice(11, 16);
+        if (d.act === "ln-now") $("#ln-on").checked = true;
+        paintLaunchStatus(); break;
+      }
+      case "ln-save": {
+        const dt = $("#ln-date"), tm = $("#ln-time");
+        if (!slIso(dt.value, tm.value)) return toast("දවස සහ වෙලාව දෙකම දාන්න.", true);
+        const f = launchForm();
+        b.disabled = true;
+        try {
+          await fs("PATCH", "/site/launch", { fields: toFields({ enabled: f.enabled, at: f.at, intro: f.intro, updatedAt: new Date() }) });
+          S.launch.saved = Object.assign({}, f); S.launch.exists = true; S.launch.updatedAt = new Date().toISOString();
+          try { localStorage.setItem("hx_launch_v1", JSON.stringify(f)); } catch (e) { /* storage blocked */ }
+          renderTab(); toast(launchStatus(f)[1]);
+        } catch (err) { b.disabled = false; toast(errText(err), true); }
+        break;
+      }
       case "menu": setMenu(!document.documentElement.classList.contains("ad-nav-open")); break;
       case "menu-close": setMenu(false); break;
       case "img-clear": setField(d.path, ""); break;
