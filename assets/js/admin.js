@@ -839,8 +839,8 @@
         '<div class="ad-field wide"><label class="ad-check"><input type="checkbox" id="ln-on"' + (f.enabled ? " checked" : "") + '><span>Countdown page එක on (launch වෙලාව වෙනකන් site එක වෙනුවට countdown එක පේනවා)</span></label></div>' +
         '<div class="ad-field"><label for="ln-date">Launch දවස</label><input class="input" type="date" id="ln-date" value="' + esc(p[0]) + '"></div>' +
         '<div class="ad-field"><label for="ln-time">වෙලාව (ලංකාවේ වෙලාව)</label><input class="input" type="time" id="ln-time" step="60" value="' + esc(p[1]) + '"></div>' +
-        '<div class="ad-field wide"><span class="ad-hint">ඉක්මනට කල් දාන්න / ගේන්න (ඊට පස්සේ Save කරන්න)</span><div class="ad-add">' +
-          [[15, "+15 min"], [60, "+1 hour"], [1440, "+1 day"], [-60, "−1 hour"]].map(x => '<button type="button" class="btn ad-small" data-act="ln-add" data-min="' + x[0] + '">' + x[1] + "</button>").join("") +
+        '<div class="ad-field wide"><span class="ad-hint">විනාඩියෙන් විනාඩිය කල් දාන්න / ගේන්න (ඊට පස්සේ Save කරන්න)</span><div class="ad-add">' +
+          [[-60, "−1 hour"], [-15, "−15 min"], [-1, "−1 min"], [1, "+1 min"], [5, "+5 min"], [15, "+15 min"], [60, "+1 hour"], [1440, "+1 day"]].map(x => '<button type="button" class="btn ad-small" data-act="ln-add" data-min="' + x[0] + '">' + x[1] + "</button>").join("") +
           '<button type="button" class="btn ad-small" data-act="ln-now">දැන්ම launch කරන්න</button></div></div>' +
         '<div class="ad-field wide"><label class="ad-check"><input type="checkbox" id="ln-intro"' + (f.intro ? " checked" : "") + '><span>Launch වෙද්දී Hexora intro animation එක පෙන්නන්න</span></label></div>' +
       "</div>" +
