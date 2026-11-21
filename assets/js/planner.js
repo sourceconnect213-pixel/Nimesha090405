@@ -119,7 +119,7 @@
       ? "මේක estimate එකක්. Final price එක free call එකෙන් පස්සේ fixed quote එකක් විදියට දෙනවා. Google / Apple / domain fees වෙනම."
       : isPkg(t)
         ? (C.packagesFixedLkr
-          ? "Package එකේ fixed development price එක. Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න — ඒකට වෙනම quote එකක්. Urgent ඕන නම් call එකෙන් confirm කරනවා. " + (C.packageNote || "")
+          ? "Package එකේ fixed development price එක. Package එකේ නැති දෙයක් ඕන නම් Idea එකේ ලියන්න, ඒකට වෙනම quote එකක්. Urgent ඕන නම් call එකෙන් confirm කරනවා. " + (C.packageNote || "")
           : "Package එකයි තෝරපු වෙනස්කම් ටිකයි එකතු කරපු price එක. අද dollar rate එකට අනුව වෙනස් වෙනවා. Final price එක call එකෙන් පස්සේ confirm කරනවා. Google / Apple fees වෙනම.")
         : "මේක estimate එකක්. Revisions include. Final price එක chat එකෙන් confirm කරලා වැඩ පටන් ගන්නවා.";
   }
@@ -184,24 +184,24 @@
   /* ---------- render estimate ---------- */
   // the examples in the "project idea" fields follow what the customer picked (an app, a website, a logo, a video …)
   const EXAMPLES = {
-    app: ["Ex: QuickFix, Perera Hardware App", "Ex: Customers, delivery riders, shop staff",
-      "Ex: Customersලා phone එකෙන් order දාලා status එක බලන්න app එකක් ඕන. Screens: Home, Products, Cart, Orders, Profile. Login email එකෙන්.", "Ex: PickMe / Daraz වගේ app එකක්, Play Store link එකක්"],
-    web: ["Ex: Perera Hardware website", "Ex: Customers, Google එකෙන් හොයන අය",
-      "Ex: Pages 5ක business site එකක් ඕන — Home, About, Services, Gallery, Contact. Products 20ක් විතර, WhatsApp button එකක් එක්ක.", "Ex: කැමති website එකක link එක, logo / photos Google Drive link එක"],
-    backend: ["Ex: Shop app admin panel", "Ex: Admin, shop staff, delivery team",
-      "Ex: දැනට තියෙන Flutter app එකට Firebase login, products database සහ orders බලන්න web admin panel එකක් ඕන. Staff 3ක් use කරනවා.", "Ex: App එකේ Play Store link එක, දැනට තියෙන admin panel එකක screenshot"],
-    ai: ["Ex: Website AI chatbot", "Ex: Website visitors, customers, office staff",
-      "Ex: Website එකට Sinhala / English FAQ chatbot එකක් ඕන. ප්‍රශ්න 40ක් විතර, price list PDF එකෙන් උත්තර දෙන්න ඕන, බැරි නම් WhatsApp එකට යවන්න.", "Ex: Website link එක, FAQ / price list documents Google Drive link එක"],
-    maint: ["Ex: Perera Hardware website care", "Ex: Customers, online shop buyers",
-      "Ex: WordPress + WooCommerce site එකක් තියෙනවා. Plugins update, weekly backups, speed එක සහ security බලාගන්න මාසික plan එකක් ඕන.", "Ex: Site එකේ link එක, hosting එක (Ex: Hostinger), දැනට තියෙන ප්‍රශ්න"],
-    logo: ["Ex: Perera Bakers logo", "Ex: Customers, shop එකට එන අය",
-      "Ex: මගේ cake shop එකට logo එකක් ඕන. Blue සහ white colours, simple සහ modern. Signboard සහ Facebook page එකට use කරනවා.", "Ex: කැමති logos වල links / Pinterest board එක"],
-    design: ["Ex: New Year offer posts", "Ex: Facebook / Instagram followers, customers",
-      "Ex: Facebook / Instagram posts 8ක් ඕන මාසෙට — offers, new products. Brand colours සහ logo එක තියෙනවා. Sinhala text එක්ක.", "Ex: කැමති page එකක link එක, logo / photos Google Drive link එක"],
-    photo: ["Ex: Product photos edit", "Ex: Online shop customers",
-      "Ex: Product photos 30ක background එක සුදු කරලා, colour සහ light හදලා දෙන්න ඕන. Daraz / website එකට.", "Ex: Photos Google Drive link එක, කැමති example එකක්"],
-    video: ["Ex: YouTube channel videos", "Ex: YouTube viewers, TikTok / Reels followers",
-      "Ex: YouTube video 4ක් edit කරන්න ඕන, විනාඩි 10 ගානේ — subtitles, music, thumbnails එක්ක. Reels 8කුත් ඕන.", "Ex: Footage Google Drive link එක, කැමති channel එකක link එක"]
+    app: ["උදා: QuickFix, Perera Hardware App", "උදා: Customers, delivery riders, shop staff",
+      "උදා: Customersලා phone එකෙන් order දාලා status එක බලන්න app එකක් ඕන. Screens: Home, Products, Cart, Orders, Profile. Login email එකෙන්.", "උදා: PickMe / Daraz වගේ app එකක්, Play Store link එකක්"],
+    web: ["උදා: Perera Hardware website", "උදා: Customers, Google එකෙන් හොයන අය",
+      "උදා: Pages 5ක business site එකක් ඕන, Home, About, Services, Gallery, Contact. Products 20ක් විතර, WhatsApp button එකක් එක්ක.", "උදා: කැමති website එකක link එක, logo / photos Google Drive link එක"],
+    backend: ["උදා: Shop app admin panel", "උදා: Admin, shop staff, delivery team",
+      "උදා: දැනට තියෙන Flutter app එකට Firebase login, products database සහ orders බලන්න web admin panel එකක් ඕන. Staff 3ක් use කරනවා.", "උදා: App එකේ Play Store link එක, දැනට තියෙන admin panel එකක screenshot"],
+    ai: ["උදා: Website AI chatbot", "උදා: Website visitors, customers, office staff",
+      "උදා: Website එකට Sinhala / English FAQ chatbot එකක් ඕන. ප්‍රශ්න 40ක් විතර, price list PDF එකෙන් උත්තර දෙන්න ඕන, බැරි නම් WhatsApp එකට යවන්න.", "උදා: Website link එක, FAQ / price list documents Google Drive link එක"],
+    maint: ["උදා: Perera Hardware website care", "උදා: Customers, online shop buyers",
+      "උදා: WordPress + WooCommerce site එකක් තියෙනවා. Plugins update, weekly backups, speed එක සහ security බලාගන්න මාසික plan එකක් ඕන.", "උදා: Site එකේ link එක, hosting එක (උදා: Hostinger), දැනට තියෙන ප්‍රශ්න"],
+    logo: ["උදා: Perera Bakers logo", "උදා: Customers, shop එකට එන අය",
+      "උදා: මගේ cake shop එකට logo එකක් ඕන. Blue සහ white colours, simple සහ modern. Signboard සහ Facebook page එකට use කරනවා.", "උදා: කැමති logos වල links / Pinterest board එක"],
+    design: ["උදා: New Year offer posts", "උදා: Facebook / Instagram followers, customers",
+      "උදා: Facebook / Instagram posts 8ක් ඕන මාසෙට, offers, new products. Brand colours සහ logo එක තියෙනවා. Sinhala text එක්ක.", "උදා: කැමති page එකක link එක, logo / photos Google Drive link එක"],
+    photo: ["උදා: Product photos edit", "උදා: Online shop customers",
+      "උදා: Product photos 30ක background එක සුදු කරලා, colour සහ light හදලා දෙන්න ඕන. Daraz / website එකට.", "උදා: Photos Google Drive link එක, කැමති example එකක්"],
+    video: ["උදා: YouTube channel videos", "උදා: YouTube viewers, TikTok / Reels followers",
+      "උදා: YouTube video 4ක් edit කරන්න ඕන, විනාඩි 10 ගානේ, subtitles, music, thumbnails එක්ක. Reels 8කුත් ඕන.", "උදා: Footage Google Drive link එක, කැමති channel එකක link එක"]
   };
   const CR_KIND = { logo: "logo", brand: "logo", social: "design", poster: "design", thumb: "design", photo: "photo", reel: "video", youtube: "video", motion: "video", promo: "video" };
   function setExamples() {
@@ -386,7 +386,7 @@
       const feats = sel.features.filter(k => !(k === "admin" && t.includesAdmin)).map(k => C.features[k].label);
       if (t.includesAdmin) feats.unshift("Admin Panel (included)");
       const extras = sel.extras.map(k => C.extras[k].label);
-      L.push("*Project — App / Website / System*");
+      L.push("*Project: App / Website / System*");
       L.push("Type: " + t.label + " (" + s.label + " – " + s.note + ")");
       L.push("Features: " + (feats.length ? feats.join(", ") : "-"));
       L.push("Design: " + (C.design[sel.design] ? C.design[sel.design].label : "-"));
@@ -394,11 +394,11 @@
     } else if (est.kind === "pkg") {
       const ps = pkgSel(), p = C.packages[ps.pkg];
       const ad = ps.addons.map(k => C.addons[k].label).concat(Object.keys(ps.qty).map(k => C.addons[k].label + " × " + ps.qty[k]));
-      L.push({ web: "*Project — Website Package*", backend: "*Project — Backend & Admin Package*", ai: "*Project — AI Features & Automation Package*", maint: "*Maintenance plan (monthly)*" }[p.cat] || "*Project — Mobile App Package*");
+      L.push({ web: "*Project: Website Package*", backend: "*Project: Backend & Admin Package*", ai: "*Project: AI Features & Automation Package*", maint: "*Maintenance plan (monthly)*" }[p.cat] || "*Project: Mobile App Package*");
       L.push("Package: " + p.label + " (" + (p.from ? "from " : "") + pk(p.lkr) + (p.from ? "+" : "") + (p.monthly ? " / month" : "") + (p.platform ? " · " + p.platform : "") + ")");
       L.push("Changes / add-ons: " + (ad.length ? ad.join(", ") : "-"));
     } else {
-      L.push("*Project — Logo, Design & Video*");
+      L.push("*Project: Logo, Design & Video*");
       est.raw.lines.filter(l => l.key).forEach(l => {
         L.push("• " + l.label + " = " + P.formatLKR(l.lkr));
       });
@@ -451,8 +451,8 @@
       })
       .catch(e => {
         // offline or refused: say so, so the customer sends it by WhatsApp / Email instead of thinking it arrived
-        if (sent === job) sumState("send", e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ — පහළ button එකකින් අපිට එවන්න." : "පහළ button එකකින් අපිට එවන්න.");
-        if (sent === job) toast(e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ — WhatsApp / Email එකෙන් එවන්න." : "Request එක save කරන්න බැරි උනා — WhatsApp / Email එකෙන් එවන්න.");
+        if (sent === job) sumState("send", e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ, පහළ button එකකින් අපිට එවන්න." : "පහළ button එකකින් අපිට එවන්න.");
+        if (sent === job) toast(e && e.reason === "NETWORK" ? "Internet නැති නිසා save උනේ නෑ, WhatsApp / Email එකෙන් එවන්න." : "Request එක save කරන්න බැරි උනා, WhatsApp / Email එකෙන් එවන්න.");
       });
   }
   // the summary has three states: "saving" (a moment), "ok" (in Hexora's inbox) and "send" (not saved: send it by hand)
@@ -484,7 +484,7 @@
     const fallback = () => {
       selectText(pre);
       let ok = false; try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
-      toast(ok ? "Copy කළා ✓" : "Text එක select කළා — Copy කරන්න");
+      toast(ok ? "Copy කළා ✓" : "Text එක select කළා, Copy කරන්න");
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(() => toast("Copy කළා ✓"), fallback);
@@ -559,11 +559,11 @@
     $("#send-email").href = "mailto:" + C.email + "?subject=" + encodeURIComponent("New project request – " + ref) + "&body=" + encodeURIComponent(plain);
     $("#copy-btn").onclick = () => copy(plain);
     $$("[data-ref]").forEach(el => { el.textContent = ref; });
-    $("#wa-now").href = window.hxWhatsAppLink("Hi Hexora! මම project request එකක් එව්වා — Ref: " + ref);
+    $("#wa-now").href = window.hxWhatsAppLink("Hi Hexora! මම project request එකක් එව්වා, Ref: " + ref);
     const who = { name: ($("#f-name").value || "").trim(), phone: ($("#f-phone").value || "").trim(), ref: ref };
     $("#chat-now").onclick = () => {
       if (window.HXLive) window.HXLive.start(who);
-      else window.open(window.hxWhatsAppLink("Hi Hexora! මම project request එකක් එව්වා — Ref: " + ref), "_blank", "noopener");
+      else window.open(window.hxWhatsAppLink("Hi Hexora! මම project request එකක් එව්වා, Ref: " + ref), "_blank", "noopener");
     };
     if (sent.ok) showSaved();
     else if (FB && FB.ready && window.fetch) { sumState("saving"); saveRequest(sent, plain, currentEstimate()); }
