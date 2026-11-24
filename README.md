@@ -16,6 +16,23 @@ Built with plain **HTML + CSS + JavaScript**. No installs, no build step, no ser
 | `robots.txt`, `sitemap.xml` | For Google: the admin page is excluded and every page / service is listed, at **https://hexoraworks.com** (also `og:url`, `og:image`, canonical links and the JSON-LD block in `index.html`). |
 | `CNAME` | The custom domain (`hexoraworks.com`) for GitHub Pages. |
 
+## Shop (`index.html`, `shop.html`, `product.html`, `cart.html`)
+The site works like an online store: a search box and a cart in the header, categories, a product grid, product pages, a cart and checkout.
+- **Products are not typed twice.** `assets/js/catalog.js` builds them from the price list in `config.js`: every package (apps, websites, backend, AI, maintenance) and every design / video item (`creative`). Change a price in the admin panel and the shop follows. "From" packages (Custom …) open the quote form instead of the cart. UI/UX design (a % of a project) links to its page.
+- **Pictures**: each product shows its category's colours and the service icon (no stock photos).
+- **Cart**: kept in the visitor's browser. A one-time job pays the advance % (50%) when the order is confirmed; a monthly plan pays its first month.
+- **Checkout needs a login** (phone + PIN, or Google). The order is saved in Firestore as a request with `track: "shop"`: it shows in the admin panel → Requests as "🛒 Shop order" (the message lists every item, the totals and the customer's notes), and in the customer's "මගේ projects".
+- **Paying**: bank transfer. Put the account in admin panel → Website → Contact → *Bank details*; the customer sees it right after ordering, with the order number as the reference. Until it is filled in, the page says the details come on WhatsApp.
+- **Card payments (PayHere)**: the option shows as "ළඟදීම" while `payhere.enabled` is `false` in `config.js`. Turning it on needs a PayHere merchant account and a small server function (Firebase Blaze + Cloud Functions) that signs each payment and confirms PayHere's notification; the merchant secret must never be in the site's code.
+
+## Login with Google
+1. Firebase console → Authentication → Sign-in method → **Google** → Enable → Save. Open it again and copy the **Web client ID** (ends with `.apps.googleusercontent.com`).
+2. Firebase console → Authentication → Settings → **Authorized domains** → add `hexoraworks.com` and `www.hexoraworks.com`.
+3. Google Cloud console (same project) → APIs & Services → Credentials → that Web client → **Authorized JavaScript origins** → add `https://hexoraworks.com` and `https://www.hexoraworks.com`.
+4. Put the client ID in `assets/js/firebase-config.js` → `googleClientId`.
+5. Publish the new `firestore.rules` (Firebase console → Firestore → Rules → paste → Publish): it lets Google customers save their own profile (name, phone, their Google email) and allows `shop` orders.
+Until step 4, the Google button is simply not shown. The first time someone logs in with Google they are asked for their phone number once.
+
 ## Domain: hexoraworks.com (Cloudflare DNS → GitHub Pages)
 The `CNAME` file tells GitHub Pages to serve the site at `hexoraworks.com`. In **Cloudflare → hexoraworks.com → DNS → Records**, set (Proxy status **DNS only**, grey cloud):
 | Type | Name | Content |
@@ -41,7 +58,10 @@ Until the admin saves for the first time, the built-in launch time is **2026-11-
 ## Folder structure
 ```
 hexora-website/
-├─ index.html
+├─ index.html            the store front (banners, categories, products) + why / process / FAQ tabs
+├─ shop.html             search results and categories
+├─ product.html          one product: price, time, what is in it, add to cart
+├─ cart.html             cart, checkout, order receipt
 ├─ service.html
 ├─ start-project.html
 ├─ account.html
@@ -57,6 +77,9 @@ hexora-website/
    ├─ css/launch.css       launch screen design
    ├─ js/config.js         prices, WhatsApp, email, links (starting data; the admin panel edits the live copy)
    ├─ js/pricing.js        USD → LKR rate + price maths
+   ├─ js/catalog.js        shop products (built from config.js) + the cart
+   ├─ js/shop.js           draws the store front, shop, product and cart pages
+   ├─ css/shop.css         shop design (header search + cart too)
    ├─ js/launch.js         launch screen: countdown, intro motion, "we are live" (admin panel → Launch)
    ├─ js/nav.js            navigation: phone menu, anchor links, current page / section, back to top, login state in the header (loaded straight from the page, not through boot.js)
    ├─ js/main.js           animations, video, live prices, tabs, and loading the 3D (only when it is about to be seen)

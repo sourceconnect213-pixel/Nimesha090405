@@ -55,10 +55,29 @@ service cloud.firestore {
         && request.auth.token.email == 'c' + data().phone + '@hexora-admin-panel.firebaseapp.com'
         && data().createdAt == request.time;
       allow update: if signedIn() && request.auth.uid == uid
+        && request.auth.token.firebase.sign_in_provider != 'google.com'   // Google customers have no PIN: they use the rule below
         && data().diff(resource.data).affectedKeys().hasOnly(['name', 'pin'])
         && text('name', 100) && data().name.size() > 1
         && (!('pin' in data()) || (data().pin is string && data().pin.matches('[0-9]{6}')));
       allow delete: if isAdmin() || (signedIn() && request.auth.uid == uid);   // a customer can delete their own profile (Settings → Account එක මකන්න)
+
+      // Customers who sign in with Google (no PIN). Only their own profile: name, phone (asked after the first Google login), email.
+      allow create: if isGoogleOwner(uid)
+        && data().keys().hasOnly(['name', 'phone', 'email', 'createdAt'])
+        && isValidGoogleProfile()
+        && data().createdAt == request.time;
+      allow update: if isGoogleOwner(uid)
+        && data().diff(resource.data).affectedKeys().hasOnly(['name', 'phone'])
+        && data().keys().hasOnly(['name', 'phone', 'email', 'createdAt'])
+        && isValidGoogleProfile();
+    }
+    function isGoogleOwner(uid) {
+      return signedIn() && request.auth.uid == uid && request.auth.token.firebase.sign_in_provider == 'google.com';
+    }
+    function isValidGoogleProfile() {
+      return text('name', 100) && data().name.size() > 1
+        && data().phone is string && data().phone.matches('[0-9]{10,15}')
+        && (!('email' in data()) || (text('email', 120) && data().email == request.auth.token.email));   // only their own Google email
     }
 
     // "PIN එක අමතක උනා" requests. Anyone can send one; only the admin can read them. The PIN is never put in this document:
@@ -86,7 +105,7 @@ service cloud.firestore {
         && text('ref', 20) && text('name', 100) && data().name.size() > 1
         && text('phone', 30) && text('message', 6000)
         && optText('title', 100) && optText('email', 120) && optText('business', 120) && optText('contact', 20) && optText('estimate', 60)
-        && (!('track' in data()) || data().track in ['dev', 'creative', 'pkg', 'web', 'backend', 'ai', 'maint'])
+        && (!('track' in data()) || data().track in ['dev', 'creative', 'pkg', 'web', 'backend', 'ai', 'maint', 'shop'])
         && (!('uid' in data()) || (signedIn() && data().uid == request.auth.uid))
         && (!('claim' in data()) || (data().claim is string && data().claim.size() >= 20 && data().claim.size() <= 60))
         && data().status == 'new'

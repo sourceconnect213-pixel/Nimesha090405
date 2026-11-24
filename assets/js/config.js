@@ -16,6 +16,12 @@ window.HEXORA = {
   facebook: "",                          // add your Facebook page link (https://...)
   youtube: "",                           // add your YouTube channel link (https://...)
 
+  /* ---------- Shop orders: where the advance is paid (admin panel → Contact). Empty = "we send the bank details on WhatsApp" ---------- */
+  bank: { bank: "", branch: "", name: "", number: "" },
+  /* Card payment on the cart page (PayHere). Stays off until a PayHere merchant account and the server function exist
+     (see README → Shop → Card payments). While off, the option shows as "ළඟදීම". */
+  payhere: { enabled: false },
+
   /* ---------- Notice bar at the top of every page (admin panel → Notice) ---------- */
   notice: { show: false, text: "", linkText: "", link: "" },
 

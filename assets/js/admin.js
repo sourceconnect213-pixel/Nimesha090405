@@ -251,6 +251,8 @@
   function normalize() {
     const c = S.data.config, d = window.HEXORA || {};
     if (!c.notice) c.notice = { show: false, text: "", linkText: "", link: "" };
+    if (!c.bank || typeof c.bank !== "object") c.bank = { bank: "", branch: "", name: "", number: "" };
+    ["bank", "branch", "name", "number"].forEach(k => { if (c.bank[k] === undefined) c.bank[k] = ""; });
     if (!c.banner || typeof c.banner !== "object") c.banner = { show: false, image: "", imageM: "", link: "", alt: "" };
     ["show", "image", "imageM", "link", "alt"].forEach(k => { if (c.banner[k] === undefined) c.banner[k] = k === "show" ? false : ""; });
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
@@ -711,7 +713,7 @@
       '<summary class="ad-req-head"><div><b>' + esc(r.title || r.name || "—") + "</b><small>" + (r.title ? esc(r.name) + " · " : "") + esc(fmtDate(r.createdAt)) + " · <code>" + esc(r.ref) + "</code></small></div>" +
         '<span class="ad-req-end"><span class="ad-badge" data-adot="' + id + '"' + (isUnread(r.id) ? "" : " hidden") + '>අලුත්</span><span class="ad-pill">' + esc(STAGE_EN[r.status] || r.status) + " · " + pct + "%</span></span></summary>" +
       '<div class="ad-req-body">' +
-      '<div class="ad-req-meta">' + [r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
+      '<div class="ad-req-meta">' + [r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ shop: "🛒 Shop order", web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
       linkBox(r) +
       '<div class="ad-grid tight ad-req-edit">' +
         '<div class="ad-field"><label for="rq-status-' + id + '">Stage</label><select class="input"' + fid("status") + ' data-rf="status">' +
@@ -869,7 +871,13 @@
       field("config.email", "Email", { ph: "teamhexoramain@gmail.com" }) +
       field("config.facebook", "Facebook page link", { ph: "https://facebook.com/…", hint: "හිස්ව තිබ්බොත් site එකේ පෙන්නන්නේ නෑ." }) +
       field("config.youtube", "YouTube channel link", { ph: "https://youtube.com/@…", hint: "හිස්ව තිබ්බොත් site එකේ පෙන්නන්නේ නෑ." })),
-    "Site එකේ හැම තැනම WhatsApp, call, email buttons මේවා use කරනවා.");
+    "Site එකේ හැම තැනම WhatsApp, call, email buttons මේවා use කරනවා.") +
+    card("Bank details (shop orders)", grid(
+      field("config.bank.bank", "Bank", { ph: "උදා: Commercial Bank" }) +
+      field("config.bank.branch", "Branch", { ph: "උදා: Kandy" }) +
+      field("config.bank.name", "Account name", { ph: "උදා: Hexora" }) +
+      field("config.bank.number", "Account number", { ph: "උදා: 1234567890" })),
+    "Shop එකෙන් order එකක් දැම්ම ගමන් customer ට මේ details පේනවා, advance එක ගෙවන්න. හිස්ව තිබ්බොත් \"bank details WhatsApp එකෙන් එවනවා\" කියලා පේනවා.");
 
   const GROUPS = [
     { key: "types", title: "Project types", note: "Small project එකක පටන් ගන්නේ price එක (USD).", fixed: true,
@@ -1468,7 +1476,7 @@
       case "req-toggle-all": { const list = reqShown(), anyClosed = list.some(r => !(S.reqOpen[r.id] !== undefined ? S.reqOpen[r.id] : list.length <= 3)); list.forEach(r => { S.reqOpen[r.id] = anyClosed ? 1 : 0; }); repaintReqs(); break; }
       case "csv-req": {
         const rows = [["Ref", "Date", "Name", "Phone", "Email", "Business", "Project", "Type", "Stage", "Progress %", "Estimate", "Due", "Account"]];
-        reqShown().forEach(r => { const c = S.customers.find(x => x.id === r.uid); rows.push([r.ref, r.createdAt, r.name, waNum(r.phone) || r.phone, r.email, r.business, r.title, r.track === "creative" ? "Design & Video" : r.track === "pkg" ? "Mobile App package" : "App / Website / System", STAGE_EN[r.status] || r.status, pctOf(r), r.estimate, r.due, c ? c.name : ""]); });
+        reqShown().forEach(r => { const c = S.customers.find(x => x.id === r.uid); rows.push([r.ref, r.createdAt, r.name, waNum(r.phone) || r.phone, r.email, r.business, r.title, r.track === "creative" ? "Design & Video" : r.track === "pkg" ? "Mobile App package" : r.track === "shop" ? "Shop order" : "App / Website / System", STAGE_EN[r.status] || r.status, pctOf(r), r.estimate, r.due, c ? c.name : ""]); });
         downloadCsv("hexora-requests-" + csvDay() + ".csv", rows); toast("CSV එක download උනා (" + (rows.length - 1) + " rows)."); break;
       }
       case "csv-cust": {

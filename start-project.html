@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="assets/css/style.css?v=20261120a">
   <link rel="stylesheet" href="assets/css/hx.css?v=20261120a">
   <link rel="stylesheet" href="assets/css/pro.css?v=20261120a">
+  <link rel="stylesheet" href="assets/css/shop.css?v=20261124d">
   <link rel="stylesheet" href="assets/css/launch.css?v=20261121b">
   <script src="assets/js/launch.js?v=20261121c"></script>
   <script>document.documentElement.classList.add("js");try{var c=JSON.parse(localStorage.getItem("hx_customer_v1"));if(c&&c.uid)document.documentElement.classList.add("auth-in");if(sessionStorage.getItem("hx_seen"))document.documentElement.classList.add("no-loader")}catch(e){}</script>
@@ -36,15 +37,19 @@
       <span class="logo-part lp-mark brand-mark" aria-hidden="true"></span>
       <span class="logo-part lp-word brand-word" role="img" aria-label="Hexora"></span>
     </a>
+    <form class="hx-search" action="shop.html" method="get" role="search" aria-label="Services හොයන්න">
+      <input type="search" name="q" placeholder="App, website, logo, video… හොයන්න" aria-label="හොයන්න" autocomplete="off" enterkeyhint="search" maxlength="80">
+      <button type="submit" aria-label="හොයන්න"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    </form>
     <ul class="hx-links">
-      <li><a href="index.html">Home</a></li>
       <li class="nav-svc"><button type="button" class="nav-svc-btn" aria-expanded="false" aria-controls="nav-svc-panel">Services <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         <div class="nav-svc-panel" id="nav-svc-panel"><div class="nsp-cols" data-nav-services></div><a class="nsp-all" href="service.html">සියලුම services බලන්න <span aria-hidden="true">→</span></a></div></li>
-      <li><a href="packages.html">Packages</a></li>
+      <li><a href="shop.html">Shop</a></li>
     </ul>
     <div class="hx-end">
       <a class="hx-acc" href="account.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-auth-out>Login</span><span data-auth-in hidden>මගේ projects</span></a>
       <a class="btn btn-primary hx-cta" href="start-project.html" aria-current="page">Quote එකක් ගන්න</a>
+      <a class="hx-cart" href="cart.html" aria-label="Cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg><span class="hx-cart-n" data-cart-count hidden>0</span></a>
       <a class="hx-wa" data-wa-link="" href="https://wa.me/94706305377" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg></a>
     </div>
   </nav>
@@ -408,7 +413,7 @@
   <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></a>
   <button type="button" class="hx-dock-svc" aria-expanded="false" aria-controls="hx-sheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.7 5v10L12 22l-8.7-5V7z"/><path d="M12 22V12M12 12l8.7-5M12 12L3.3 7"/></svg><span>Services</span></button>
   <a class="hx-dock-main" href="start-project.html" aria-current="page"><span class="hx-hex"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Quote</span></a>
-  <a href="packages.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Packages</span></a>
+  <a class="hx-dock-cart" href="cart.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg><span class="hx-cart-n" data-cart-count hidden>0</span><span>Cart</span></a>
   <a href="account.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-auth-out>Login</span><span data-auth-in hidden>Account</span></a>
 </nav>
 <div class="hx-sheet" id="hx-sheet" hidden>
@@ -424,16 +429,16 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script defer src="assets/js/firebase-config.js?v=20261122a"></script>
-<script defer src="assets/js/config.js?v=20261122a"></script>
-<script defer src="assets/js/services.js?v=20261122a"></script>
+<script defer src="assets/js/firebase-config.js?v=20261124a"></script>
+<script defer src="assets/js/config.js?v=20261124a"></script>
+<script defer src="assets/js/services.js?v=20261124a"></script>
 <a class="wa-float" data-wa-link="Hi Hexora! මට project එකක් ගැන කතා කරන්න ඕන." href="https://wa.me/94706305377" target="_blank" rel="noopener" aria-label="WhatsApp එකෙන් message කරන්න">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4 22l4.6-2.1c1.1.3 2.2.5 3.4.5 5.5 0 10-3.9 10-8.7S17.5 3 12 3zm-4 10a1.3 1.3 0 1 1 0-2.6A1.3 1.3 0 0 1 8 13zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6z"/></svg>
 </a>
 
-<script defer src="assets/js/fb.js?v=20261122a"></script>
-<script defer src="assets/js/nav.js?v=20261122a"></script>
-<script defer src="assets/js/chat.js?v=20261122a"></script>
-<script defer src="assets/js/boot.js?v=20261122a" data-load="pricing.js main.js planner.js livechat.js sitetext.js"></script>
+<script defer src="assets/js/fb.js?v=20261124a"></script>
+<script defer src="assets/js/nav.js?v=20261124a"></script>
+<script defer src="assets/js/chat.js?v=20261124a"></script>
+<script defer src="assets/js/boot.js?v=20261124a" data-load="pricing.js catalog.js main.js planner.js livechat.js sitetext.js"></script>
 </body>
 </html>
