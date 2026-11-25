@@ -12,5 +12,5 @@ window.HX_FIREBASE = {
   adminEmail: "teamhexoramain@gmail.com",
   /* "Continue with Google" on the login page: the Web client ID from Firebase console → Authentication → Sign-in method →
      Google → Web SDK configuration (ends with .apps.googleusercontent.com). Empty = the Google button is not shown. */
-  googleClientId: ""
+  googleClientId: "953823684336-idaaksmnu3vbkgd1r89h4r412gekd3b2.apps.googleusercontent.com"
 };

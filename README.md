@@ -31,7 +31,8 @@ The site works like an online store: a search box and a cart in the header, cate
 3. Google Cloud console (same project) → APIs & Services → Credentials → that Web client → **Authorized JavaScript origins** → add `https://hexoraworks.com` and `https://www.hexoraworks.com`.
 4. Put the client ID in `assets/js/firebase-config.js` → `googleClientId`.
 5. Publish the new `firestore.rules` (Firebase console → Firestore → Rules → paste → Publish): it lets Google customers save their own profile (name, phone, their Google email). Only needed for Google login; the shop works with the rules already published.
-Until step 4, the Google button is simply not shown. The first time someone logs in with Google they are asked for their phone number once.
+Done on 2026-11-25: the Google provider was already on; `hexoraworks.com` and `www.hexoraworks.com` were added to the authorized domains; the new rules were published; the client ID is in `firebase-config.js`. Step 3 (JavaScript origins of the OAuth client) is done in the Google Cloud console.
+Without a client ID the Google button is simply not shown. The first time someone logs in with Google they are asked for their phone number once.
 
 ## Domain: hexoraworks.com (Cloudflare DNS → GitHub Pages)
 The `CNAME` file tells GitHub Pages to serve the site at `hexoraworks.com`. In **Cloudflare → hexoraworks.com → DNS → Records**, set (Proxy status **DNS only**, grey cloud):
