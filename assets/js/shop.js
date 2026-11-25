@@ -248,7 +248,7 @@
       (t.once ? "එක පාරක් ගෙවන වැඩ: " + money(t.once) + " (advance " + t.advancePercent + "%: " + money(t.advance) + ")\n" : "") + (t.monthly ? "මාසික plans: " + money(t.monthly) + " / මාසෙට\n" : "") +
       "Confirm වුණාම ගෙවන්න: " + money(t.dueNow), "Payment: " + (payWay === "card" ? "Card (PayHere)" : "Bank transfer"), note ? "\nNotes: " + note : ""].join("\n").slice(0, 6000);
     const data = { ref: ref, title: (t.lines.length === 1 ? t.lines[0].p.name : "Shop order · " + t.items + " items").slice(0, 100), name: name.slice(0, 100), phone: phone, email: email.slice(0, 120),
-      business: biz.slice(0, 120), contact: "WhatsApp", track: "shop", estimate: (money(t.once + t.monthly) + " · දැන් " + money(t.dueNow)).slice(0, 60), message: message, status: "new", uid: me.uid };
+      business: biz.slice(0, 120), contact: "WhatsApp", track: "pkg", estimate: (money(t.once + t.monthly) + " · දැන් " + money(t.dueNow)).slice(0, 60), message: message, status: "new", uid: me.uid };
     if (!data.email) delete data.email; if (!data.business) delete data.business;
     const btn = form.querySelector("button[type=submit]"); btn.disabled = true; placing = true; msg("Order එක යවනවා…");
     try {

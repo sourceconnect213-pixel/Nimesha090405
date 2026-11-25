@@ -713,7 +713,7 @@
       '<summary class="ad-req-head"><div><b>' + esc(r.title || r.name || "—") + "</b><small>" + (r.title ? esc(r.name) + " · " : "") + esc(fmtDate(r.createdAt)) + " · <code>" + esc(r.ref) + "</code></small></div>" +
         '<span class="ad-req-end"><span class="ad-badge" data-adot="' + id + '"' + (isUnread(r.id) ? "" : " hidden") + '>අලුත්</span><span class="ad-pill">' + esc(STAGE_EN[r.status] || r.status) + " · " + pct + "%</span></span></summary>" +
       '<div class="ad-req-body">' +
-      '<div class="ad-req-meta">' + [r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ shop: "🛒 Shop order", web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
+      '<div class="ad-req-meta">' + [(r.track === "shop" || /^Shop order /.test(r.message || "")) ? "🛒 Shop order" : r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
       linkBox(r) +
       '<div class="ad-grid tight ad-req-edit">' +
         '<div class="ad-field"><label for="rq-status-' + id + '">Stage</label><select class="input"' + fid("status") + ' data-rf="status">' +
@@ -1476,7 +1476,7 @@
       case "req-toggle-all": { const list = reqShown(), anyClosed = list.some(r => !(S.reqOpen[r.id] !== undefined ? S.reqOpen[r.id] : list.length <= 3)); list.forEach(r => { S.reqOpen[r.id] = anyClosed ? 1 : 0; }); repaintReqs(); break; }
       case "csv-req": {
         const rows = [["Ref", "Date", "Name", "Phone", "Email", "Business", "Project", "Type", "Stage", "Progress %", "Estimate", "Due", "Account"]];
-        reqShown().forEach(r => { const c = S.customers.find(x => x.id === r.uid); rows.push([r.ref, r.createdAt, r.name, waNum(r.phone) || r.phone, r.email, r.business, r.title, r.track === "creative" ? "Design & Video" : r.track === "pkg" ? "Mobile App package" : r.track === "shop" ? "Shop order" : "App / Website / System", STAGE_EN[r.status] || r.status, pctOf(r), r.estimate, r.due, c ? c.name : ""]); });
+        reqShown().forEach(r => { const c = S.customers.find(x => x.id === r.uid); rows.push([r.ref, r.createdAt, r.name, waNum(r.phone) || r.phone, r.email, r.business, r.title, r.track === "creative" ? "Design & Video" : (r.track === "shop" || /^Shop order /.test(r.message || "")) ? "Shop order" : r.track === "pkg" ? "Mobile App package" : "App / Website / System", STAGE_EN[r.status] || r.status, pctOf(r), r.estimate, r.due, c ? c.name : ""]); });
         downloadCsv("hexora-requests-" + csvDay() + ".csv", rows); toast("CSV එක download උනා (" + (rows.length - 1) + " rows)."); break;
       }
       case "csv-cust": {

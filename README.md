@@ -21,7 +21,7 @@ The site works like an online store: a search box and a cart in the header, cate
 - **Products are not typed twice.** `assets/js/catalog.js` builds them from the price list in `config.js`: every package (apps, websites, backend, AI, maintenance) and every design / video item (`creative`). Change a price in the admin panel and the shop follows. "From" packages (Custom …) open the quote form instead of the cart. UI/UX design (a % of a project) links to its page.
 - **Pictures**: each product shows its category's colours and the service icon (no stock photos).
 - **Cart**: kept in the visitor's browser. A one-time job pays the advance % (50%) when the order is confirmed; a monthly plan pays its first month.
-- **Checkout needs a login** (phone + PIN, or Google). The order is saved in Firestore as a request with `track: "shop"`: it shows in the admin panel → Requests as "🛒 Shop order" (the message lists every item, the totals and the customer's notes), and in the customer's "මගේ projects".
+- **Checkout needs a login** (phone + PIN, or Google). The order is saved in Firestore as a request with `track: "pkg"` (allowed by the rules already published; its message starts with "Shop order"): it shows in the admin panel → Requests as "🛒 Shop order" (the message lists every item, the totals and the customer's notes), and in the customer's "මගේ projects".
 - **Paying**: bank transfer. Put the account in admin panel → Website → Contact → *Bank details*; the customer sees it right after ordering, with the order number as the reference. Until it is filled in, the page says the details come on WhatsApp.
 - **Card payments (PayHere)**: the option shows as "ළඟදීම" while `payhere.enabled` is `false` in `config.js`. Turning it on needs a PayHere merchant account and a small server function (Firebase Blaze + Cloud Functions) that signs each payment and confirms PayHere's notification; the merchant secret must never be in the site's code.
 
@@ -30,7 +30,7 @@ The site works like an online store: a search box and a cart in the header, cate
 2. Firebase console → Authentication → Settings → **Authorized domains** → add `hexoraworks.com` and `www.hexoraworks.com`.
 3. Google Cloud console (same project) → APIs & Services → Credentials → that Web client → **Authorized JavaScript origins** → add `https://hexoraworks.com` and `https://www.hexoraworks.com`.
 4. Put the client ID in `assets/js/firebase-config.js` → `googleClientId`.
-5. Publish the new `firestore.rules` (Firebase console → Firestore → Rules → paste → Publish): it lets Google customers save their own profile (name, phone, their Google email) and allows `shop` orders.
+5. Publish the new `firestore.rules` (Firebase console → Firestore → Rules → paste → Publish): it lets Google customers save their own profile (name, phone, their Google email). Only needed for Google login; the shop works with the rules already published.
 Until step 4, the Google button is simply not shown. The first time someone logs in with Google they are asked for their phone number once.
 
 ## Domain: hexoraworks.com (Cloudflare DNS → GitHub Pages)
