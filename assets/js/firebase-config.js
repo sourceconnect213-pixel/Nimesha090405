@@ -9,5 +9,8 @@
 window.HX_FIREBASE = {
   apiKey: "AIzaSyAwn3DDg-zDPVuo3n9KhSUdhhemz4dmHLI",
   projectId: "hexora-admin-panel",
-  adminEmail: "teamhexoramain@gmail.com"
+  adminEmail: "teamhexoramain@gmail.com",
+  /* "Continue with Google" on the login page: the Web client ID from Firebase console → Authentication → Sign-in method →
+     Google → Web SDK configuration (ends with .apps.googleusercontent.com). Empty = the Google button is not shown. */
+  googleClientId: ""
 };

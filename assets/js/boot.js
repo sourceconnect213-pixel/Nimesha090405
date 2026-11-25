@@ -36,8 +36,22 @@
         }
         // a new phone number in config.js (contactVersion) replaces the older one saved from the admin panel
         if (built.contactVersion && conf.contactVersion !== built.contactVersion) ["whatsapp", "phoneDisplay", "contactVersion"].forEach(k => { conf[k] = built[k]; });
+        // new wording for the option lists (labels / notes) in config.js (textVersion): prices saved from the admin panel stay
+        if (built.textVersion && conf.textVersion !== built.textVersion) {
+          ["types", "sizes", "features", "design", "extras", "creative", "urgency"].forEach(k => {
+            const b = built[k], c = conf[k];
+            if (b && c) Object.keys(b).forEach(id => { if (c[id]) ["label", "note"].forEach(f => { if (b[id][f] !== undefined) c[id][f] = b[id][f]; }); });
+          });
+          conf.textVersion = built.textVersion;
+        }
         fillMissing(conf.packages, built.packages); fillMissing(conf.addons, built.addons);
         window.HEXORA = Object.assign({}, built, conf);
+      }
+      // new wording for the work steps and the shared FAQ in services.js (textv) replaces an older saved copy of them
+      if (svc && window.HX_SERVICES && window.HX_SERVICES.textv && svc.textv !== window.HX_SERVICES.textv) {
+        delete svc.categories; delete svc.commonFaq;
+        if (svc.home) { const bh = window.HX_SERVICES.home || {}; svc.home = Object.assign({}, svc.home, { steps: bh.steps, faq: bh.faq }); }   // "අපේ වැඩ" / reviews saved from the admin panel stay
+        svc.textv = window.HX_SERVICES.textv;
       }
       if (svc && Array.isArray(svc.list)) {
         // a service whose built-in text is versioned (pkgv, the Mobile Apps page) replaces an older saved copy of itself

@@ -251,11 +251,18 @@
   function normalize() {
     const c = S.data.config, d = window.HEXORA || {};
     if (!c.notice) c.notice = { show: false, text: "", linkText: "", link: "" };
+    if (!c.bank || typeof c.bank !== "object") c.bank = { bank: "", branch: "", name: "", number: "" };
+    ["bank", "branch", "name", "number"].forEach(k => { if (c.bank[k] === undefined) c.bank[k] = ""; });
     if (!c.banner || typeof c.banner !== "object") c.banner = { show: false, image: "", imageM: "", link: "", alt: "" };
     ["show", "image", "imageM", "link", "alt"].forEach(k => { if (c.banner[k] === undefined) c.banner[k] = k === "show" ? false : ""; });
     // a new approved package list in config.js (packagesVersion) replaces an older copy saved from the admin panel
     if (d.contactVersion && c.contactVersion !== d.contactVersion) ["whatsapp", "phoneDisplay", "contactVersion"].forEach(k => { c[k] = d[k]; });
     if (d.packagesVersion && c.packagesVersion !== d.packagesVersion) ["packages", "addons", "packagesVersion", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote", "freeSupportMonths", "advancePercent"].forEach(k => { c[k] = clone(d[k]); });
+    // new wording for the option lists (textVersion): labels / notes from config.js, the prices saved here stay
+    if (d.textVersion && c.textVersion !== d.textVersion) {
+      ["types", "sizes", "features", "design", "extras", "creative", "urgency"].forEach(k => { const b = d[k], o = c[k]; if (b && o) Object.keys(b).forEach(id => { if (o[id]) ["label", "note"].forEach(f => { if (b[id][f] !== undefined) o[id][f] = b[id][f]; }); }); });
+      c.textVersion = d.textVersion;
+    }
     ["packages", "addons", "packageBaseRate", "packagesFixedLkr", "packageNote", "packageTerms", "packageFees", "packageFeesWeb", "packageFeesBackend", "packageFeesAI", "packageFeesMaint", "packageTermsMonthly", "packageQuote"].forEach(k => { if (c[k] == null && d[k] != null) c[k] = clone(d[k]); });
     ["packages", "addons"].forEach(g => Object.keys(c[g] || {}).forEach(k => Object.keys((d[g] || {})[k] || {}).forEach(f => { if (c[g][k][f] === undefined) c[g][k][f] = clone(d[g][k][f]); })));
     if (S.data.services && S.data.services.list) {
@@ -263,6 +270,13 @@
       // a service whose built-in text is versioned (pkgv, the Mobile Apps page) replaces an older saved copy of itself
       S.data.services.list = S.data.services.list.map(x => { const b = bl.find(y => y.slug === x.slug); return b && b.pkgv && x.pkgv !== b.pkgv ? clone(b) : x; });
       S.data.services.list.forEach(x => { if (x.packages === undefined && x.slug === "mobile-apps") x.packages = true; });
+    }
+    // new wording for the work steps / shared FAQ (textv) replaces an older saved copy; "අපේ වැඩ" and reviews stay
+    const HS = window.HX_SERVICES || {};
+    if (S.data.services && HS.textv && S.data.services.textv !== HS.textv) {
+      S.data.services.categories = clone(HS.categories); S.data.services.commonFaq = clone(HS.commonFaq);
+      if (S.data.services.home && HS.home) { S.data.services.home.steps = clone(HS.home.steps); S.data.services.home.faq = clone(HS.home.faq); }
+      S.data.services.textv = HS.textv;
     }
     if (S.data.services && !S.data.services.home && window.HX_SERVICES && window.HX_SERVICES.home) S.data.services.home = clone(window.HX_SERVICES.home);
     if (S.data.services && S.data.services.home) { const h = S.data.services.home; if (!Array.isArray(h.work)) h.work = []; if (!Array.isArray(h.reviews)) h.reviews = []; }
@@ -699,7 +713,7 @@
       '<summary class="ad-req-head"><div><b>' + esc(r.title || r.name || "—") + "</b><small>" + (r.title ? esc(r.name) + " · " : "") + esc(fmtDate(r.createdAt)) + " · <code>" + esc(r.ref) + "</code></small></div>" +
         '<span class="ad-req-end"><span class="ad-badge" data-adot="' + id + '"' + (isUnread(r.id) ? "" : " hidden") + '>අලුත්</span><span class="ad-pill">' + esc(STAGE_EN[r.status] || r.status) + " · " + pct + "%</span></span></summary>" +
       '<div class="ad-req-body">' +
-      '<div class="ad-req-meta">' + [r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
+      '<div class="ad-req-meta">' + [(r.track === "shop" || /^Shop order /.test(r.message || "")) ? "🛒 Shop order" : r.track === "creative" ? "Logo, Design & Video" : r.track === "pkg" ? "Package" : ({ web: "Website package", backend: "Backend & Admin package", ai: "AI package", maint: "Maintenance plan" }[r.track] || "App / Website / System"), r.estimate, r.business, r.contact ? "Contact: " + r.contact : ""].filter(Boolean).map(x => "<span>" + esc(x) + "</span>").join("") + "</div>" +
       linkBox(r) +
       '<div class="ad-grid tight ad-req-edit">' +
         '<div class="ad-field"><label for="rq-status-' + id + '">Stage</label><select class="input"' + fid("status") + ' data-rf="status">' +
@@ -857,7 +871,13 @@
       field("config.email", "Email", { ph: "teamhexoramain@gmail.com" }) +
       field("config.facebook", "Facebook page link", { ph: "https://facebook.com/…", hint: "හිස්ව තිබ්බොත් site එකේ පෙන්නන්නේ නෑ." }) +
       field("config.youtube", "YouTube channel link", { ph: "https://youtube.com/@…", hint: "හිස්ව තිබ්බොත් site එකේ පෙන්නන්නේ නෑ." })),
-    "Site එකේ හැම තැනම WhatsApp, call, email buttons මේවා use කරනවා.");
+    "Site එකේ හැම තැනම WhatsApp, call, email buttons මේවා use කරනවා.") +
+    card("Bank details (shop orders)", grid(
+      field("config.bank.bank", "Bank", { ph: "උදා: Commercial Bank" }) +
+      field("config.bank.branch", "Branch", { ph: "උදා: Kandy" }) +
+      field("config.bank.name", "Account name", { ph: "උදා: Hexora" }) +
+      field("config.bank.number", "Account number", { ph: "උදා: 1234567890" })),
+    "Shop එකෙන් order එකක් දැම්ම ගමන් customer ට මේ details පේනවා, advance එක ගෙවන්න. හිස්ව තිබ්බොත් \"bank details WhatsApp එකෙන් එවනවා\" කියලා පේනවා.");
 
   const GROUPS = [
     { key: "types", title: "Project types", note: "Small project එකක පටන් ගන්නේ price එක (USD).", fixed: true,
@@ -1456,7 +1476,7 @@
       case "req-toggle-all": { const list = reqShown(), anyClosed = list.some(r => !(S.reqOpen[r.id] !== undefined ? S.reqOpen[r.id] : list.length <= 3)); list.forEach(r => { S.reqOpen[r.id] = anyClosed ? 1 : 0; }); repaintReqs(); break; }
       case "csv-req": {
         const rows = [["Ref", "Date", "Name", "Phone", "Email", "Business", "Project", "Type", "Stage", "Progress %", "Estimate", "Due", "Account"]];
-        reqShown().forEach(r => { const c = S.customers.find(x => x.id === r.uid); rows.push([r.ref, r.createdAt, r.name, waNum(r.phone) || r.phone, r.email, r.business, r.title, r.track === "creative" ? "Design & Video" : r.track === "pkg" ? "Mobile App package" : "App / Website / System", STAGE_EN[r.status] || r.status, pctOf(r), r.estimate, r.due, c ? c.name : ""]); });
+        reqShown().forEach(r => { const c = S.customers.find(x => x.id === r.uid); rows.push([r.ref, r.createdAt, r.name, waNum(r.phone) || r.phone, r.email, r.business, r.title, r.track === "creative" ? "Design & Video" : (r.track === "shop" || /^Shop order /.test(r.message || "")) ? "Shop order" : r.track === "pkg" ? "Mobile App package" : "App / Website / System", STAGE_EN[r.status] || r.status, pctOf(r), r.estimate, r.due, c ? c.name : ""]); });
         downloadCsv("hexora-requests-" + csvDay() + ".csv", rows); toast("CSV එක download උනා (" + (rows.length - 1) + " rows)."); break;
       }
       case "csv-cust": {

@@ -96,7 +96,7 @@
         '<form id="acc-form" class="acc-form" novalidate>' +
           (up
             ? '<div class="acc-who"><span>' + esc(draft.phoneLabel || "") + '</span><button type="button" class="acc-link" data-mode="login">වෙනස් කරන්න</button></div>' +
-              '<div class="field"><label for="a-name">ඔයාගේ නම</label><input class="input" id="a-name" type="text" autocomplete="name" maxlength="100" placeholder="Ex: Kasun Perera"></div>' +
+              '<div class="field"><label for="a-name">ඔයාගේ නම</label><input class="input" id="a-name" type="text" autocomplete="name" maxlength="100" placeholder="උදා: Kasun Perera"></div>' +
               '<div class="field"><label for="a-pin2">PIN එක ආයෙත් ගහන්න <span class="hint">(confirm)</span></label><input class="input acc-pin" id="a-pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>' +
               '<label class="acc-agree"><input type="checkbox" id="a-agree"> <span>මම <a href="terms.html" target="_blank" rel="noopener">Terms</a> සහ <a href="privacy.html" target="_blank" rel="noopener">Privacy</a> කියවලා එකඟයි.</span></label>'
             : '<div class="field"><label for="a-phone">Phone number <span class="hint">(WhatsApp)</span></label><input class="input" id="a-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX" value="' + esc(draft.raw || "") + '"></div>' +
@@ -108,10 +108,56 @@
           ? "Account එක තියෙනවා නම් PIN එක වැරදියි. <button type=\"button\" class=\"acc-link\" data-mode=\"login\">ආයෙත් ගහන්න</button> · <button type=\"button\" class=\"acc-link\" data-mode=\"forgot\">PIN එක අමතකද?</button><br>" +
             "⚠ PIN එක බැංකු / phone PIN එකක් නෙවෙයි. මේ site එකට විතරක් අලුතෙන් හදපු එකක් වෙන්න ඕන."
           : lock + ' <button type="button" class="acc-link" data-mode="forgot">PIN එක අමතක උනාද?</button>') + "</p>" +
+        (!up && FB.googleReady() ? '<div class="acc-or"><span>නැත්නම්</span></div><div class="acc-google" id="acc-google"></div>' : "") +
       "</section>";
+    if (!up && FB.googleReady()) FB.googleButton($("#acc-google"), googleLogin).catch(() => { const g = $("#acc-google"); if (g) g.innerHTML = '<p class="muted">Google login එක load වුණේ නෑ. Phone number එකෙන් login වෙන්න.</p>'; });
     const first = up ? $("#a-name") : $("#a-phone");
     if (first) first.focus({ preventScroll: true });
     if (!up && draft.msg) { msg(draft.msg, false, "a-pin"); draft.msg = ""; }
+  }
+
+  /* ---------- Continue with Google: the first time, the phone number is asked once (orders and WhatsApp need it) ---------- */
+  async function googleLogin(credential) {
+    msg("Google එකෙන් login වෙනවා…", true);
+    try { await FB.signInGoogle(credential); profile = null; portal(); }
+    catch (e) { msg(/OPERATION_NOT_ALLOWED|INVALID_IDP/.test((e && (e.msg || e.message)) || "") ? "Google login එක තාම on කරලා නෑ. Phone number එකෙන් login වෙන්න." : FB.errText(e)); }
+  }
+  function phoneStep() {
+    const me = FB.user();
+    root.innerHTML = '<section class="acc-card acc-gate acc-one">' +
+      '<div class="acc-mark" aria-hidden="true"><span class="logo-part lp-mark"></span></div>' +
+      '<h1 class="display">තව <span class="grad-text">එක</span> පියවරයි</h1>' +
+      '<p class="muted">' + esc(me.email || "Google account") + ' එකෙන් login වුණා. Order එක ගැන කතා කරන්න ඔයාගේ phone number එක (WhatsApp) දෙන්න.</p>' +
+      '<form id="gphone-form" class="acc-form" novalidate>' +
+        '<div class="field"><label for="g-name">ඔයාගේ නම</label><input class="input" id="g-name" type="text" autocomplete="name" maxlength="100" value="' + esc(me.name || "") + '"></div>' +
+        '<div class="field"><label for="g-phone">Phone number <span class="hint">(WhatsApp)</span></label><input class="input" id="g-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX"></div>' +
+        '<label class="acc-agree"><input type="checkbox" id="g-agree"> <span>මම <a href="terms.html" target="_blank" rel="noopener">Terms</a> සහ <a href="privacy.html" target="_blank" rel="noopener">Privacy</a> කියවලා එකඟයි.</span></label>' +
+        '<p class="acc-msg" id="acc-msg" role="alert"></p>' +
+        '<button class="btn btn-primary btn-block btn-lg" type="submit">ඉදිරියට</button>' +
+      "</form>" +
+      '<p class="acc-help"><button type="button" class="acc-link" data-act="logout">වෙන account එකකින් login වෙන්න</button></p></section>';
+    const f = $("#g-phone"); if (f) f.focus({ preventScroll: true });
+  }
+  async function savePhone(form) {
+    const me = FB.user(), name = $("#g-name").value.trim(), phone = FB.phoneId($("#g-phone").value), btn = form.querySelector("button[type=submit]");
+    if (name.length < 2) return msg("ඔයාගේ නම ගහන්න.", false, "g-name");
+    if (!phone) return msg("Phone number එක හරියට ගහන්න (උදා: 077 123 4567).", false, "g-phone");
+    if (!$("#g-agree").checked) return msg("Terms සහ Privacy වලට එකඟ වෙන්න (tick එක දාන්න).", false, "g-agree");
+    btn.disabled = true; msg("Save කරනවා…", true);
+    try {
+      const data = { name: name, phone: phone }; if (me.email) data.email = me.email;
+      if (profile) await FB.patch("/customers/" + me.uid, { name: name, phone: phone }, ["name", "phone"]);
+      else await FB.create("customers", me.uid, data, ["createdAt"]);
+      profile = { name: name, phone: phone, email: me.email };
+      FB.setName(name); FB.setPhone(phone);
+      portal();
+    } catch (e) { btn.disabled = false; msg(FB.errText(e)); }
+  }
+  // account.html?next=cart.html#checkout: once logged in (and the phone is known), go back there
+  function goNext() {
+    const n = new URLSearchParams(location.search).get("next") || "";
+    if (/^[a-z0-9-]+\.html(#[a-z0-9-]*)?$/i.test(n)) { location.replace(n); return true; }
+    return false;
   }
 
   /* ---------- admin login: the same login page; the admin's PIN goes to Firebase, and the admin panel opens signed in ---------- */
@@ -171,7 +217,7 @@
   async function forgot(form) {
     const name = $("#f-fname").value.trim(), phone = FB.phoneId($("#f-fphone").value), btn = form.querySelector("button[type=submit]");
     if (name.length < 2) return msg("ඔයාගේ නම ගහන්න.", false, "f-fname");
-    if (!phone) return msg("Phone number එක හරියට ගහන්න (Ex: 077 123 4567).", false, "f-fphone");
+    if (!phone) return msg("Phone number එක හරියට ගහන්න (උදා: 077 123 4567).", false, "f-fphone");
     btn.disabled = true; msg("");
     const id = FB.newId() + FB.newId();
     try {
@@ -193,7 +239,7 @@
     if (mode !== "signup") {
       const raw = $("#a-phone").value, phone = FB.phoneId(raw), pin = $("#a-pin").value;
       draft.raw = raw;
-      if (!phone) return msg("Phone number එක හරියට ගහන්න (Ex: 077 123 4567).", false, "a-phone");
+      if (!phone) return msg("Phone number එක හරියට ගහන්න (උදා: 077 123 4567).", false, "a-phone");
       if (!/^\d{6}$/.test(pin)) return msg("PIN එක digits 6ක් වෙන්න ඕන.", false, "a-pin");
       btn.disabled = true; msg("බලනවා…", true);
       try { await FB.signIn(phone, pin); portal(); }
@@ -290,8 +336,10 @@
     try {
       if (!profile) {
         profile = await FB.get("/customers/" + me.uid);
-        if (profile) FB.setName(profile.name);
+        if (profile) { FB.setName(profile.name); if (profile.phone && !me.phone) FB.setPhone(profile.phone); }
       }
+      if (me.google && !(profile && profile.phone)) return phoneStep();
+      if (goNext()) return;
       await claimPending();
       projects = (await FB.where("requests", "uid", me.uid)).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
       await loadChats();
@@ -314,7 +362,7 @@
       '<div class="acc-bar" role="progressbar" aria-label="ඉවර වෙලා තියෙන ප්‍රමාණය" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
       '<p class="acc-pct"><b>' + pct + "%</b> ඉවරයි</p>" +
       '<ol class="acc-steps">' + STAGES.map((s, i) => '<li class="' + (i < idx || st.key === "done" ? "done" : i === idx ? "now" : "") + '"' + (i === idx ? ' aria-current="step"' : "") + "><i></i><span>" + esc(s.short) + "</span></li>").join("") + "</ol>" +
-      (st.key === "new" ? '<div class="acc-wait"><b>⏳ Pending · Under review</b><p>Hexora Developer කෙනෙක් ඔයා එක්ක ඉක්මනින්ම සම්බන්ධ වෙනවා. මද වේලාවක් රැඳී ඉන්න.</p></div>' : "") +
+      (st.key === "new" ? '<div class="acc-wait"><b>⏳ අපි බලනවා</b><p>Request එක අපිට ලැබුණා. Hexora team එකෙන් කෙනෙක් ඉක්මනටම ඔයාට call කරනවා, නැත්නම් message කරනවා.</p></div>' : "") +
       (r.note ? '<div class="acc-note"><b>Hexora update</b><p>' + esc(r.note) + "</p>" + (r.updatedAt ? "<small>" + esc(fmtDay(r.updatedAt)) + "</small>" : "") + "</div>" : "") +
       '<dl class="acc-facts">' +
         (r.due ? "<div><dt>" + (st.key === "done" ? "ඉවර කළ දවස" : "ඉවර වෙන්න බලාපොරොත්තු වෙන දවස") + "</dt><dd>" + esc(fmtDay(r.due)) + "</dd></div>" : "") +
@@ -331,13 +379,15 @@
         '<a class="btn btn-wa" href="' + esc(wa("Hi Hexora! මගේ project එක මගේ account එකට (" + FB.phoneLabel(me.phone) + ") දාන්න පුළුවන්ද?")) + '" target="_blank" rel="noopener">WhatsApp</a></div></section>';
   }
   function settingsHtml(me, name) {
-    return '<section class="acc-card"><h2>Account</h2><p class="muted">Phone number එක: <b>' + esc(FB.phoneLabel(me.phone)) + "</b> (login වෙන්න use කරන්නේ මේක)</p>" +
+    return '<section class="acc-card"><h2>Account</h2><p class="muted">' + (me.google
+        ? "Google account: <b>" + esc(me.email) + "</b> (login වෙන්නේ මේකෙන්)<br>Phone number එක: <b>" + esc(me.phone ? FB.phoneLabel(me.phone) : "—") + "</b>"
+        : "Phone number එක: <b>" + esc(FB.phoneLabel(me.phone)) + "</b> (login වෙන්න use කරන්නේ මේක)") + "</p>" +
         '<form id="name-form" class="acc-form"><div class="field"><label for="s-name">නම</label><input class="input" id="s-name" type="text" maxlength="100" value="' + esc(name) + '"></div>' +
         '<button class="btn" type="submit">නම save කරන්න</button></form></section>' +
-      '<section class="acc-card"><h2>PIN එක මාරු කරන්න</h2>' +
+      (me.google ? "" : '<section class="acc-card"><h2>PIN එක මාරු කරන්න</h2>' +
         '<form id="pin-form" class="acc-form"><div class="field"><label for="s-pin">අලුත් PIN (digits 6)</label><input class="input acc-pin" id="s-pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>' +
         '<div class="field"><label for="s-pin2">ආයෙත් ගහන්න</label><input class="input acc-pin" id="s-pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>' +
-        '<button class="btn" type="submit">PIN එක මාරු කරන්න</button></form></section>' +
+        '<button class="btn" type="submit">PIN එක මාරු කරන්න</button></form></section>') +
       '<p class="acc-msg" id="acc-msg" role="status"></p>' +
       '<section class="acc-card"><h2>ඔයාගේ data</h2><p class="muted">ඔයාගේ account එකේ, projects වල විස්තර JSON file එකක් විදියට බාගන්න. Account එක මකන්නත් පුළුවන් (login එකයි profile එකයි මැකෙනවා).</p>' +
         '<div class="acc-actions"><button class="btn" type="button" data-act="export">Data බාගන්න</button><button class="btn" type="button" data-act="delete">Account එක මකන්න</button></div></section>' +
@@ -429,6 +479,7 @@
     else if (e.target.id === "forgot-form") forgot(e.target);
     else if (e.target.id === "name-form") saveName(e.target);
     else if (e.target.id === "pin-form") savePin(e.target);
+    else if (e.target.id === "gphone-form") savePhone(e.target);
   });
   root.addEventListener("input", e => { if (e.target.classList.contains("acc-pin")) e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6); });
   root.addEventListener("input", e => { if (e.target.id === "ad-pin") e.target.value = e.target.value.replace(/\D/g, "").slice(0, 12); });

@@ -1,6 +1,8 @@
 /* HEXORA — Firebase helper for the customer pages (REST, no SDK).
    Customer accounts: phone number + a 6-digit PIN. Firebase Auth keeps each one as an
    email/password user c<phone>@<projectId>.firebaseapp.com (no email is ever sent to it).
+   Or "Continue with Google": Google Identity Services gives an ID token, Firebase Auth (signInWithIdp) turns it into the
+   same kind of login. Needs googleClientId in firebase-config.js; the phone number is asked once after the first Google login.
    The login stays in this browser until the customer logs out. Used by account.js and planner.js. */
 (function () {
   "use strict";
@@ -43,7 +45,7 @@
   const post = body => ({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
   /* ---------- customer login ---------- */
-  let S = store.get(KEY);   // { uid, phone, name, id, refresh, exp }
+  let S = store.get(KEY);   // { uid, phone, name, email, provider ("google" | undefined), id, refresh, exp }
   function keep(j, extra) {
     S = Object.assign({}, S, extra, {
       uid: j.localId || j.user_id || (S && S.uid), id: j.idToken || j.id_token, refresh: j.refreshToken || j.refresh_token,
@@ -56,7 +58,34 @@
   const auth = (path, body) => http("https://identitytoolkit.googleapis.com/v1/accounts:" + path + "?key=" + encodeURIComponent(F.apiKey), post(body));
   async function signUp(phone, pin, name) { keep(await auth("signUp", { email: emailFor(phone), password: pin, returnSecureToken: true }), { phone: phone, name: name }); }
   async function signIn(phone, pin) { S = null; keep(await auth("signInWithPassword", { email: emailFor(phone), password: pin, returnSecureToken: true }), { phone: phone }); }
-  function signOut() { S = null; store.del(KEY); tell(); }
+  function signOut() { S = null; store.del(KEY); tell(); try { if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect(); } catch (e) { /* not loaded */ } }
+
+  /* ---------- Continue with Google ---------- */
+  const googleReady = () => !!(ready && F.googleClientId);
+  async function signInGoogle(credential) {
+    const j = await auth("signInWithIdp", { postBody: "id_token=" + encodeURIComponent(credential) + "&providerId=google.com", requestUri: location.origin, returnSecureToken: true, returnIdpCredential: true });
+    S = null;
+    keep(j, { provider: "google", email: j.email || "", name: j.displayName || j.fullName || j.firstName || "", phone: "" });
+  }
+  // the Google button (Google's own script, loaded only on the page that shows it); onToken gets the ID token
+  let gsi = null;
+  function loadGoogle() {
+    if (!gsi) gsi = new Promise((res, rej) => {
+      if (window.google && google.accounts && google.accounts.id) return res();
+      const sc = document.createElement("script");
+      sc.src = "https://accounts.google.com/gsi/client"; sc.async = true;
+      sc.onload = () => res(); sc.onerror = () => { gsi = null; rej(new Error("google")); };
+      document.head.appendChild(sc);
+    });
+    return gsi;
+  }
+  async function googleButton(el, onToken) {
+    if (!googleReady() || !el) return false;
+    await loadGoogle();
+    google.accounts.id.initialize({ client_id: F.googleClientId, callback: r => { if (r && r.credential) onToken(r.credential); }, ux_mode: "popup", context: "signin", use_fedcm_for_prompt: true });
+    google.accounts.id.renderButton(el, { type: "standard", theme: "filled_black", size: "large", text: "continue_with", shape: "pill", logo_alignment: "left", width: Math.min(360, el.clientWidth || 320) });
+    return true;
+  }
   async function token() {
     if (!S) { const er = new Error("signed out"); er.reason = "UNAUTHENTICATED"; throw er; }
     if (Date.now() > S.exp - 5 * 60000) {
@@ -73,6 +102,7 @@
   async function deleteAccount() { await auth("delete", { idToken: await token() }); signOut(); }
   async function changePin(pin) { keep(await auth("update", { idToken: await token(), password: pin, returnSecureToken: true })); }
   function setName(name) { if (S) { S.name = name; store.set(KEY, S); tell(); } }
+  function setPhone(phone) { if (S) { S.phone = phone; store.set(KEY, S); tell(); } }
 
   /* ---------- Firestore ---------- */
   async function fs(method, path, body, query) {
@@ -132,8 +162,9 @@
 
   window.HXFB = {
     ready: ready, stages: stages, phoneId: phoneId, phoneLabel: phoneLabel,
-    user: () => (S ? { uid: S.uid, phone: S.phone, name: S.name || "" } : null),
-    signUp: signUp, signIn: signIn, signOut: signOut, deleteAccount: deleteAccount, changePin: changePin, setName: setName, token: token,
+    user: () => (S ? { uid: S.uid, phone: S.phone || "", name: S.name || "", email: S.email || "", google: S.provider === "google" } : null),
+    signUp: signUp, signIn: signIn, signOut: signOut, deleteAccount: deleteAccount, changePin: changePin, setName: setName, setPhone: setPhone, token: token,
+    googleReady: googleReady, signInGoogle: signInGoogle, googleButton: googleButton,
     fs: fs, db: DB, create: create, patch: patch, get: get, where: where, newId: newId, errText: errText
   };
 })();
