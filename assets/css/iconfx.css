@@ -88,6 +88,20 @@ svg.fx-run[data-fx="hex"]     { animation: fx-hex .9s var(--fx-s); }
 @keyframes fx-mail { 40% { rotate: -10deg; translate: 0 -3px; } 70% { rotate: 4deg; } }
 @keyframes fx-hex { to { rotate: 60deg; } }
 
+/* ---------- showcase tiles on screen (.fx-on from iconfx.js): a light sweep and a soft glow ---------- */
+.sp-cat-ic, .pk-ic { position: relative; overflow: hidden; isolation: isolate; }
+.sp-cat-ic::after, .sp-tile::after, .pk-ic::after { content: ""; position: absolute; inset: -20% auto -20% -60%; width: 45%; z-index: 2; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .38), transparent); transform: translateX(0) skewX(-18deg); opacity: 0; }
+.sp-cat-ic.fx-on::after, .pk-ic.fx-on::after { animation: fx-sweep 5.5s ease-in-out infinite; }
+.sp-tile.fx-on::after { animation: fx-sweep 7s ease-in-out infinite; }
+.sp-cat:nth-child(4n + 2) .sp-cat-ic::after, .sp-card:nth-child(4n + 2) .sp-tile::after { animation-delay: .7s; }
+.sp-cat:nth-child(4n + 3) .sp-cat-ic::after, .sp-card:nth-child(4n + 3) .sp-tile::after { animation-delay: 1.4s; }
+.sp-cat:nth-child(4n + 4) .sp-cat-ic::after, .sp-card:nth-child(4n + 4) .sp-tile::after { animation-delay: 2.1s; }
+@keyframes fx-sweep { 0% { transform: translateX(0) skewX(-18deg); opacity: 0; } 8% { opacity: 1; } 30%, 100% { transform: translateX(420%) skewX(-18deg); opacity: 0; } }
+.sp-cat-ic.fx-on { animation: fx-glow 4s ease-in-out infinite; }
+@keyframes fx-glow { 50% { box-shadow: 0 0 0 1px rgba(255, 255, 255, .12), 0 8px 26px -6px var(--t2, rgba(47, 107, 255, .7)); } }
+.sp-cat-ic svg, .sp-tile .sp-ico { position: relative; z-index: 1; }
+
 /* the big shop tile icon floats up a little while its card is pointed at */
 @media (hover: hover) {
   .sp-card .sp-ico { transition: translate .5s var(--fx-s); }
@@ -95,6 +109,6 @@ svg.fx-run[data-fx="hex"]     { animation: fx-hex .9s var(--fx-s); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  svg.fx-draw *, svg.fx-run, svg.fx-run * { animation: none !important; }
+  svg.fx-draw *, svg.fx-run, svg.fx-run *, .fx-on, .fx-on::after { animation: none !important; }
   .sp-card:hover .sp-ico { translate: none; }
 }

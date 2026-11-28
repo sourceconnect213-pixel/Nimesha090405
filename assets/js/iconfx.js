@@ -4,6 +4,8 @@
    • It plays once when the pointer comes onto (or a finger taps, or the keyboard focuses) the link,
      button or card the icon is in.
    • Line icons draw themselves in once, the first time they scroll into view.
+   • The showcase icons (service categories, shop tiles, features) also play by themselves: as they come
+     into view, then one at a time in a slow wave while they are on screen (phones have no hover).
    • Icons are recognised by their shape, so icons drawn later by other scripts are picked up too.
    • Nothing moves for people who ask their system for reduced motion. */
 (function () {
@@ -75,19 +77,59 @@
   function scan() {
     queued = false;
     document.querySelectorAll("svg:not([data-fx])").forEach(tag);
+    watchShow();
   }
   const later = () => { if (!queued) { queued = true; requestAnimationFrame(scan); } };
 
   // play: once per enter / tap / focus; a new run restarts cleanly
+  function play(s) {
+    if (still || !s || s.closest(SKIP)) return;
+    clearTimeout(s._fxT);
+    s.classList.remove("fx-run"); void s.getBoundingClientRect(); s.classList.add("fx-run");
+    s._fxT = setTimeout(() => s.classList.remove("fx-run"), 1100);   // every motion is shorter than this
+  }
   function run(host) {
     if (still || !host) return;
-    host.querySelectorAll("svg[data-fx]").forEach(s => {
-      if (s.closest(SKIP)) return;
-      clearTimeout(s._fxT);
-      s.classList.remove("fx-run"); void s.getBoundingClientRect(); s.classList.add("fx-run");
-      s._fxT = setTimeout(() => s.classList.remove("fx-run"), 1100);   // every motion is shorter than this
-    });
+    host.querySelectorAll("svg[data-fx]").forEach(play);
   }
+
+  /* ---------- the showcase icons (service categories, shop tiles, features) play by themselves ----------
+     • each one plays its motion as it comes into view (one after another down a grid)
+     • then, while they are on screen, a slow wave plays them one at a time, so the page always feels alive
+     • tiles that are on screen get .fx-on, which runs their light sweep (iconfx.css); off screen nothing runs */
+  const SHOW = ".sp-cat-ic svg, .sp-tile .sp-ico, .hex-icon svg, .pk-ic svg, .shop-trust svg, .ic svg, .sb-art svg, .nsp-col svg";
+  const TILES = ".sp-cat-ic, .sp-tile, .hex-icon, .pk-ic";
+  const onScreen = new Set();
+  let entering = [], enterT = 0;
+  const showIo = !still && "IntersectionObserver" in window ? new IntersectionObserver(es => {
+    es.forEach(e => {
+      const el = e.target;
+      if (el.tagName.toLowerCase() !== "svg") { el.classList.toggle("fx-on", e.isIntersecting); return; }
+      if (e.isIntersecting) {
+        onScreen.add(el);
+        if (!el._fxSeen) { el._fxSeen = true; entering.push(el); }
+      } else onScreen.delete(el);
+    });
+    if (entering.length && !enterT) enterT = setTimeout(() => {
+      // after the draw-in, top to bottom, left to right
+      const list = entering.sort((a, b) => { const r = a.getBoundingClientRect(), q = b.getBoundingClientRect(); return (r.top - q.top) || (r.left - q.left); });
+      entering = []; enterT = 0;
+      list.forEach((s, i) => setTimeout(() => play(s), 650 + i * 110));
+    }, 60);
+  }, { threshold: .6 }) : null;
+  function watchShow() {
+    if (!showIo) return;
+    document.querySelectorAll(SHOW).forEach(s => { if (!s._fxShow && s.hasAttribute("data-fx")) { s._fxShow = true; showIo.observe(s); } });
+    document.querySelectorAll(TILES).forEach(t => { if (!t._fxShow) { t._fxShow = true; showIo.observe(t); } });
+  }
+  let waveI = 0, lastTouch = 0;
+  if (showIo) setInterval(() => {
+    if (document.hidden || Date.now() - lastTouch < 2500 || !onScreen.size) return;
+    const list = Array.from(onScreen).filter(s => s.isConnected && s.getBoundingClientRect().width > 0);
+    if (!list.length) return;
+    list.sort((a, b) => (a.compareDocumentPosition(b) & 4) ? -1 : 1);
+    play(list[waveI++ % list.length]);
+  }, 1400);
   let last = null;
   document.addEventListener("pointerover", e => {
     if (e.pointerType !== "mouse") return;
@@ -96,6 +138,7 @@
     last = h;
     run(h);
   }, { passive: true });
+  document.addEventListener("pointerdown", () => { lastTouch = Date.now(); }, { passive: true, capture: true });
   document.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse") return;
     run(e.target.closest && e.target.closest(HOST));
