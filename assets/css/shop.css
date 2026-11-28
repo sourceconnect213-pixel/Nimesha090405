@@ -202,7 +202,8 @@
   .sb-side { grid-template-columns: 1fr 1fr; }
   .sp-cats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .shop-trust { grid-template-columns: 1fr 1fr; }
-  .shop-layout { grid-template-columns: 1fr; }
+  .shop-layout { grid-template-columns: minmax(0, 1fr); }
+  .shop-layout > * { min-width: 0; }
   .shop-side { display: none; }
   .shop-chips { display: flex; }
   .pd { grid-template-columns: 1fr; }
