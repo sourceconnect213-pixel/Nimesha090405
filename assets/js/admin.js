@@ -60,6 +60,7 @@
   const ANIMS = ["phone", "browser", "dashboard", "backend", "chat", "server", "logo", "social", "photo", "timeline", "uiux"];
   // project stages (shared with the customer page through fb.js); admin labels in English
   const STAGES = (window.HXFB && window.HXFB.stages) || [{ key: "new", pct: 5 }, { key: "contacted", pct: 15 }, { key: "design", pct: 35 }, { key: "building", pct: 60 }, { key: "testing", pct: 85 }, { key: "done", pct: 100 }];
+  const FB = window.HXFB || { kinds: {}, kindOf: () => "other", safeUrl: u => u }, K = FB.kinds;
   const STAGE_EN = { new: "New", contacted: "Contacted", design: "Design", building: "Building", testing: "Testing", done: "Done" };
   const FILTERS = [["all", "All"], ["new", "New"], ["active", "Active"], ["done", "Done"]];
   const inFilter = (r, f) => f === "all" || (f === "active" ? r.status !== "new" && r.status !== "done" : r.status === f);
@@ -511,9 +512,7 @@
     const nr = nav.getBoundingClientRect(), sr = sel.getBoundingClientRect();   // measured against the list itself (the groups are positioned too)
     const x = Math.round(sr.left - nr.left + nav.scrollLeft), y = Math.round(sr.top - nr.top + nav.scrollTop);
     const to = "translate(" + x + "px," + y + "px)";
-    // in the side menu the highlight runs out to the edge of the menu (the page-coloured tab with curved corners, see admin.css)
-    const ext = matchMedia("(min-width: 960px)").matches ? parseFloat(getComputedStyle(nav).paddingRight) || 0 : 0;
-    ind.style.width = Math.round(sr.width + ext) + "px"; ind.style.height = Math.round(sr.height) + "px";
+    ind.style.width = Math.round(sr.width) + "px"; ind.style.height = Math.round(sr.height) + "px";   // a floating pill the size of the tab (admin-glass.css)
     if (!animate && S.pillAt) { ind.style.transition = "none"; ind.style.transform = S.pillAt; void ind.offsetWidth; ind.style.transition = ""; }
     ind.style.transform = to; S.pillAt = to;
     const left = x - nav.clientWidth / 2 + sr.width / 2;   // a sideways tab bar keeps the current tab in view
@@ -721,6 +720,11 @@
         '<div class="ad-field"><label for="rq-progress-' + id + '">ඉවර වෙලා <output data-pct>' + pct + '%</output></label><input class="ad-range" type="range" min="0" max="100" step="5"' + fid("progress") + ' data-rf="progress" value="' + pct + '"></div>' +
         '<div class="ad-field"><label for="rq-due-' + id + '">ඉවර වෙන දවස</label><input class="input" type="date"' + fid("due") + ' data-rf="due" value="' + esc(r.due || "") + '"></div>' +
         '<div class="ad-field"><label for="rq-title-' + id + '">Project එකේ නම</label><input class="input"' + fid("title") + ' data-rf="title" maxlength="100" value="' + esc(r.title || "") + '"></div>' +
+        '<div class="ad-field"><label for="rq-kind-' + id + '">Category</label><select class="input"' + fid("kind") + ' data-rf="kind">' +
+          '<option value="">Auto (' + esc((K[FB.kindOf(Object.assign({}, r, { kind: "" }))] || K.other).label) + ")</option>" +
+          Object.keys(K).map(k => '<option value="' + k + '"' + (r.kind === k ? " selected" : "") + ">" + esc(K[k].label) + "</option>").join("") + "</select></div>" +
+        '<div class="ad-field wide"><label for="rq-preview-' + id + '">Preview link <span class="ad-hint">(customer ට \"' + esc((K[FB.kindOf(r)] || K.other).btn) + '\" button එකක් පේනවා)</span></label>' +
+          '<input class="input" type="url" inputmode="url"' + fid("preview") + ' data-rf="preview" maxlength="500" placeholder="https://… (site එක, APK එකේ Google Drive link එක, designs / video folder එක)" value="' + esc(r.preview || "") + '"></div>' +
         '<div class="ad-field wide"><label for="rq-note-' + id + '">Customer ට update එක</label><textarea class="input" rows="2" maxlength="1000"' + fid("note") + ' data-rf="note" placeholder="Ex: Home screen design එක ඉවරයි. ඊළඟට login page එක.">' + esc(r.note || "") + "</textarea>" +
           '<small class="ad-hint">Customer ට එයාගේ account එකේ පේනවා.' + (r.updatedAt ? " අන්තිම update එක: " + esc(fmtDate(r.updatedAt)) : "") + "</small></div></div>" +
       '<div class="ad-req-actions">' +
@@ -1592,7 +1596,10 @@
       case "req-save": {
         const r = S.reqs.find(x => x.id === d.id), box = b.closest(".ad-req"); if (!r) return;
         const v = k => box.querySelector('[data-rf="' + k + '"]').value;
-        const data = { status: v("status"), progress: Number(v("progress")) || 0, due: v("due"), title: v("title").trim().slice(0, 100), note: v("note").trim().slice(0, 1000), updatedAt: new Date() };
+        const pv = v("preview").trim();
+        if (pv && !FB.safeUrl(pv)) return toast("Preview link එක https:// වලින් පටන් ගන්න ඕන.", true);
+        const data = { status: v("status"), progress: Number(v("progress")) || 0, due: v("due"), title: v("title").trim().slice(0, 100), note: v("note").trim().slice(0, 1000),
+          kind: v("kind"), preview: FB.safeUrl(pv), updatedAt: new Date() };
         b.disabled = true;
         try { await patchReq(r, data, Object.keys(data)); paintTabs(); renderTab(); toast("Update උනා ✓ Customer ට පේනවා."); }
         catch (err) { toast(errText(err), true); b.disabled = false; }

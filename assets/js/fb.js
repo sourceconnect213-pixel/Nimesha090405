@@ -160,7 +160,49 @@
     { key: "done", label: "ඉවරයි", short: "ඉවරයි", pct: 100 }
   ];
 
+  /* ---------- what kind of project a request is (the preview button on the customer page follows it) ----------
+     The admin can set it (field "kind"); otherwise it is guessed from the shop items ([p-…] / [c-…] in the message), the track and the words. */
+  const KINDS = {
+    website: { label: "Website", color: "#38BDF8", btn: "Site එක බලන්න", wait: "Site එකේ preview link එක ready වුණාම මෙතන පේනවා." },
+    app: { label: "Mobile App", color: "#818CF8", btn: "Test app එක download කරන්න", wait: "Test app එක (APK) ready වුණාම download link එක මෙතන පේනවා." },
+    system: { label: "Business System", color: "#2DD4BF", btn: "System එක බලන්න", wait: "System එකේ test link එක ready වුණාම මෙතන පේනවා." },
+    backend: { label: "Backend & Admin", color: "#60A5FA", btn: "Admin panel එක බලන්න", wait: "Admin panel එකේ test link එක ready වුණාම මෙතන පේනවා." },
+    ai: { label: "AI & Automation", color: "#C084FC", btn: "AI එක try කරන්න", wait: "AI එක try කරන්න link එක ready වුණාම මෙතන පේනවා." },
+    maint: { label: "Maintenance", color: "#4ADE80", btn: "Report එක බලන්න", wait: "මාසික report එක ready වුණාම මෙතන පේනවා." },
+    design: { label: "Logo & Design", color: "#F472B6", btn: "Designs බලන්න", wait: "Designs ready වුණාම බලන්න link එක මෙතන පේනවා." },
+    photo: { label: "Photo Editing", color: "#FB923C", btn: "Photos බලන්න", wait: "Edit කරපු photos ready වුණාම link එක මෙතන පේනවා." },
+    video: { label: "Video", color: "#F87171", btn: "Video එක බලන්න", wait: "Video එක ready වුණාම බලන්න link එක මෙතන පේනවා." },
+    other: { label: "Project", color: "#94A3B8", btn: "Preview එක බලන්න", wait: "Preview link එක ready වුණාම මෙතන පේනවා." }
+  };
+  const PKG_KIND = { app: "app", web: "website", backend: "backend", ai: "ai", maint: "maint" };
+  const CR_KIND = { logo: "design", brand: "design", social: "design", poster: "design", thumb: "design", photo: "photo", reel: "video", youtube: "video", motion: "video", promo: "video" };
+  function kindOf(r) {
+    if (!r) return "other";
+    if (r.kind && KINDS[r.kind]) return r.kind;
+    const msg = String(r.message || ""), C = window.HEXORA || {}, P = C.packages || {};
+    const ids = (msg.match(/\[(p|c)-[a-z0-9-]+\]/g) || []).map(x => x.slice(1, -1));
+    for (const id of ids) {   // the first shop item decides
+      if (id.startsWith("c-")) { const k = CR_KIND[id.slice(2)]; if (k) return k; }
+      else { const key = id.slice(2), pk = P[key]; if (key === "web-advanced" || key === "web-custom") return "system"; if (pk && PKG_KIND[pk.cat || "app"]) return PKG_KIND[pk.cat || "app"]; }
+    }
+    const t = r.track || "", words = (String(r.title || "") + " " + msg.slice(0, 400)).toLowerCase();
+    if (PKG_KIND[t]) return PKG_KIND[t];
+    if (t === "creative") return /video|reel|youtube|tiktok|motion|intro|promo/.test(words) ? "video" : /photo|retouch|background/.test(words) ? "photo" : "design";
+    // clear words first; a loose "shop" or "site" only counts when nothing clearer is there
+    if (/website|web site|landing page|wordpress|e-?commerce/.test(words)) return "website";
+    if (/\b(apps?|android|ios|apk)\b|mobile app/.test(words)) return "app";
+    if (/\b(system|pos|portal|dashboard|erp|crm)\b/.test(words)) return "system";
+    if (/\b(logo|brand|branding|poster|flyer|banner|post design|ui|ux)\b/.test(words)) return "design";
+    if (/\b(video|reels?|youtube|tiktok|motion|intro)\b/.test(words)) return "video";
+    if (/\b(photo|photos|retouch)\b/.test(words)) return "photo";
+    if (/\b(shop|site|web)\b/.test(words)) return "website";
+    return t === "pkg" ? "app" : "other";
+  }
+  // a preview link is only ever an https address (it is opened in a new tab, without access to this page)
+  const safeUrl = u => (/^https:\/\/[^\s"'<>]{3,500}$/i.test(String(u || "").trim()) ? String(u).trim() : "");
+
   window.HXFB = {
+    kinds: KINDS, kindOf: kindOf, safeUrl: safeUrl,
     ready: ready, stages: stages, phoneId: phoneId, phoneLabel: phoneLabel,
     user: () => (S ? { uid: S.uid, phone: S.phone || "", name: S.name || "", email: S.email || "", google: S.provider === "google" } : null),
     signUp: signUp, signIn: signIn, signOut: signOut, deleteAccount: deleteAccount, changePin: changePin, setName: setName, setPhone: setPhone, token: token,

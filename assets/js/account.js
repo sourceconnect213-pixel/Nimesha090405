@@ -355,14 +355,16 @@
   function card(r) {
     const st = stageOf(r.status), idx = STAGES.indexOf(st);
     const pct = st.key === "done" ? 100 : Math.max(0, Math.min(100, typeof r.progress === "number" ? r.progress : st.pct));
-    const title = r.title || (r.track === "creative" ? "Logo, Design & Video project" : r.track === "pkg" ? "Package project" : "App / Website project");
-    return '<article class="acc-proj s-' + esc(st.key) + '">' +
-      '<div class="acc-proj-top"><div><h2>' + esc(title) + "</h2><small>" + esc(r.ref || "") + (r.createdAt ? " · " + esc(fmtDay(r.createdAt)) : "") + "</small></div>" +
+    const kind = FB.kindOf(r), K = FB.kinds[kind] || FB.kinds.other;
+    const title = r.title || K.label + " project";
+    return '<article class="acc-proj s-' + esc(st.key) + '" data-kind="' + esc(kind) + '" style="--k:' + K.color + '">' +
+      '<div class="acc-proj-top"><div><span class="acc-kind"><i aria-hidden="true"></i>' + esc(K.label) + "</span><h2>" + esc(title) + "</h2><small>" + esc([r.ref, r.createdAt ? fmtDay(r.createdAt) : ""].filter(Boolean).join(" · ")) + "</small></div>" +
         '<span class="acc-stage">' + esc(st.label) + "</span></div>" +
       '<div class="acc-bar" role="progressbar" aria-label="ඉවර වෙලා තියෙන ප්‍රමාණය" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
       '<p class="acc-pct"><b>' + pct + "%</b> ඉවරයි</p>" +
       '<ol class="acc-steps">' + STAGES.map((s, i) => '<li class="' + (i < idx || st.key === "done" ? "done" : i === idx ? "now" : "") + '"' + (i === idx ? ' aria-current="step"' : "") + "><i></i><span>" + esc(s.short) + "</span></li>").join("") + "</ol>" +
       (st.key === "new" ? '<div class="acc-wait"><b>⏳ අපි බලනවා</b><p>Request එක අපිට ලැබුණා. Hexora team එකෙන් කෙනෙක් ඉක්මනටම ඔයාට call කරනවා, නැත්නම් message කරනවා.</p></div>' : "") +
+      previewHtml(r, K, st) +
       (r.note ? '<div class="acc-note"><b>Hexora update</b><p>' + esc(r.note) + "</p>" + (r.updatedAt ? "<small>" + esc(fmtDay(r.updatedAt)) + "</small>" : "") + "</div>" : "") +
       '<dl class="acc-facts">' +
         (r.due ? "<div><dt>" + (st.key === "done" ? "ඉවර කළ දවස" : "ඉවර වෙන්න බලාපොරොත්තු වෙන දවස") + "</dt><dd>" + esc(fmtDay(r.due)) + "</dd></div>" : "") +
@@ -372,8 +374,26 @@
       '<div class="acc-chat" data-chat="' + esc(r.id) + '" hidden></div>' +
     "</article>";
   }
+  // the link the admin set for this project: a site, a test app, a folder of designs or a video (https only, new tab)
+  function previewHtml(r, K, st) {
+    const url = FB.safeUrl(r.preview);
+    if (url) {
+      let host = ""; try { host = new URL(url).hostname.replace(/^www\./, ""); } catch (e) { host = ""; }
+      return '<div class="acc-preview"><div class="acc-pv-bar" aria-hidden="true"><i></i><i></i><i></i><span>' + esc(host) + "</span></div>" +
+        '<div class="acc-pv-body"><p><b>Preview එක ready</b>ඔයාගේ ' + esc(K.label) + " එක මෙතනින් බලන්න. වෙනස් කරන්න ඕන දේවල් chat එකෙන් කියන්න.</p>" +
+        '<a class="btn btn-primary acc-pv-go" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(K.btn) + ' <span aria-hidden="true">↗</span></a></div></div>';
+    }
+    return st.key === "new" ? "" : '<p class="acc-pv-wait"><i aria-hidden="true"></i>' + esc(K.wait) + "</p>";
+  }
+  let kindFilter = "";
   function projectsHtml(me) {
-    return projects.length ? '<div class="acc-list">' + projects.map(card).join("") + "</div>" :
+    const kinds = Array.from(new Set(projects.map(r => FB.kindOf(r))));
+    if (kindFilter && kinds.indexOf(kindFilter) < 0) kindFilter = "";
+    const shown = kindFilter ? projects.filter(r => FB.kindOf(r) === kindFilter) : projects;
+    const chips = kinds.length > 1 ? '<div class="acc-kinds" role="group" aria-label="Category">' +
+      '<button type="button" data-act="kind" data-kind="" aria-pressed="' + !kindFilter + '">ඔක්කොම <small>' + projects.length + "</small></button>" +
+      kinds.map(k => { const K = FB.kinds[k] || FB.kinds.other; return '<button type="button" data-act="kind" data-kind="' + k + '" aria-pressed="' + (kindFilter === k) + '" style="--k:' + K.color + '"><i aria-hidden="true"></i>' + esc(K.label) + " <small>" + projects.filter(r => FB.kindOf(r) === k).length + "</small></button>"; }).join("") + "</div>" : "";
+    return projects.length ? chips + '<div class="acc-list">' + shown.map(card).join("") + "</div>" :
       '<section class="acc-card acc-empty"><h2>තාම projects නෑ</h2><p class="muted">Project request එකක් එව්වම ඒක මෙතන පේනවා. WhatsApp එකෙන් කතා කරපු project එකක් නම්, අපි ඒක ඔයාගේ account එකට දාන්නම්.</p>' +
         '<div class="acc-actions"><a class="btn btn-primary" href="start-project.html">Project එකක් පටන් ගන්න</a>' +
         '<a class="btn btn-wa" href="' + esc(wa("Hi Hexora! මගේ project එක මගේ account එකට (" + FB.phoneLabel(me.phone) + ") දාන්න පුළුවන්ද?")) + '" target="_blank" rel="noopener">WhatsApp</a></div></section>';
@@ -466,6 +486,7 @@
       try { history.replaceState(null, "", location.pathname + location.search + (tab === "settings" ? "#settings" : "")); } catch (err) { /* file:// */ }
     }
     if (t.dataset.act === "chat") toggleChat(t.dataset.id);
+    if (t.dataset.act === "kind") { kindFilter = t.dataset.kind || ""; paint(); }
     if (t.dataset.act === "reload") portal();
     if (t.dataset.act === "export") exportData();
     if (t.dataset.act === "delete") deleteAccount(t);

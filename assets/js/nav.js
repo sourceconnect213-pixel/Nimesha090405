@@ -65,6 +65,40 @@
     });
   })();
 
+  /* ---------- the white pill under the current header link; it follows the pointer and comes back ---------- */
+  (function () {
+    const ul = document.querySelector(".hx-links"); if (!ul) return;
+    const ind = document.createElement("span"); ind.className = "hx-ind"; ind.setAttribute("aria-hidden", "true"); ul.appendChild(ind);
+    const items = () => Array.from(ul.querySelectorAll(":scope > li > a, :scope > li > .nav-svc-btn"));
+    const home = () => items().find(a => a.getAttribute("aria-current") === "page" || a.getAttribute("aria-expanded") === "true") || null;
+    let held = null;
+    function put(el, instant) {
+      items().forEach(a => a.classList.toggle("pill-on", a === el));
+      ul.dataset.pill = el ? "1" : "";
+      if (!el || !el.offsetWidth) { ind.classList.remove("on"); return; }
+      if (instant) ind.style.transition = "none";
+      const x = el.getBoundingClientRect().left - ul.getBoundingClientRect().left - ul.clientLeft;   // the links sit in their own <li>, so offsetLeft would be 0
+      ind.style.width = el.offsetWidth + "px";
+      ind.style.transform = "translateX(" + x + "px)";
+      ind.classList.add("on");
+      if (instant) { void ind.offsetWidth; ind.style.transition = ""; }
+    }
+    const rest = () => put(held || home());
+    items().forEach(a => {
+      a.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") put(a); });
+      a.addEventListener("focus", () => put(a));
+    });
+    ul.addEventListener("pointerleave", rest);
+    ul.addEventListener("focusout", () => setTimeout(() => { if (!ul.contains(document.activeElement)) rest(); }, 0));
+    // the Services button keeps the pill while its menu is open
+    const sb = ul.querySelector(".nav-svc-btn");
+    if (sb && window.MutationObserver) new MutationObserver(() => { held = sb.getAttribute("aria-expanded") === "true" ? sb : null; rest(); }).observe(sb, { attributes: true, attributeFilter: ["aria-expanded"] });
+    const first = () => put(held || home(), true);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(first); else first();
+    window.addEventListener("load", first);
+    window.addEventListener("resize", first);
+  })();
+
   /* ---------- Services menu: every service, grouped by category (built from the same list the admin panel edits) ---------- */
   const svcBtn = $(".nav-svc-btn"), svcBoxes = $$("[data-nav-services]"), svcBox = svcBoxes[0];
   const escH = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -77,7 +111,7 @@
       const items = S.list.filter(x => x.cat === k);
       if (!items.length) return "";
       return '<div class="nsp-col"><span class="nsp-h">' + escH(S.categories[k].label) + "</span><ul>" + items.map(x =>
-        '<li><a href="service.html?s=' + encodeURIComponent(x.slug) + '"' + (x.slug === cur ? ' aria-current="page"' : "") + '><svg viewBox="0 0 24 24" aria-hidden="true">' + (SHAPES.test(x.icon || "") ? x.icon : "") + "</svg><span>" + escH(x.name) + "</span></a></li>").join("") + "</ul></div>";
+        '<li><a href="service.html?s=' + encodeURIComponent(x.slug) + '"' + (x.slug === cur ? ' aria-current="page"' : "") + '><svg viewBox="0 0 24 24" aria-hidden="true">' + (SHAPES.test(x.icon || "") ? x.icon : "") + "</svg><span class=\"nsp-t\"><b>" + escH(x.name) + "</b><small>" + escH(x.short || "") + "</small></span></a></li>").join("") + "</ul></div>";
     }).join("");
     svcBoxes.forEach(box => {
       box.innerHTML = html;

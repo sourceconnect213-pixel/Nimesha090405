@@ -11,6 +11,7 @@
   const me = document.currentScript;
   const scripts = ((me && me.getAttribute("data-load")) || "").split(/\s+/).filter(Boolean);
   const base = me && me.src ? me.src.replace(/[^/?#]*([?#].*)?$/, "") : "assets/js/";
+  const ver = me && me.src ? (me.src.match(/[?&]v=([\w.-]+)/) || [])[1] : "";   // the page scripts get boot.js's ?v=, so a new release is not served from an old cache
   const F = window.HX_FIREBASE || {};
   const KEY = "hx_content_v1", FRESH = 10 * 60000, WAIT = 1500;
   let started = false;
@@ -69,7 +70,7 @@
     apply(c);
     scripts.forEach(src => {
       const s = document.createElement("script");
-      s.src = base + src; s.async = false;   // run in the listed order
+      s.src = base + src + (ver && src.indexOf("?") < 0 ? "?v=" + ver : ""); s.async = false;   // run in the listed order
       document.body.appendChild(s);
     });
   }

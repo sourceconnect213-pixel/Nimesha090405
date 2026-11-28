@@ -1,0 +1,138 @@
+/* HEXORA admin — glass finish (loaded after admin.css)
+   Blue-teal aurora behind frosted panels: a floating glass top bar, a floating glass side menu with a
+   white sliding pill on the current tab, glass cards, and blur-in section changes.
+   Blur (backdrop-filter) is used only on the bar, the menu and the PIN card; the many cards use
+   translucent gradients instead, so long lists stay smooth on phones. */
+
+:root {
+  --ag-bg: #050914;
+  --ag-panel: linear-gradient(160deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .025));
+  --ag-item: linear-gradient(160deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .015));
+  --ag-rim: rgba(255, 255, 255, .1);
+  --ag-rim2: rgba(255, 255, 255, .16);
+  --ag-hi: inset 0 1px 0 rgba(255, 255, 255, .09);
+  --ag-teal: #2DD4BF;
+  --ag-blue: #3B82F6;
+  --ag-ink: #0B1020;
+  --ag-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* aurora: fixed, painted once */
+html, body.admin-page, .ad-shell { background: var(--ag-bg) !important; }
+body.admin-page { position: relative; isolation: isolate; }
+body.admin-page::before { content: ""; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(42% 38% at 12% 8%, rgba(45, 212, 191, .2), transparent 70%),
+    radial-gradient(40% 40% at 88% 14%, rgba(59, 130, 246, .24), transparent 70%),
+    radial-gradient(50% 45% at 70% 92%, rgba(99, 102, 241, .18), transparent 70%),
+    radial-gradient(36% 30% at 8% 86%, rgba(14, 165, 233, .14), transparent 70%); }
+.ad-shell::after { display: none !important; }
+
+/* ---------- top bar: a floating glass strip ---------- */
+.ad-top { margin: 10px 12px 0; padding: 10px 14px !important; border-radius: 18px;
+  background: rgba(14, 22, 44, .55) !important; border: 1px solid var(--ag-rim) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important; -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+  box-shadow: var(--ag-hi), 0 18px 40px -24px rgba(0, 0, 0, .9); top: calc(env(safe-area-inset-top, 0px) + 10px) !important; }
+.ad-top::after { display: none !important; }
+.ad-top .btn { background: rgba(255, 255, 255, .06) !important; border: 1px solid var(--ag-rim) !important; border-radius: 12px !important; }
+@media (hover: hover) { .ad-top .btn:hover { background: rgba(255, 255, 255, .12) !important; } }
+.ad-pill { background: rgba(45, 212, 191, .1); border-color: rgba(45, 212, 191, .35) !important; color: #A7F3EA; }
+
+/* ---------- side menu (wide screens): a floating glass panel ---------- */
+@media (min-width: 960px) {
+  .ad-shell { grid-template-columns: 268px minmax(0, 1fr) !important; }
+  .ad-tabs { margin: 14px 0 14px 12px; height: calc(100vh - var(--ad-top, 69px) - 38px) !important; top: calc(var(--ad-top, 69px) + 24px) !important;
+    padding: 18px 12px 24px !important; border-radius: 22px; border: 1px solid var(--ag-rim) !important;
+    background: rgba(14, 22, 44, .5) !important; backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: var(--ag-hi), 0 24px 60px -30px rgba(0, 0, 0, .9) !important; }
+  .ad-savebar { left: 280px !important; }
+}
+
+/* the current tab: a white pill that slides (admin.js moves .ad-pill-ind) */
+.ad-pill-ind { background: #fff !important; border: 0 !important; border-radius: 14px !important;
+  box-shadow: 0 10px 24px -10px rgba(120, 190, 255, .55), inset 0 -1px 0 rgba(11, 16, 32, .08) !important; }
+.ad-pill-ind::before, .ad-pill-ind::after { display: none !important; content: none !important; }
+.ad-tabs button { border-radius: 14px !important; color: rgba(214, 224, 245, .72) !important; transition: color .25s ease, background-color .25s ease !important; }
+@media (hover: hover) { .ad-tabs button:not([aria-selected="true"]):hover { color: #fff !important; background: rgba(255, 255, 255, .06) !important; } }
+.ad-tabs button[aria-selected="true"] { background: transparent !important; color: var(--ag-ink) !important; }
+.ad-tabs button[aria-selected="true"] .ad-ico { stroke: var(--ag-ink) !important; }
+.ad-tabs button .ad-ico { stroke: currentColor; }
+.ad-tabgroup-l { color: rgba(190, 205, 235, .5); font-size: .7rem; letter-spacing: .12em; }
+.ad-badge { box-shadow: 0 0 0 2px rgba(5, 9, 20, .6); }
+
+.ad-tabs .ad-pill-ind { display: block !important; }
+
+/* phone: the menu is a floating glass dock at the bottom, with the same white pill */
+@media (max-width: 959px) {
+  .ad-tabs { left: 10px !important; right: 10px !important; bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important; padding: 6px !important;
+    border-radius: 24px !important; border: 1px solid var(--ag-rim) !important;
+    background: rgba(12, 19, 40, .72) !important; backdrop-filter: blur(20px) saturate(1.5) !important; -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
+    box-shadow: var(--ag-hi), 0 18px 40px -16px rgba(0, 0, 0, .9) !important; }
+  .ad-tabs button { border-radius: 18px !important; }
+  .ad-tabs button[aria-selected="true"] { background: transparent !important; }
+  .ad-pill-ind { border-radius: 18px !important; }
+  .ad-menu { background: rgba(255, 255, 255, .06) !important; border-color: var(--ag-rim) !important; }
+  .ad-cur { color: #A7F3EA; border-color: rgba(45, 212, 191, .4); background: rgba(45, 212, 191, .1); }
+  .ad-savebar { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+
+/* ---------- surfaces ---------- */
+.ad-card, .ad-fold, .ad-gate-card { background: var(--ag-panel), rgba(10, 16, 34, .55) !important; border: 1px solid var(--ag-rim) !important;
+  border-radius: 22px !important; box-shadow: var(--ag-hi), 0 24px 50px -34px rgba(0, 0, 0, .9) !important; }
+.ad-item, .ad-list-item, .ad-req, .ad-pkg, .ad-hist, .ad-install { background: var(--ag-item), rgba(8, 13, 28, .5) !important; border-color: var(--ag-rim) !important; border-radius: 16px !important; }
+.ad-req { border-left-width: 3px !important; transition: border-color .25s ease, transform .3s var(--ag-ease); }
+.ad-req.s-new { border-left-color: var(--ag-blue) !important; }
+.ad-req.s-contacted { border-left-color: #E2E8F0 !important; }
+.ad-req.s-design, .ad-req.s-building, .ad-req.s-testing { border-left-color: var(--ag-teal) !important; }
+.ad-req.s-done { border-left-color: #22C55E !important; }
+
+/* numbers on the dashboard: glass tiles with a soft glow */
+.ad-stat, .ad-todo-i { position: relative; overflow: hidden; background: var(--ag-item), rgba(8, 13, 28, .5) !important; border: 1px solid var(--ag-rim) !important; border-radius: 18px !important;
+  transition: transform .35s var(--ag-ease), border-color .25s ease !important; }
+.ad-stat::after { content: ""; position: absolute; right: -30px; top: -30px; width: 110px; height: 110px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(45, 212, 191, .22), transparent 70%); }
+.ad-stat:nth-child(2n)::after { background: radial-gradient(circle, rgba(59, 130, 246, .26), transparent 70%); }
+.ad-stat:nth-child(3n)::after { background: radial-gradient(circle, rgba(129, 140, 248, .24), transparent 70%); }
+@media (hover: hover) { .ad-stat:hover, .ad-todo-i:hover { transform: translateY(-3px); border-color: var(--ag-rim2) !important; } }
+.ad-stat b { color: #fff !important; font-size: 1.6rem; }
+.ad-todo-i b { background: #fff !important; color: var(--ag-ink) !important; }
+
+/* sub tabs (Requests · Live chat · Customers …) and filters: a glass track with a white chip */
+.ad-sub, .ad-ctabs { background: rgba(255, 255, 255, .045) !important; border: 1px solid var(--ag-rim) !important; border-radius: 16px !important; }
+.ad-sub button, .ad-ctabs button { border-radius: 12px !important; transition: background-color .3s var(--ag-ease), color .2s ease !important; }
+.ad-sub button[aria-selected="true"], .ad-ctabs button[aria-selected="true"] { background: #fff !important; color: var(--ag-ink) !important; border-color: #fff !important; }
+.ad-sub button[aria-selected="true"] .ad-badge { color: #fff; }
+.ad-filters button { border-radius: 999px !important; background: rgba(255, 255, 255, .04); border-color: var(--ag-rim) !important; }
+.ad-filters button[aria-pressed="true"] { background: #fff !important; color: var(--ag-ink) !important; border-color: #fff !important; }
+.ad-filters button[aria-pressed="true"] span { color: rgba(11, 16, 32, .6); }
+
+/* fields and buttons */
+.input { background: rgba(255, 255, 255, .045) !important; border-color: rgba(255, 255, 255, .12) !important; border-radius: 12px !important; }
+.input:focus { border-color: rgba(45, 212, 191, .7) !important; box-shadow: 0 0 0 3px rgba(45, 212, 191, .18) !important; }
+select.input option { background: #0C1326; color: #E6ECFF; }
+.btn { border-radius: 12px !important; }
+.btn-primary { background: linear-gradient(135deg, #2F6BFF, #22B8CF) !important; border: 0 !important; box-shadow: 0 10px 26px -12px rgba(34, 184, 207, .7) !important; }
+@media (hover: hover) { .btn-primary:hover { filter: brightness(1.08); } }
+.ad-mini { background: rgba(255, 255, 255, .05); border-color: var(--ag-rim) !important; }
+.ad-savebar { right: 12px !important; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); left: 12px; padding-bottom: 12px !important; background: rgba(12, 19, 40, .78) !important; border: 1px solid var(--ag-rim) !important; border-radius: 18px !important;
+  backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); }
+
+/* PIN screen */
+.ad-gate-card { backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); }
+.pin-pad button { background: rgba(255, 255, 255, .06) !important; border-color: var(--ag-rim) !important; }
+@media (hover: hover) { .pin-pad button:hover { background: #fff !important; color: var(--ag-ink) !important; border-color: #fff !important; } }
+.pin-pad button:active { background: #fff !important; color: var(--ag-ink) !important; }
+
+/* a new section comes in out of a soft blur (on top of admin.css's slide) */
+@keyframes ag-in { from { opacity: 0; filter: blur(10px); translate: 0 var(--ty, 18px); } to { opacity: 1; filter: none; translate: 0 0; } }
+.ad-main.swap > * { animation: ag-in .6s var(--ag-ease) both !important; }
+.ad-main.swap > .ad-sub { animation: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-main.swap > * { animation: none !important; }
+  .ad-stat, .ad-todo-i, .ad-req { transition: none !important; }
+}
+/* no blur support: make the floating chrome solid enough to read */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ad-top, .ad-tabs, .ad-savebar, .ad-gate-card { background: rgba(12, 19, 40, .96) !important; }
+}
